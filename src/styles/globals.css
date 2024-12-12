@@ -1,0 +1,61 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  :root {
+    /*color palette*/
+    --color-primary: #6a42db;
+    --color-secondary: #f1edfc;
+    --white: #ffffff;
+    --black: #101318;
+
+    /*font-weight*/
+    --regular: 400;
+    --medium: 500;
+    --semi-bold: 600;
+    --bold: 700;
+  }
+
+  html,
+  body {
+    font-family: 'Pretendard';
+  }
+
+  html[data-theme='gray'] {
+    --color-100: #f2f4f8;
+    --color-300: #cfdbea;
+    --color-500: #040404;
+    --color-800: #2d3034;
+  }
+  html {
+    /* 브라우저 폰트 사이즈 16px * 0.625 = 10px */
+    font-size: 62.5%;
+  }
+
+  body {
+    /* 1rem = html의 폰트 사이즈, 10px = 1rem */
+    font-size: 1rem;
+  }
+
+  button {
+    border: 0;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  button:disabled {
+    cursor: not-allow;
+  }
+
+  img {
+    object-fit: cover;
+  }
+}
