@@ -28,6 +28,10 @@ const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
 });
 
+/**
+ * @description 5팀 화이팅 😘
+ * @author kiJu2
+ */
 const eslintConfig = [
   ...compat.config({
     extends: ["next/core-web-vitals", "next/typescript"],
