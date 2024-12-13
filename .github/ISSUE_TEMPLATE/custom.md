@@ -1,16 +1,11 @@
 ---
-name: '이슈 템플릿'
-about: '이슈 생성을 위한 기본 템플릿입니다'
-title: '[ISSUE] '
+name: 이슈 템플릿
+about: 이슈 생성을 위한 기본 템플릿입니다
+title: "[ 페이지이름 ] 기능/작업내용"
 labels: ''
 assignees: ''
+
 ---
-
-## 🛰️ Issue Number
-ISSUE-
-
-	
-
 
 ## 🪐 작업 내용
 
@@ -23,3 +18,5 @@ ISSUE-
 ### ✨ To-do
 - [ ] 
 - [ ]
+
+### 📸 참고 사진
