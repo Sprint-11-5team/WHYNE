@@ -1,2 +1,1 @@
-export default function hooks() {
-}
+export default function hooks() {}
