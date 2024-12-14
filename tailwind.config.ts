@@ -9,10 +9,10 @@ export default {
   theme: {
     colors: {
       transparent: "transparent",
-      primary: "--color-primary",
-      secondary: "--color-secondary",
-      white: "--white",
-      black: "--black",
+      primary: "var(--color-primary)",
+      secondary: "var(--color-secondary)",
+      white: "var(--white)",
+      black: "var(--black)",
       gray: {
         100: "#f2f4f8",
         300: "#cfdbea",
