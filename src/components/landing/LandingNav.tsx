@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "../../../public/icons/white_medium_logo.svg";
 
-export default function Nav() {
+export default function LandingNav() {
   return (
     <header className="nav-container flex-between tablet:py-[1.1rem] mobile:py-[1.5rem] tablet:px-[6rem] mobile:px-[2rem] tablet:h-[7rem] mobile:h-[5rem] ">
       <nav className="w-full flex-between">
