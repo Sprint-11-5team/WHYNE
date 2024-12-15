@@ -11,7 +11,7 @@ interface ButtonProp extends ButtonHTMLAttributes<HTMLButtonElement> {
   type: "button" | "submit" | "reset";
 }
 
-function Button({
+export default function Button({
   children,
   addClassName,
   handleClick,
@@ -29,7 +29,8 @@ function Button({
 
   const colorClasses = {
     primary: "bg-primary hover:bg-[#7b52f1] text-white",
-    white: "bg-white hover:bg-[#e1d7f4] text-gray-800",
+    white:
+      "bg-white hover:bg-[#e1d7f4] text-gray-800 border-solid border-[0.1rem] border-gray-300",
   };
 
   const buttonClass = classNames(
@@ -51,10 +52,8 @@ function Button({
         disabled={disabled}
         {...rest}
       >
-        <div>{children}</div>
+        {children}
       </button>
     </>
   );
 }
-
-export default Button;
