@@ -20,6 +20,16 @@ export default {
         800: "#2d3034",
       },
     },
+    screens: {
+      desktop: "1920px",
+      // => @media (min-width: 1920px) { ... }
+
+      tablet: "744px",
+      // => @media (min-width: 744px) { ... }
+
+      mobile: "375px",
+      // => @media (min-width: 375px) { ... }
+    },
     extend: {
       fontSize: {
         "3xl": [
