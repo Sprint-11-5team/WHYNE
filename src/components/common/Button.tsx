@@ -22,9 +22,10 @@ export default function Button({
   ...rest
 }: ButtonProp) {
   const sizeClasses = {
-    large: "w-auto h-[5rem] rounded-[1.6rem] ",
-    medium: "w-auto h-[4.8rem] rounded-[1.6rem] ",
-    small: "w-auto h-[4.2rem] rounded-[1.2rem]",
+    large: "w-auto desktop:h-[5rem] tablet:h-[4.8rem] tablet:rounded-[1.6rem] ",
+    medium:
+      "w-auto tablet:h-[5rem] mobile:h-[4.8rem] tablet:rounded-[1.6rem] mobile:rounded-[1.2rem]",
+    small: "w-auto rounded-[1.2rem] tablet:h-[4.2rem] mobile:h-[4rem]",
   };
 
   const colorClasses = {
