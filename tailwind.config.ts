@@ -9,16 +9,26 @@ export default {
   theme: {
     colors: {
       transparent: "transparent",
-      primary: "--color-primary",
-      secondary: "--color-secondary",
-      white: "--white",
-      black: "--black",
+      primary: "var(--color-primary)",
+      secondary: "var(--color-secondary)",
+      white: "var(--white)",
+      black: "var(--black)",
       gray: {
         100: "#f2f4f8",
         300: "#cfdbea",
         500: "#040404",
         800: "#2d3034",
       },
+    },
+    screens: {
+      desktop: "1920px",
+      // => @media (min-width: 1920px) { ... }
+
+      tablet: "744px",
+      // => @media (min-width: 744px) { ... }
+
+      mobile: "375px",
+      // => @media (min-width: 375px) { ... }
     },
     extend: {
       fontSize: {
