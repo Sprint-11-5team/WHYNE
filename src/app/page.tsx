@@ -8,10 +8,12 @@ import filterWine from "../../public/images/filter_wine.svg";
 import review from "../../public/images/review.svg";
 import mobileFilterWine from "../../public/images/mobile_filter_wine.svg";
 import mobileReview from "../../public/images/mobile_review.svg";
+import Button from "@/components/common/Button";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="bg-gray-100 flex-column">
+    <div className="bg-gray-100 flex-column desktop:pb-[10.9rem] tablet:pb-[7.2rem] mobile:pb-[6.2rem]">
       <section className="bg-black rounded-[1.6rem] desktop:w-[114rem] tablet:w-[70.4rem] mobile:w-[34.3rem] desktop:h-[53.5rem] tablet:-[39.4rem] mobile:h-[40.4rem] desktop:mt-[8rem] mobile:mt-[2.4rem] ">
         <div className="flex-column">
           <div className="flex-column gap-[3.2rem] desktop:mt-[11.2rem] desktop:mb-[5.8rem] tablet:mt-[8rem] tablet:mb-[3.4rem] mobile:mt-[5.6rem] mobile:mb-[10.5rem]">
@@ -91,6 +93,16 @@ export default function Home() {
             <Image width={272} src={mobileReview} alt="와인 리뷰 예시" />
           </div>
         </section>
+        <Link href={"/wines"}>
+          <Button
+            type="button"
+            size="large"
+            color="primary"
+            addClassName="flex-between py-[1.6rem] px-[9.6rem] mobile:rounded-[10rem] text-white text-lg font-bold text-center"
+          >
+            와인 보러가기
+          </Button>
+        </Link>
       </div>
     </div>
   );

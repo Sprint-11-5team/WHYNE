@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     unoptimized: true,
-    domains: ["http://www.w3.org/2000/***"],
+    domains: ["http://www.w3.org/2000/svg"],
   },
 };
 
