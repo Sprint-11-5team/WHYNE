@@ -19,7 +19,7 @@ export default function SignUp() {
       <button>가입하기</button>
       <p>
         계정이 이미 있으신가요?
-        <Link href="/login" aria-label="로그인으로 이동">
+        <Link href="/signin" aria-label="로그인으로 이동">
           <span>로그인하기</span>
         </Link>
       </p>
