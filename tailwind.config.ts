@@ -10,6 +10,7 @@ export default {
     colors: {
       transparent: "transparent",
       primary: "var(--color-primary)",
+      "primary-gradient": "var(--primary-gradient)",
       secondary: "var(--color-secondary)",
       white: "var(--white)",
       black: "var(--black)",

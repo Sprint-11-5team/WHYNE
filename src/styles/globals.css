@@ -474,6 +474,7 @@ template {
     --color-secondary: #f1edfc;
     --white: #ffffff;
     --black: #101318;
+    --primary-gradient: #d842db;
 
     /*font-weight*/
     --regular: 400;
