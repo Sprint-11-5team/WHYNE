@@ -4,9 +4,15 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export default function InputItem({ label, id, ...props }: InputProps) {
   return (
-    <div>
-      <label htmlFor={id}>{label}</label>
-      <input id={id} {...props} />
+    <div className="gap-[1rem] flex flex-col">
+      <label htmlFor={id} className="text-[1.6rem] font-medium">
+        {label}
+      </label>
+      <input
+        id={id}
+        className="placeholder-gray-500 text-[1.6rem] border border-gray-300 rounded-[1.6rem] w-[40rem] h-[4.8rem] pl-[2rem]"
+        {...props}
+      />
     </div>
   );
 }
