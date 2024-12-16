@@ -491,7 +491,7 @@ template {
   html[data-theme="gray"] {
     --color-100: #f2f4f8;
     --color-300: #cfdbea;
-    --color-500: #040404;
+    --color-500: #9facbd;
     --color-800: #2d3034;
   }
   html {
@@ -528,6 +528,9 @@ template {
   align-items: center
   */
   }
+  .flex-column {
+    @apply flex flex-col items-center;
+  }
   .card-container {
     @apply bg-white rounded-[1.6rem];
   }
@@ -539,6 +542,15 @@ template {
   }
   .card-top {
     @apply desktop:w-[23.2rem] desktop:h-[18.5rem] desktop:pt-[2.4rem] desktop:px-[3rem] tablet:w-[13.9rem] tablet:h-[11.1rem] tablet:pt-[1.4rem] tablet:px-[1.8rem] mobile:w-[20.8rem] h-[16.6rem] mobile:pt-[2.1rem] mobile:px-[2.7rem];
+  }
+  .home-section-container {
+    @apply bg-[#ebeef4] rounded-[1.6rem] border-solid border-[0.1rem] border-[#e0e6ee] drop-shadow-2md desktop:w-[64rem] tablet:flex justify-between desktop:h-[32rem] tablet:w-[63.8rem] tablet:h-[31.9rem] mobile:w-[34.3rem] mobile:h-[42.3rem];
+  }
+  .home-section-h2 {
+    @apply text-gray-800 font-bold tablet:text-[2.2rem]/[3.2rem] mobile:text-[1.8rem]/[2.6rem];
+  }
+  .home-section-sub {
+    @apply text-gray-500 font-regular text-[1.2rem]/[1.6rem];
   }
   .visible-tablet {
     @apply mobile:hidden tablet:flow-root;

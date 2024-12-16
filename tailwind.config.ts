@@ -17,7 +17,7 @@ export default {
       gray: {
         100: "#f2f4f8",
         300: "#cfdbea",
-        500: "#040404",
+        500: "#9FACBD",
         800: "#2d3034",
       },
     },
@@ -91,6 +91,8 @@ export default {
           "0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)",
           "-0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)",
         ],
+        mds: ["0.4rem 0.4rem 1rem rgba(136, 136, 136, 0.2)"],
+        "2md": ["0.4rem 0.4rem 2rem rgba(224,230,238, 0.2)"],
       },
     },
   },

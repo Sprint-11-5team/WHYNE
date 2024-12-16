@@ -4,7 +4,7 @@ import secondWine from "../../../public/images/middle_second_card.svg";
 
 export default function SectionCard() {
   return (
-    <div className="flex flex-row gap-[1rem]">
+    <div className="flex-between gap-[1rem]">
       <div className="card-container drop-shadow-md w-[19.3rem] h-[16rem] pt-[2.4rem] px-[2.5rem] ">
         <Image width={143} src={firstWine} alt="추천 와인 예시" />
       </div>
