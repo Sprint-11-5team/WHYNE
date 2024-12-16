@@ -1,17 +1,28 @@
 import Image from "next/image";
 import logo from "../../public/icons/purple_logo.svg";
+import CardList from "@/components/landing/CardList";
+import SectionCard from "@/components/landing/SectionCard";
+import typesFilter from "../../public/images/types_filter.svg";
+import pricesFilter from "../../public/images/prices_filter.svg";
+import filterWine from "../../public/images/filter_wine.svg";
+import review from "../../public/images/review.svg";
+import mobileFilterWine from "../../public/images/mobile_filter_wine.svg";
+import mobileReview from "../../public/images/mobile_review.svg";
 
 export default function Home() {
   return (
     <div>
       <section>
         <div>
-          <Image width={102} height={29} src={logo} alt="wine 로고" />
-          <h2>
-            한 곳에서 관리하는
-            <br />
-            나만의 와인창고
-          </h2>
+          <div>
+            <Image width={102} height={29} src={logo} alt="wine 로고" />
+            <h2>
+              한 곳에서 관리하는
+              <br />
+              나만의 와인창고
+            </h2>
+          </div>
+          <CardList />
         </div>
       </section>
       <section>
@@ -25,7 +36,7 @@ export default function Home() {
         </div>
         <div>
           <h3>이번 달 추천 와인</h3>
-          <div>card</div>
+          <SectionCard />
         </div>
       </section>
       <section>
@@ -41,10 +52,17 @@ export default function Home() {
               나에게 맞는 와인을 쉽게 검색해보세요
             </div>
           </div>
-          <div>filter 1</div>
-          <div>filter 2</div>
+          <div className="visible-tablet">
+            <Image width={137} src={typesFilter} alt="와인 타입 필터" />
+            <Image width={129} src={pricesFilter} alt="와인 가격 필터" />
+          </div>
         </div>
-        <div>card</div>
+        <div className="visible-tablet">
+          <Image width={341} src={filterWine} alt="맞춤 와인 예시" />
+        </div>
+        <div className="visible-mobile">
+          <Image width={280} src={mobileFilterWine} alt="맞춤 와인 예시" />
+        </div>
       </section>
       <section>
         <div>
@@ -59,7 +77,12 @@ export default function Home() {
             쉽고 빠르게 와인 리뷰를 살펴보세요.
           </div>
         </div>
-        <div>review</div>
+        <div className="visible-tablet">
+          <Image width={272} src={review} alt="와인 리뷰 예시" />
+        </div>
+        <div className="visible-mobile">
+          <Image width={272} src={mobileReview} alt="와인 리뷰 예시" />
+        </div>
       </section>
     </div>
   );

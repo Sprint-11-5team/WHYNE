@@ -84,6 +84,14 @@ export default {
         semiBold: "var(--semi-bold)",
         bold: "var(--bold)",
       },
+      dropShadow: {
+        mdl: ["0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)"],
+        mdr: ["-0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)"],
+        md: [
+          "0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)",
+          "-0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)",
+        ],
+      },
     },
   },
   plugins: [],
