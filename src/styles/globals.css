@@ -1,5 +1,4 @@
 @charset "UTF-8";
-@charset "UTF-8";
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 @tailwind base;
 @tailwind components;
@@ -94,7 +93,6 @@ video {
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 62.5%;
   font-size: 62.5%;
   vertical-align: baseline;
 }
