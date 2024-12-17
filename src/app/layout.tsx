@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
+import MainNav from "@/components/common/MainNav";
 
 export const metadata: Metadata = {
   title: "WHYNE",
@@ -14,6 +15,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>{children}</body>
+      <body>
+        <MainNav />
+        {children}
+      </body>
     </html>
   );
 }
