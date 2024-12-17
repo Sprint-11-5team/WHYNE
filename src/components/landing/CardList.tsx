@@ -8,19 +8,19 @@ import fifthWine from "../../../public/images/fifth_card_top.svg";
 export default function CardList() {
   return (
     <div className="flex justify-center">
-      <div className="card-container drop-shadow-mdr card-top">
+      <div className="card-container shadow-mdr shadow-current card-top">
         <Image width={172} alt="와인 창고 예시" src={firstWine} />
       </div>
-      <div className="card-container drop-shadow-mdr card-top">
+      <div className="card-container shadow-mdr shadow-current card-top">
         <Image width={172} alt="와인 창고 예시" src={secondWine} />
       </div>
-      <div className="card-container drop-shadow-md mdr card-top">
+      <div className="card-container shadow-md shadow-current card-top">
         <Image width={172} alt="와인 창고 예시" src={thirdWine} />
       </div>
-      <div className="card-container drop-shadow-mdl card-top">
+      <div className="card-container shadow-mdl shadow-current card-top">
         <Image width={172} alt="와인 창고 예시" src={fourthWine} />
       </div>
-      <div className="card-container drop-shadow-mdl card-top">
+      <div className="card-container shadow-mdl shadow-current card-top">
         <Image width={172} alt="와인 창고 예시" src={fifthWine} />
       </div>
     </div>

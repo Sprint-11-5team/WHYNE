@@ -85,16 +85,16 @@ export default {
         semiBold: "var(--semi-bold)",
         bold: "var(--bold)",
       },
-      dropShadow: {
-        sm: ["0 0.2rem 2rem rgba(0, 0, 0, 0.4)"],
-        mdl: ["0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)"],
-        mdr: ["-0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)"],
+      boxShadow: {
+        sm: "0 0.2rem 2rem 0 rgba(0, 0, 0, 0.4)",
+        mdl: "0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)",
+        mdr: "-0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)",
         md: [
           "0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)",
           "-0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)",
         ],
-        mds: ["0.4rem 0.4rem 1rem rgba(136, 136, 136, 0.2)"],
-        "2md": ["0.4rem 0.4rem 2rem rgba(224,230,238, 0.2)"],
+        mds: "0.4rem 0.4rem 1rem rgba(136, 136, 136, 0.2)",
+        "2md": "0.4rem 0.4rem 2rem rgba(224,230,238, 0.2)",
       },
     },
   },

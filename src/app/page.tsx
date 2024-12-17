@@ -20,7 +20,7 @@ export default function Home() {
             <div className="h-auto mobile:w-[8.1rem] tablet:w-[10.2rem]">
               <Image width={102} src={logo} alt="wine 로고" />
             </div>
-            <h2 className="text-gray-100 drop-shadow-mds font-bold desktop:text-[3.2rem]/[4.6rem] tablet:text-[2.8rem]/[4.6rem] mobile:text-[2rem]/[3rem] text-center">
+            <h2 className="text-gray-100 [text-shadow:_0.4rem_0.4rem_1rem_rgba(136_136_136_/_0.2)] font-bold desktop:text-[3.2rem]/[4.6rem] tablet:text-[2.8rem]/[4.6rem] mobile:text-[2rem]/[3rem] text-center">
               한 곳에서 관리하는
               <br />
               나만의 와인창고
@@ -30,7 +30,7 @@ export default function Home() {
         </div>
       </section>
       <div className="flex-column desktop:mt-[16rem] tablet:mt-[8rem] mobile:mt-[4.8rem] tablet:gap-[9.6rem] mobile:gap-[4.8rem]">
-        <section className="home-section-container">
+        <section className="home-section-container shadow-current shadow-2md">
           <div className="tablet:mt-[5.6rem] tablet:ml-[3.2rem] mobile:mt-[2.4rem] mobile:ml-[2.4rem]">
             <h2 className="home-section-h2">
               매달 새롭게 만나는
@@ -48,7 +48,7 @@ export default function Home() {
             <SectionCard />
           </div>
         </section>
-        <section className="home-section-container">
+        <section className="home-section-container shadow-current shadow-2md">
           <div className="tablet:mt-[5.6rem] tablet:ml-[2.8rem] mobile:mt-[2.4rem] mobile:ml-[2.5rem]">
             <div>
               <h2 className="home-section-h2">
@@ -73,7 +73,7 @@ export default function Home() {
             <Image width={280} src={mobileFilterWine} alt="맞춤 와인 예시" />
           </div>
         </section>
-        <section className="home-section-container">
+        <section className="home-section-container shadow-2md shadow-current">
           <div className="tablet:mt-[5.5rem] tablet:ml-[2.8rem] mobile:mt-[2.4rem] mobile:ml-[2.5rem]">
             <h2 className="home-section-h2">
               직관적인
