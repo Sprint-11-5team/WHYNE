@@ -28,7 +28,6 @@ export default function SignUpForm() {
           type="submit"
           size="large"
           color="primary"
-          disabled={true}
           addClassName="text-[1.6rem] font-bold mt-[0.8rem]"
         >
           로그인
@@ -37,7 +36,6 @@ export default function SignUpForm() {
           type="submit"
           size="large"
           color="white"
-          disabled={true}
           addClassName="text-[1.6rem] font-bold mt-[0.8rem] flex items-center justify-center"
         >
           <Image
@@ -53,7 +51,6 @@ export default function SignUpForm() {
           type="submit"
           size="large"
           color="white"
-          disabled={true}
           addClassName="text-[1.6rem] font-bold mt-[0.8rem] flex items-center justify-center"
         >
           <Image
