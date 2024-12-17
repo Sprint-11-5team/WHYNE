@@ -54,7 +54,7 @@ export default function Nav() {
             </button>
             {showMenu && (
               <div className="absolute right-0 mt-[0.8rem] h-auto w-auto bg-white shadow-lg rounded-[1.6rem] overflow-hidden border-solid border-[0.1rem] border-gray-300">
-                <Link href="/mypage" onClick={() => setShowMenu(false)}>
+                <Link href="/myprofile" onClick={() => setShowMenu(false)}>
                   <button className="block tablet:w-[12.6rem] tablet:h-[5.2rem] mobile:w-[10.1rem] mobile:h-[4.6rem] tablet:py-[1.6rem] tablet:px-[2.6rem] mobile:py-[1.4rem] mobile:px-[2rem] text-gray-800 font-medium text-center tablet:text-lg mobile:md hover:bg-secondary hover:text-primary">
                     마이페이지
                   </button>
@@ -71,7 +71,7 @@ export default function Nav() {
         ) : (
           <div className="flex tablet:gap-[4rem] mobile:gap-[2rem]">
             <Link
-              href="/login"
+              href="/signin"
               className="text-white font-medium tablet:text-[1.6rem]/[1.9rem] mobile:text-[1.4rem]/[1.6rem]"
             >
               로그인
