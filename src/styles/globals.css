@@ -474,7 +474,8 @@ template {
     --color-secondary: #f1edfc;
     --white: #ffffff;
     --black: #101318;
-
+    --red: #f74747; 
+    
     /*font-weight*/
     --regular: 400;
     --medium: 500;
@@ -492,6 +493,7 @@ template {
     --color-300: #cfdbea;
     --color-500: #040404;
     --color-800: #2d3034;
+
   }
   html {
     /* 브라우저 폰트 사이즈 16px * 0.625 = 10px */

@@ -13,6 +13,7 @@ export default {
       secondary: "var(--color-secondary)",
       white: "var(--white)",
       black: "var(--black)",
+      red: "var(--red)",
       gray: {
         100: "#f2f4f8",
         300: "#cfdbea",

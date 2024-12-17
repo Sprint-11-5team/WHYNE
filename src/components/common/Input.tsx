@@ -12,17 +12,18 @@ export default function Input({
     const classCombined = `
   w-full
   h-[2.625rem] 
-  px-5 
-  rounded-xl 
-  text-md-14px-regular 
+  px-[2rem]
+  rounded-[1.1rem]
+  text-[1.2rem] font-regular
   text-gray-800 
-  focus:border-[#330066]
+  focus:border-primary
   focus:outline-none
   placeholder:text-gray-500 
-  md:h-12 
-  md:rounded-2xl 
-  md:text-lg-16px-regular 
-  ${isErrored ? "border-[#f74747]" : "border-[1px] border-gray-300"}  // border 속성을 하나로 합침
+  tablet:h-[4.8rem]
+  tablet:rounded-[1.6rem] 
+  tablet:text-[1.4rem]
+  desktop:text-[1.6rem]
+  ${isErrored ? "border-red" : "border-[1px] border-gray-300"}  // border 속성을 하나로 합침
   ${className ? ` ${className}` : ""}
   `;
   
