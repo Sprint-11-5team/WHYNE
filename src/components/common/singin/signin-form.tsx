@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Button from "../Button";
 import InputItem from "./input-item";
+import Image from "next/image";
 
 export default function SignUpForm() {
   return (
@@ -10,14 +11,19 @@ export default function SignUpForm() {
           label="이메일"
           id="email"
           type="email"
-          placeholder="whyne@email.com"
+          placeholder="이메일 입력"
         />
         <InputItem
           label="비밀번호"
           id="pw"
           type="password"
-          placeholder="영문, 숫자 포함 8자 이상"
+          placeholder="비밀번호 입력"
         />
+        <Link href="/signup" aria-label="회원가입으로 이동">
+          <span className="text-primary text-[1.6rem] font-medium underline">
+            비밀번호를 잊으셨나요?
+          </span>
+        </Link>
         <Button
           type="submit"
           size="large"
@@ -32,18 +38,32 @@ export default function SignUpForm() {
           size="large"
           color="white"
           disabled={true}
-          addClassName="text-[1.6rem] font-bold mt-[0.8rem]"
+          addClassName="text-[1.6rem] font-bold mt-[0.8rem] flex items-center justify-center"
         >
-          카카오
+          <Image
+            src="/icons/google.svg"
+            alt="kakao 로고"
+            width={24}
+            height={24}
+            className="mr-2"
+          />
+          Goggle로 시작하기
         </Button>
         <Button
           type="submit"
           size="large"
           color="white"
           disabled={true}
-          addClassName="text-[1.6rem] font-bold mt-[0.8rem]"
+          addClassName="text-[1.6rem] font-bold mt-[0.8rem] flex items-center justify-center"
         >
-          구글
+          <Image
+            src="/icons/kakao.svg"
+            alt="kakao 로고"
+            width={24}
+            height={24}
+            className="mr-2"
+          />
+          kakao로 시작하기
         </Button>
       </form>
       <p className="flex gap-[1rem] text-gray-500 text-[1.6rem] mx-auto">

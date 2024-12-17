@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-export default function SignUp() {
+export default function Signin() {
   return (
     <div className="bg-gray-100 min-h-screen">
       <Container
