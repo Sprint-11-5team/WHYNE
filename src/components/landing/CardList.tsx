@@ -7,7 +7,7 @@ import fifthWine from "../../../public/images/fifth_card_top.svg";
 
 export default function CardList() {
   return (
-    <div className="flex flex-row">
+    <div className="flex justify-center">
       <div className="card-container drop-shadow-mdr card-top">
         <Image width={172} alt="와인 창고 예시" src={firstWine} />
       </div>

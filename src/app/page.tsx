@@ -14,7 +14,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="bg-gray-100 flex-column desktop:pb-[10.9rem] tablet:pb-[7.2rem] mobile:pb-[6.2rem]">
-      <section className="bg-black rounded-[1.6rem] desktop:w-[114rem] tablet:w-[70.4rem] mobile:w-[34.3rem] desktop:h-[53.5rem] tablet:-[39.4rem] mobile:h-[40.4rem] desktop:mt-[8rem] mobile:mt-[2.4rem] ">
+      <section className="bg-black overflow-hidden rounded-[1.6rem] desktop:w-[114rem] tablet:w-[70.4rem] mobile:w-[34.3rem] desktop:h-[53.5rem] tablet:-[39.4rem] mobile:h-[40.4rem] desktop:mt-[8rem] mobile:mt-[2.4rem] ">
         <div className="flex-column">
           <div className="flex-column gap-[3.2rem] desktop:mt-[11.2rem] desktop:mb-[5.8rem] tablet:mt-[8rem] tablet:mb-[3.4rem] mobile:mt-[5.6rem] mobile:mb-[10.5rem]">
             <div className="h-auto mobile:w-[8.1rem] tablet:w-[10.2rem]">
@@ -41,7 +41,7 @@ export default function Home() {
               매달 다양한 인기 와인을 만나보세요.
             </div>
           </div>
-          <div className="bg-gray-100 pl-[2rem] rounded-l-[1.6rem] tablet:mt-[4.2rem] mobile:mt-[5.9rem] tablet:ml-0 mobile:ml-[5.3rem]">
+          <div className="bg-gray-100 pl-[2rem] rounded-l-[1.6rem] tablet:mt-[4.2rem] mobile:mt-[5.9rem] tablet:ml-0 mobile:ml-[5.3rem] tablet:pb-0 mobile:pb-[2rem] flex mobile:flex-col tablet:justify-start mobile:justify-end mobile:items-start">
             <h3 className="font-bold tablet:text-[#50545B] tablet:py-[2rem] mobile:pt-[2rem] mobile:pb-[2.2rem] tablet:text-[1.8rem]/[2.1rem] mobile:text-[#7E7E7E] mobile:text-[1.6rem]/[1.9rem]">
               이번 달 추천 와인
             </h3>
@@ -89,7 +89,7 @@ export default function Home() {
           <div className="visible-tablet">
             <Image width={272} src={review} alt="와인 리뷰 예시" />
           </div>
-          <div className="visible-mobile flex justify-end">
+          <div className="visible-mobile flex justify-end tablet:mt-0 mobile:mt-[0.2rem]">
             <Image width={272} src={mobileReview} alt="와인 리뷰 예시" />
           </div>
         </section>
