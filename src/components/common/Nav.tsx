@@ -38,7 +38,6 @@ export default function Nav() {
         </Link>
         {isLoggedIn ? (
           <div className="relative">
-            {/* 프로필 버튼 */}
             <button
               onClick={handleProfileClick}
               className="rounded-full overflow-hidden tablet:w-[4.5rem] tablet:h-[4.5rem] mobile:w-[2rem] mobile:h-[2rem]"
@@ -53,7 +52,6 @@ export default function Nav() {
                 className="object-cover"
               />
             </button>
-            {/* 마이페이지 & 로그아웃 메뉴 */}
             {showMenu && (
               <div className="absolute right-0 mt-[0.8rem] h-auto w-auto bg-white shadow-lg rounded-[1.6rem] overflow-hidden border-solid border-[0.1rem] border-gray-300">
                 <Link href="/mypage" onClick={() => setShowMenu(false)}>
