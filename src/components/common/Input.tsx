@@ -23,7 +23,7 @@ export default function Input({
   tablet:rounded-[1.6rem] 
   tablet:text-[1.4rem]
   desktop:text-[1.6rem]
-  ${isErrored ? "border-red" : "border-[1px] border-gray-300"}  // border 속성을 하나로 합침
+  ${isErrored ? "border-red" : "border-[0.1rem] border-gray-300"}  // border 속성을 하나로 합침
   ${className ? ` ${className}` : ""}
   `;
   
