@@ -93,7 +93,7 @@ video {
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
+  font-size: 62.5%;
   vertical-align: baseline;
 }
 
@@ -490,7 +490,7 @@ template {
   html[data-theme="gray"] {
     --color-100: #f2f4f8;
     --color-300: #cfdbea;
-    --color-500: #040404;
+    --color-500: #9facbd;
     --color-800: #2d3034;
   }
   html {
