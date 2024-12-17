@@ -7,7 +7,7 @@ interface ButtonProp extends ButtonHTMLAttributes<HTMLButtonElement> {
   handleClick?: () => void;
   disabled?: boolean;
   size: "small" | "medium" | "large";
-  color: "primary" | "white";
+  color: "primary" | "white" | "secondary";
   type: "button" | "submit" | "reset";
 }
 
@@ -31,6 +31,7 @@ export default function Button({
     primary: "bg-primary hover:bg-[#7b52f1] text-white",
     white:
       "bg-white hover:bg-[#e1d7f4] text-gray-800 border-solid border-[0.1rem] border-gray-300",
+    secondary: "bg-secondary hover:bg-[#e1d7f4] text-primary",
   };
 
   const buttonClass = classNames(
