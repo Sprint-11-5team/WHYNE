@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 import Modal from '@/components/common/Modal-container';
 
@@ -25,7 +26,6 @@ export default function ModalTestPage() {
       >
         모달 열기
       </button>
-
       <Modal
         isOpen={isOpen}
         onClose={handleClose}
