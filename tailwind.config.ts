@@ -86,6 +86,7 @@ export default {
         bold: "var(--bold)",
       },
       dropShadow: {
+        sm: ["0 0.2rem 2rem rgba(0, 0, 0, 0.4)"],
         mdl: ["0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)"],
         mdr: ["-0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)"],
         md: [
