@@ -22,7 +22,9 @@ export default function AddWine({ onClose }: Props) {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-    const validateField = (id: string, value: string | number | WineType): string => {
+    const validateField = (id: string, value: string | number | WineType | null): string => {
+        if (value === null) return '값을 입력해주세요.';
+        
         switch (id) {
             case 'name':
                 return !value || (typeof value === 'string' && value.trim() === '') 
@@ -47,6 +49,30 @@ export default function AddWine({ onClose }: Props) {
         }
     };
 
+    const shouldShowError = (fieldName: string) => {
+        return touched[fieldName] && errors[fieldName];
+    };
+
+    const handleBlur = (id: string) => {
+        setTouched(prev => ({
+            ...prev,
+            [id]: true
+        }));
+
+        if (id === 'name' || id === 'region' || id === 'price') {
+          const errorMessage = validateField(id, values[id]);
+          if (errorMessage) {
+              setErrors(prev => ({ ...prev, [id]: errorMessage }));
+          } else {
+              setErrors(prev => {
+                  const newErrors = { ...prev };
+                  delete newErrors[id];
+                  return newErrors;
+              });
+          }
+      }
+  };
+
     const updateFieldValue = (id: string, value: string | number | WineType) => {
         const newValues = {
             ...values,
@@ -54,13 +80,11 @@ export default function AddWine({ onClose }: Props) {
         };
         setValues(newValues);
         
-        // 필드가 터치되었음을 표시
         setTouched(prev => ({
             ...prev,
             [id]: true
         }));
 
-        // 에러 검사
         const errorMessage = validateField(id, value);
         if (errorMessage) {
             setErrors(prev => ({ ...prev, [id]: errorMessage }));
@@ -84,16 +108,38 @@ export default function AddWine({ onClose }: Props) {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('제출된 와인 데이터:', values);
-        onClose();
+
+        const allFields = ['name', 'price', 'region', 'type', 'image'];
+        const allTouched = allFields.reduce((acc, field) => ({
+            ...acc,
+            [field]: true
+        }), {});
+        setTouched(allTouched);
+
+        // 모든 필드 유효성 검사
+        const newErrors: Record<string, string> = {};
+        allFields.forEach(field => {
+            const value = values[field as keyof NewWineData];
+            const errorMessage = validateField(field, value);
+            if (errorMessage) {
+                newErrors[field] = errorMessage;
+            }
+        });
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length === 0) {
+            console.log('제출된 와인 데이터:', values);
+            onClose();
+        }
     };
 
     const isSubmitDisabled = !values.name || !values.region || values.price === 0 || 
-                            values.type === WineType.None || !values.image || 
+                            values.type === WineType.None || 
                             Object.keys(errors).length > 0;
 
     return (
-        <div className='w-[35rem] h-[60rem] rounded-[1.5rem] bg-white'>
+        <div className='w-[35rem] h-[70rem] rounded-[1.5rem] bg-white'>
           <article className='flex flex-col px-[2rem] py-[1.5rem]'>
             <h1 className='text-[1.9rem] font-bold mt-[1rem] mb-[5rem]'>와인 등록</h1>
       
@@ -105,8 +151,10 @@ export default function AddWine({ onClose }: Props) {
                     id='name'
                     placeholder='와인 이름 입력'
                     onChange={handleWineValueChange}
+                    onBlur={() => handleBlur('name')}
+                    value={values.name}
                     className='w-full'
-                    error={touched.name ? errors.name || '' : ''}
+                    error={shouldShowError('name') ? errors.name : ''}
                   />
                 </div>
       
@@ -118,7 +166,9 @@ export default function AddWine({ onClose }: Props) {
                     type='number'
                     min='0'
                     onChange={handleWineValueChange}
-                    error={touched.price ? errors.price || '' : ''}
+                    onBlur={() => handleBlur('price')}
+                    value={values.price === 0 ? '' : String(values.price)}
+                    error={shouldShowError('price') ? errors.price : ''}
                   />
                 </div>
       
@@ -128,7 +178,9 @@ export default function AddWine({ onClose }: Props) {
                     id='region'
                     placeholder='원산지 입력'
                     onChange={handleWineValueChange}
-                    error={touched.region ? errors.region || '' : ''}
+                    onBlur={() => handleBlur('region')}
+                    value={values.region}
+                    error={shouldShowError('region') ? errors.region : ''}
                   />
                 </div>
       
@@ -137,19 +189,20 @@ export default function AddWine({ onClose }: Props) {
                     <WineTypeDropdown
                         value={values.type}
                         onChange={handleTypeChange}
-                        onBlur={() => {
-                            setTouched(prev => ({
-                                ...prev,
-                                type: true
-                            }));
-                        }}
-                        error={touched.type ? errors.type : undefined}
+                        onBlur={() => handleBlur('type')}
+                        error={shouldShowError('type') ? errors.type : ''}
                     />
                 </div>                
       
                 <div className='flex flex-col gap-[1rem]'>
                   <label htmlFor='image' className='text-[1.125rem] font-medium'>이미지</label>
-                  <Input id='image' placeholder='이미지 선택' />
+                  <Input 
+                    id='image' 
+                    placeholder='이미지 선택'
+                    value={values.image || ''}
+                    onChange={handleWineValueChange}
+                    onBlur={() => handleBlur('image')}
+                  />
                 </div>
               </div>
       
