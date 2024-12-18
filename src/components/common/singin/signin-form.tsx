@@ -2,6 +2,7 @@ import Link from "next/link";
 import Button from "../Button";
 import InputItem from "./input-item";
 import Image from "next/image";
+import KakaoLoginButton from "./kakaoLoginButton";
 
 export default function SignUpForm() {
   return (
@@ -47,21 +48,8 @@ export default function SignUpForm() {
           />
           Goggle로 시작하기
         </Button>
-        <Button
-          type="submit"
-          size="large"
-          color="white"
-          addClassName="text-[1.6rem] font-bold mt-[0.8rem] flex items-center justify-center"
-        >
-          <Image
-            src="/icons/kakao.svg"
-            alt="kakao 로고"
-            width={24}
-            height={24}
-            className="mr-2"
-          />
-          kakao로 시작하기
-        </Button>
+
+        <KakaoLoginButton />
       </form>
       <p className="flex gap-[1rem] text-gray-500 text-[1.6rem] mx-auto">
         계정이 없으신가요?
