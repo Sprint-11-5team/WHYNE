@@ -11,24 +11,28 @@ export default function SignUpForm() {
           id="email"
           type="email"
           placeholder="whyne@email.com"
+          required
         />
         <InputItem
           label="닉네임"
           id="nickname"
           type="text"
           placeholder="whyne"
+          required
         />
         <InputItem
           label="비밀번호"
           id="pw"
           type="password"
           placeholder="영문, 숫자 포함 8자 이상"
+          required
         />
         <InputItem
           label="비밀번호 확인"
           id="pw-check"
           type="password"
           placeholder="비밀번호 확인"
+          required
         />
         <Button
           type="submit"
