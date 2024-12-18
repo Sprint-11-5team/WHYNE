@@ -1,9 +1,28 @@
+"use client";
+
+import { useState } from "react";
+import { loginUser } from "../../api/api";
 import Link from "next/link";
-import Button from "../Button";
+import Button from "../common/Button";
 import InputItem from "./input-item";
 import Image from "next/image";
 
-export default function SignUpForm() {
+export default function SigninForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      const response = await loginUser({ email, password });
+      localStorage.setItem("authToken", response.data.token);
+      window.location.href = "/"; // 로그인 후 홈으로 리디렉션
+    } catch (error) {
+      setError("이메일 혹은 비밀번호를 확인해주세요.");
+      console.error("로그인 중 오류", error);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-[4rem]">
       <form className="gap-[2.4rem] flex flex-col">
@@ -11,13 +30,17 @@ export default function SignUpForm() {
           label="이메일"
           id="email"
           type="email"
-          placeholder="이메일 입력"
+          placeholder={error ? error : "이메일 입력"}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <InputItem
           label="비밀번호"
           id="pw"
           type="password"
           placeholder="비밀번호 입력"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <Link href="/signup" aria-label="회원가입으로 이동">
           <span className="text-primary text-[1.6rem] font-medium underline">
@@ -29,6 +52,10 @@ export default function SignUpForm() {
           size="large"
           color="primary"
           addClassName="text-[1.6rem] font-bold mt-[0.8rem]"
+          onClick={(e) => {
+            e.preventDefault();
+            handleLogin();
+          }}
         >
           로그인
         </Button>
@@ -63,6 +90,7 @@ export default function SignUpForm() {
           kakao로 시작하기
         </Button>
       </form>
+
       <p className="flex gap-[1rem] text-gray-500 text-[1.6rem] mx-auto">
         계정이 없으신가요?
         <Link href="/signup" aria-label="회원가입으로 이동">
