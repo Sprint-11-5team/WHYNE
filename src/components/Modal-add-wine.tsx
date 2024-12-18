@@ -158,7 +158,7 @@ export default function AddWine({ onClose }: Props) {
                   size='small'
                   color='white'
                   type='button'
-                  handleClick={onClose}
+                  onClick={onClose}
                   addClassName='flex-1 text-primary font-bold'
                 >
                   취소
