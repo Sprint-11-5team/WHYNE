@@ -11,6 +11,8 @@ export default function SignUpForm() {
           id="email"
           type="email"
           placeholder="whyne@email.com"
+          validationRule="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"
+          errorMessage="이메일 형식으로 작성해 주세요."
           required
         />
         <InputItem
@@ -18,13 +20,18 @@ export default function SignUpForm() {
           id="nickname"
           type="text"
           placeholder="whyne"
+          validationRule="^.{1,20}$"
+          errorMessage="닉네임은 최대 20자까지 가능합니다."
           required
         />
         <InputItem
           label="비밀번호"
           id="pw"
           type="password"
-          placeholder="영문, 숫자 포함 8자 이상"
+          placeholder="영문, 숫자 포함 8자 이상" // 특수문자 포함이라고 수정?
+          minLengthRule={8}
+          validationRule="^[a-zA-Z0-9!@#$%^&*]+$"
+          errorMessage="비밀번호는 숫자, 영문, 특수문자로만 가능합니다."
           required
         />
         <InputItem
