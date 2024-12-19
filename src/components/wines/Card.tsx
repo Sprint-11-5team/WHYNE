@@ -4,9 +4,9 @@ import star from "../../../public/icons/star.svg";
 
 export default function Card() {
   return (
-    <div className="grid grid-cols-4 tablet:gap-[1.5rem] mobile:gap-[1rem]">
+    <div className="grid grid-cols-4 tablet:gap-[1.5rem] mobile:gap-[1rem] overflow-hidden">
       <div className="card-container flex justify-center items-end shadow-mdr tablet:mt-[3rem] mobile:mt-[2rem] tablet:w-[23.2rem] tablet:h-[18.5rem] mobile:w-[19.3rem] mobile:h-[16rem]">
-        <div className="flex tablet:gap-[2.8rem] mobile:gap-[2.5rem] tablet:w-[17.2rem] tablet:h-[16.1rem] mobile:w-[14.3rem] mobile:h-[]">
+        <div className="flex tablet:gap-[2.8rem] mobile:gap-[2.5rem] tablet:w-[17.2rem] tablet:h-[16.1rem] mobile:w-[14.3rem]">
           <Image
             width={40}
             src={sample}
