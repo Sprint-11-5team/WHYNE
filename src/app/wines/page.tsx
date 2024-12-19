@@ -2,14 +2,16 @@ import PriceFilter from "@/components/wines/PriceFilter";
 import RatingFliter from "@/components/wines/RatingFilter";
 import TypesFilter from "@/components/wines/TypesFilter";
 import Button from "@/components/common/Button";
+import FilterButton from "@/components/wines/FilterButton";
 import SearchBar from "@/components/wines/SearchBar";
 
 export default function Wines() {
   return (
     <>
+      <FilterButton />
       <SearchBar />
       <div className="desktop:w-[28.4rem] desktop:h-auto desktop:flex desktop:flex-col desktop:gap-[6rem]">
-        <div className="h-auto w-auto flex flex-col gap-[6rem] desktop:flow-root mobile:hidden">
+        <div className="h-auto w-auto flex flex-col gap-[6rem] desktop:flow-root tablet:hidden">
           <TypesFilter />
           <PriceFilter />
           <RatingFliter />

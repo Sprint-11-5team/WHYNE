@@ -47,8 +47,8 @@ export default function Nav() {
                 alt="프로필 이미지"
                 layout="responsive"
                 objectFit="contain"
-                width={45}
-                height={45}
+                width={1}
+                height={1}
                 className="object-cover"
               />
             </button>
