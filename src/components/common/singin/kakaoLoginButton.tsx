@@ -6,7 +6,7 @@ import Button from "../Button";
 const KakaoLoginButton = () => {
   // .env.local에서 환경 변수를 가져옵니다.
   const clientId = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID; // 클라이언트 앱키
-  const redirectUri = "http://localhost:3000/signin"; // 리다이렉트 URI (카카오에 등록한 URI)
+  const redirectUri = "http://localhost:3000"; // 리다이렉트 URI (카카오에 등록한 URI)
 
   const handleKakaoLogin = () => {
     const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
