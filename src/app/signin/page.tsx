@@ -1,4 +1,4 @@
-import SignUpForm from "@/components/common/singin/signin-form";
+import SignInForm from "@/components/common/singin/signin-form";
 import Container from "@/components/common/container";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,7 +21,7 @@ export default function Signin() {
               className="block mx-auto"
             />
           </Link>
-          <SignUpForm />
+          <SignInForm />
         </div>
       </Container>
     </div>
