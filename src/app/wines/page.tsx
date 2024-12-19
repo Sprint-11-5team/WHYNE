@@ -5,6 +5,7 @@ import Button from "@/components/common/Button";
 import FilterButton from "@/components/wines/FilterButton";
 import SearchBar from "@/components/wines/SearchBar";
 import Card from "@/components/wines/Card";
+import CardList from "@/components/wines/CardList";
 
 export default function Wines() {
   return (
@@ -33,6 +34,7 @@ export default function Wines() {
           와인 등록하기
         </Button>
       </div>
+      <CardList />
     </>
   );
 }
