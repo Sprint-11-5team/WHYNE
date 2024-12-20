@@ -13,6 +13,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   validationMessage?: string;
   comparePassword?: string;
   onSignUpInfoChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onErrorChange?: (hasError: boolean) => void;
 }
 
 export default function InputItem({
@@ -30,6 +31,7 @@ export default function InputItem({
   value,
   onSignUpInfoChange,
   comparePassword,
+  onErrorChange,
   ...props
 }: InputProps) {
   const [error, setError] = useState(false);
@@ -40,9 +42,11 @@ export default function InputItem({
     if (required && !value) {
       setError(true);
       setErrorMessage(emptyErrorMessage);
+      onErrorChange?.(true);
       return;
     }
     handleValidation(e);
+    onErrorChange?.(false);
   };
 
   const handleValidation = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,12 +55,14 @@ export default function InputItem({
     if (comparePassword && value !== comparePassword) {
       setError(true);
       setErrorMessage(validationMessage);
+      onErrorChange?.(true);
       return;
     }
 
     if (minLengthRule && value.length < minLengthRule) {
       setError(true);
       setErrorMessage(minLengthErrorMessage);
+      onErrorChange?.(true);
       return;
     }
 
@@ -65,6 +71,7 @@ export default function InputItem({
       if (!regex.test(value)) {
         setError(true);
         setErrorMessage(validationMessage);
+        onErrorChange?.(true);
         return;
       }
     }
@@ -72,6 +79,7 @@ export default function InputItem({
     if (maxLengthRule && value.length > maxLengthRule) {
       setError(true);
       setErrorMessage(maxLengthErrorMessage);
+      onErrorChange?.(true);
       return;
     }
 

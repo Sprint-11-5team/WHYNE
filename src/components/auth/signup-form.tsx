@@ -16,6 +16,8 @@ export default function SignUpForm() {
     passwordConfirmation: "",
   });
 
+  const [hasError, setHasError] = useState(true);
+
   const router = useRouter();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,10 +29,19 @@ export default function SignUpForm() {
     }));
   };
 
+  const handleErrorChange = (hasError: boolean) => {
+    setHasError(hasError);
+  };
+
   const handleSignUpButtonClick = async (
     e: React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
+
+    if (hasError) {
+      alert("입력한 정보를 다시 확인해주세요.");
+      return;
+    }
 
     if (values.password !== values.passwordConfirmation) {
       alert("비밀번호가 일치하지 않습니다.");
@@ -55,7 +66,9 @@ export default function SignUpForm() {
       const axiosError = error as AxiosError;
       console.error(axiosError.response?.data || axiosError.message);
 
-      alert("회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      alert(
+        "회원가입에 실패했습니다. 입력 정보를 확인해주시고 잠시 후 다시 시도해주세요.",
+      );
     }
   };
 
@@ -72,6 +85,7 @@ export default function SignUpForm() {
           validationRule="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
           validationMessage="이메일 형식으로 작성해 주세요."
           onSignUpInfoChange={handleInputChange}
+          onErrorChange={handleErrorChange}
           required
         />
         <InputItem
@@ -84,6 +98,7 @@ export default function SignUpForm() {
           maxLengthRule={20}
           maxLengthErrorMessage="닉네임은 최대 20자까지 가능합니다."
           onSignUpInfoChange={handleInputChange}
+          onErrorChange={handleErrorChange}
           required
         />
         <InputItem
@@ -99,6 +114,7 @@ export default function SignUpForm() {
           validationMessage="비밀번호는 숫자, 영문, 특수문자로만 가능합니다."
           value={values.password}
           onSignUpInfoChange={handleInputChange}
+          onErrorChange={handleErrorChange}
           required
         />
         <InputItem
@@ -112,6 +128,7 @@ export default function SignUpForm() {
           value={values.passwordConfirmation}
           comparePassword={values.password}
           onSignUpInfoChange={handleInputChange}
+          onErrorChange={handleErrorChange}
           required
         />
         <Button
