@@ -27,8 +27,10 @@ export default function SignUpForm() {
     }));
   };
 
-  const handleSignUpButtonClick = async () => {
-    // e.preventDefault();
+  const handleSignUpButtonClick = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.preventDefault();
 
     if (values.password !== values.passwordConfirmation) {
       alert("비밀번호가 일치하지 않습니다.");
@@ -44,10 +46,16 @@ export default function SignUpForm() {
         password,
         passwordConfirmation,
       });
+      await instance.post("/10-4/auth/signIn", {
+        email,
+        password,
+      });
       router.push("/");
     } catch (error) {
       const axiosError = error as AxiosError;
       console.error(axiosError.response?.data || axiosError.message);
+
+      alert("회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
 
@@ -111,10 +119,7 @@ export default function SignUpForm() {
           size="large"
           color="primary"
           addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem]"
-          onClick={(e) => {
-            e.preventDefault();
-            handleSignUpButtonClick();
-          }}
+          onClick={handleSignUpButtonClick}
         >
           가입하기
         </Button>
