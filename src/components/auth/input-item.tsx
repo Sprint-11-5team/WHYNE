@@ -93,8 +93,7 @@ export default function InputItem({
       <input
         id={id}
         name={name}
-        className={`placeholder-gray-500 text-[1.6rem] border border-gray-300 
-          rounded-[1.6rem] w-[40rem] h-[4.8rem] pl-[2rem] focus:border-primary focus:outline-none
+        className={`placeholder-gray-500 text-[1.6rem] border border-gray-300 rounded-[1.6rem] w-[40rem] h-[4.8rem] pl-[2rem]
         ${error ? "border-red" : "border-gray-300"}`}
         onKeyDown={handlePreventSpace}
         onBlur={handleEmptyInput}
