@@ -536,7 +536,7 @@ template {
     @apply bg-white rounded-[1.6rem];
   }
   .nav-container {
-    @apply bg-black rounded-[1.6rem] w-auto gap-[1rem] sticky top-0 z-20;
+    @apply bg-black tablet:top-[2.4rem] mobile:top-[1.6rem] rounded-[1.6rem] gap-[1rem] sticky z-20;
   }
   .card-top {
     @apply desktop:w-[23.2rem] desktop:h-[18.5rem] desktop:pt-[2.4rem] desktop:px-[3rem] tablet:w-[13.9rem] tablet:h-[11.1rem] tablet:pt-[1.4rem] tablet:px-[1.8rem] mobile:w-[20.8rem] h-[16.6rem] mobile:pt-[2.1rem] mobile:px-[2.7rem];
