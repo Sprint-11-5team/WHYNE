@@ -7,31 +7,22 @@ import Button from "../common/Button";
 import InputItem from "./input-item";
 import Image from "next/image";
 
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
 export default function SigninForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
+  const [emailError, setEmailError] = useState(""); // 이메일 에러 상태 추가
 
   const handleLogin = async () => {
-    // 이메일 형식 검사
-    if (!emailRegex.test(email)) {
-      setEmailError("이메일 혹은 비밀번호를 확인해주세요.");
-      setEmail("");
-      return; // 이메일이 잘못되었으면 로그인 진행하지 않음
-    } else {
-      setEmailError(""); // 이메일 형식이 올바르면 오류 메시지 초기화
-    }
-
     try {
       const response = await loginUser({ email, password });
       localStorage.setItem("accessToken", response.data.token);
       window.location.href = "/"; // 로그인 후 홈으로 리디렉션
     } catch (error) {
-      // 로그인 중 오류가 발생하면 기존의 error 상태는 사용하지 않음
-      setEmailError("이메일 혹은 비밀번호를 확인해주세요.");
-      console.error("로그인 중 오류", error);
+      // error 객체를 콘솔로 출력하여 디버깅 할 수 있도록 처리
+      console.error("로그인 중 오류:", error);
+      // 이메일 혹은 비밀번호가 잘못됐다는 메시지를 설정
+      setEmailError("이메일 혹은 비밀번호를 확인해주세요");
+      setEmail(""); // 이메일 초기화
     }
   };
 
@@ -42,9 +33,13 @@ export default function SigninForm() {
           label="이메일"
           id="email"
           type="email"
-          placeholder={emailError || "이메일 입력"}
+          placeholder={emailError || "이메일 입력"} // 에러가 있으면 에러 메시지, 아니면 기본 placeholder
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          emptyErrorMessage="이메일은 필수 입력입니다."
+          validationRule="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"
+          validationMessage="이메일 형식으로 작성해 주세요."
+          required
         />
         <InputItem
           label="비밀번호"
@@ -53,6 +48,8 @@ export default function SigninForm() {
           placeholder="비밀번호 입력"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          emptyErrorMessage="비밀번호는 필수 입력입니다."
+          required
         />
         <Link href="/signup" aria-label="회원가입으로 이동">
           <span className="text-primary text-[1.6rem] font-medium underline">
@@ -63,7 +60,7 @@ export default function SigninForm() {
           type="submit"
           size="large"
           color="primary"
-          addClassName="text-[1.6rem] font-bold mt-[0.8rem]"
+          addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem]"
           onClick={(e) => {
             e.preventDefault();
             handleLogin();
@@ -75,22 +72,22 @@ export default function SigninForm() {
           type="submit"
           size="large"
           color="white"
-          addClassName="text-[1.6rem] font-bold mt-[0.8rem] flex items-center justify-center"
+          addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem] flex items-center justify-center"
         >
           <Image
             src="/icons/google.svg"
-            alt="kakao 로고"
+            alt="google 로고"
             width={24}
             height={24}
             className="mr-2"
           />
-          Goggle로 시작하기
+          Google로 시작하기
         </Button>
         <Button
           type="submit"
           size="large"
           color="white"
-          addClassName="text-[1.6rem] font-bold mt-[0.8rem] flex items-center justify-center"
+          addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem] flex items-center justify-center"
         >
           <Image
             src="/icons/kakao.svg"
@@ -99,7 +96,7 @@ export default function SigninForm() {
             height={24}
             className="mr-2"
           />
-          kakao로 시작하기
+          Kakao로 시작하기
         </Button>
       </form>
 
