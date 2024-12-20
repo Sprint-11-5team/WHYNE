@@ -13,8 +13,8 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="bg-gray-100 flex-column desktop:pb-[10.9rem] tablet:pb-[7.2rem] mobile:pb-[6.2rem]">
-      <section className="bg-black overflow-hidden rounded-[1.6rem] desktop:w-[114rem] tablet:w-[70.4rem] mobile:w-[34.3rem] desktop:h-[53.5rem] tablet:-[39.4rem] mobile:h-[40.4rem] desktop:mt-[8rem] mobile:mt-[2.4rem] ">
+    <div className="flex-column desktop:pb-[10.9rem] tablet:pb-[7.2rem] mobile:pb-[6.2rem]">
+      <section className="bg-black overflow-hidden rounded-[1.6rem] desktop:w-[114rem] tablet:w-[70.4rem] mobile:w-[34.3rem] desktop:h-[53.5rem] tablet:h-[39.4rem] mobile:h-[40.4rem] desktop:mt-[8rem] mobile:mt-[2.4rem] ">
         <div className="flex-column">
           <div className="flex-column gap-[3.2rem] desktop:mt-[11.2rem] desktop:mb-[5.8rem] tablet:mt-[8rem] tablet:mb-[3.4rem] mobile:mt-[5.6rem] mobile:mb-[10.5rem]">
             <div className="h-auto mobile:w-[8.1rem] tablet:w-[10.2rem]">
