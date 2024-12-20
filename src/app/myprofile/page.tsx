@@ -1,4 +1,4 @@
-import Profile from "@/components/myprofile/Profile";
+import Profile from "@/components/myprofile/profile";
 import ProfileTab from "@/components/myprofile/ProfileTab";
 
 export default function MyProfilePage() {
