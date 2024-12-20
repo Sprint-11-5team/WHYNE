@@ -9,7 +9,7 @@ Content-Type: application/json
 {
   "appSecret": "string",
   "appKey": "string",
-  "provider": "GOOGLE"
+  "provider": "KAKAO"
 }
 
 ### signIn/{provider}
