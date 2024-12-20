@@ -7,6 +7,8 @@ import Button from "../common/Button";
 import InputItem from "./input-item";
 import Image from "next/image";
 
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 export default function SigninForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,7 +16,6 @@ export default function SigninForm() {
 
   const handleLogin = async () => {
     // 이메일 형식 검사
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
       setEmailError("이메일 혹은 비밀번호를 확인해주세요.");
       setEmail("");
@@ -25,7 +26,7 @@ export default function SigninForm() {
 
     try {
       const response = await loginUser({ email, password });
-      localStorage.setItem("authToken", response.data.token);
+      localStorage.setItem("accessToken", response.data.token);
       window.location.href = "/"; // 로그인 후 홈으로 리디렉션
     } catch (error) {
       // 로그인 중 오류가 발생하면 기존의 error 상태는 사용하지 않음
