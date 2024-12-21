@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Modal from "@/components/common/modal-container";
 import AddWine from "@/components/modal-add-wine";
-import DropDownMenu from "@/components/common/dropDownMenu";
+import DropDownMenu from "@/components/common/dropdown-menu";
 
 export default function TestPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,15 +13,18 @@ export default function TestPage() {
   };
 
   const handleEdit = () => {
-    console.log('수정하기');
+    console.log("수정하기");
   };
 
   const handleDelete = () => {
-    console.log('삭제하기');
+    console.log("삭제하기");
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen" style={{ gap: '3.2rem' }}>
+    <div
+      className="flex flex-col items-center justify-center h-screen"
+      style={{ gap: "3.2rem" }}
+    >
       <div>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -35,12 +38,9 @@ export default function TestPage() {
         </Modal>
       </div>
 
-      <div className="flex items-center" style={{ gap: '1.6rem' }}>
+      <div className="flex items-center" style={{ gap: "1.6rem" }}>
         <h1 className="text-[1.6rem]">드롭다운 메뉴 테스트</h1>
-        <DropDownMenu
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
       </div>
     </div>
   );
