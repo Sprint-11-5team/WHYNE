@@ -19,3 +19,15 @@ Content-Type: application/json
 {
   "refreshToken": "string"
 }
+
+###
+
+POST https://winereview-api.vercel.app/10-4/auth/signUp
+Content-Type: application/json
+
+  {
+     "email": "wine@whyne.com",
+     "nickname": "NapaVally",
+     "password": "12341234a",
+     "passwordConfirmation": "12341234a"
+   }
