@@ -75,24 +75,20 @@ export default function InputItem({
         return;
       }
     }
-
     if (maxLengthRule && value.length > maxLengthRule) {
       setError(true);
       setErrorMessage(maxLengthErrorMessage);
       onErrorChange?.(true);
       return;
     }
-
     setError(false);
     setErrorMessage("");
   };
-
   const handlePreventSpace = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === " ") {
       e.preventDefault();
     }
   };
-
   return (
     <div className="gap-[1rem] flex flex-col">
       <label htmlFor={id} className="text-[1.6rem] font-medium">

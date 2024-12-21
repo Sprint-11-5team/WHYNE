@@ -1,6 +1,24 @@
 ### Wine API - GET 요청 (Wine 리스트 조회)
-GET https://winereview-api.vercel.app/10-2/wines?limit=5 HTTP/1.1
+GET https://winereview-api.vercel.app/10-4/wines?limit=5 HTTP/1.1
 Content-Type: application/json
+
+### Wine API - POST 요청 (로그인 요청)
+
+POST https://winereview-api.vercel.app/10-4/auth/signIn HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "example@email.com",
+  "password": "password"
+}
+
+### Wine API - POST 요청 (토큰 갱신 요청)
+POST https://winereview-api.vercel.app/10-4/auth/refresh-token HTTP/1.1
+Content-Type: application/json
+
+{
+  "refreshToken": "string"
+}
 
 ###
 
@@ -8,16 +26,8 @@ POST https://winereview-api.vercel.app/10-4/auth/signUp
 Content-Type: application/json
 
   {
-     "email": "test11-5@whyne.com",
-     "nickname": "testAccount",
-     "password": "12341234",
-     "passwordConfirmation": "12341234"
+     "email": "wine@whyne.com",
+     "nickname": "NapaVally",
+     "password": "12341234a",
+     "passwordConfirmation": "12341234a"
    }
-
-# POST https://winereview-api.vercel.app/10-4/auth/signIn
-# Content-Type: application/json
-
-#   {
-#      "email": "test11-5@whyne.com",
-#      "password": "12341234"
-#    }
