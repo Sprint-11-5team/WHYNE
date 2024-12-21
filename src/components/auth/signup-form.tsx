@@ -23,6 +23,10 @@ interface SignUpResponse {
   user: User;
 }
 
+interface ErrorResponse {
+  message: string;
+}
+
 export default function SignUpForm() {
   const [values, setValues] = useState({
     email: "",
@@ -58,11 +62,6 @@ export default function SignUpForm() {
       return;
     }
 
-    if (values.password !== values.passwordConfirmation) {
-      alert("비밀번호가 일치하지 않습니다.");
-      return;
-    }
-
     const { email, nickname, password, passwordConfirmation } = values;
 
     try {
@@ -81,33 +80,23 @@ export default function SignUpForm() {
       );
 
       const { accessToken, refreshToken } = signInResponse.data;
-      localStorage.setItem("accessToken:", accessToken);
-      // 아래 코드는 클라이언트 측에서 리프레시 토큰을 직접 쿠키에 저장하는 형식이기 때문에, HttpOnly 는 적용 안 됨
-      document.cookie = `refreshToken=${refreshToken}; path=/; HttpOnly; Secure`;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
 
-      router.push("/");
+      router.replace("/");
     } catch (error) {
       const axiosError = error as AxiosError;
       console.error(axiosError.response?.data || axiosError.message);
 
+      const errorData = axiosError.response?.data as ErrorResponse;
+
       alert(
-        "회원가입에 실패했습니다. 입력 정보를 확인해주시고 잠시 후 다시 시도해주세요.",
+        errorData?.message ||
+          axiosError.message ||
+          "회원가입에 실패했습니다. 입력 정보를 확인해주시고 잠시 후 다시 시도해주세요.",
       );
     }
   };
-
-  // useEffect(() => {
-  //   const initializeTokens = async () => {
-  //     try {
-  //       const { data } = await instance.post("/auth/refresh", {});
-  //       accessToken = data.accessToken; // 새로운 액세스 토큰을 메모리에 저장
-  //     } catch (error) {
-  //       console.error("토큰 갱신 실패:", error);
-  //     }
-  //   };
-
-  //   initializeTokens();
-  // }, []);
 
   return (
     <div className="flex flex-col gap-[4rem]">
@@ -173,10 +162,7 @@ export default function SignUpForm() {
           size="large"
           color="primary"
           addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem]"
-          onClick={(e) => {
-            e.preventDefault();
-            handleSignUpButtonClick(e);
-          }}
+          onClick={handleSignUpButtonClick}
         >
           가입하기
         </Button>
