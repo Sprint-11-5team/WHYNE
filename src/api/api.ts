@@ -79,7 +79,7 @@ export const refreshToken = async (data: RefreshTokenRequest) => {
 // 구글/카카오 앱 등록 함수
 export const registerOAuthApp = async (appData: {
   appSecret: string;
-  provider: "GOOGLE" | "KAKAO";
+  provider: "KAKAO";
 }) => {
   try {
     const appKey = process.env.KAKAO_CLIENT_ID;
