@@ -173,7 +173,10 @@ export default function SignUpForm() {
           size="large"
           color="primary"
           addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem]"
-          onClick={handleSignUpButtonClick}
+          onClick={(e) => {
+            e.preventDefault();
+            handleSignUpButtonClick(e);
+          }}
         >
           가입하기
         </Button>
