@@ -1,11 +1,62 @@
 import axios from "axios";
 
+// let accessToken: string | null = null;
+
 // Axios 인스턴스 생성
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
 });
 
 export default instance;
+
+// instance.interceptors.request.use(
+//   (config) => {
+//     if (accessToken) {
+//       config.headers.Authorization = `Bearer ${accessToken}`;
+//     }
+//     return config;
+//   },
+//   (error) => {
+//     console.error("요청 오류:", error);
+//     return Promise.reject(error);
+//   },
+// );
+
+// instance.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   async (error) => {
+//     const originalRequest = error.config;
+
+//     // 401 Unauthorized 상태 처리
+//     if (error.response?.status === 401 && !originalRequest._retry) {
+//       originalRequest._retry = true; // 무한 루프 방지
+
+//       try {
+//         // 리프레시 토큰으로 새로운 액세스 토큰 요청
+//         const { data } = await axios.post(
+//           `${process.env.NEXT_PUBLIC_BASE_URL}/auth/refresh`,
+//           {},
+//           { withCredentials: true }, // 리프레시 토큰은 쿠키에서 가져옴
+//         );
+
+//         // 새로운 액세스 토큰 저장
+//         accessToken = data.accessToken;
+
+//         // 이전 요청에 새로운 토큰 설정 후 재시도
+//         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+//         return instance(originalRequest);
+//       } catch (refreshError) {
+//         console.error("리프레시 토큰 만료 또는 오류:", refreshError);
+//         return Promise.reject(refreshError);
+//       }
+//     }
+
+//     console.error("응답 오류:", error);
+//     return Promise.reject(error);
+//   },
+// );
 
 // 요청 인터셉터
 axios.interceptors.request.use(

@@ -8,6 +8,21 @@ import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import instance from "@/api/api";
 
+interface User {
+  id: number;
+  email: string;
+  nickname: string;
+  teamId: string;
+  updatedAt: string;
+  createdAt: string;
+  image: string | null;
+}
+interface SignUpResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: User;
+}
+
 export default function SignUpForm() {
   const [values, setValues] = useState({
     email: "",
@@ -51,16 +66,25 @@ export default function SignUpForm() {
     const { email, nickname, password, passwordConfirmation } = values;
 
     try {
-      await instance.post("/10-4/auth/signUp", {
+      await instance.post("/auth/signUp", {
         email,
         nickname,
         password,
         passwordConfirmation,
       });
-      await instance.post("/10-4/auth/signIn", {
-        email,
-        password,
-      });
+      const signInResponse = await instance.post<SignUpResponse>(
+        "/auth/signIn",
+        {
+          email,
+          password,
+        },
+      );
+
+      const { accessToken, refreshToken } = signInResponse.data;
+      localStorage.setItem("accessToken:", accessToken);
+      // 아래 코드는 클라이언트 측에서 리프레시 토큰을 직접 쿠키에 저장하는 형식이기 때문에, HttpOnly 는 적용 안 됨
+      document.cookie = `refreshToken=${refreshToken}; path=/; HttpOnly; Secure`;
+
       router.push("/");
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -71,6 +95,19 @@ export default function SignUpForm() {
       );
     }
   };
+
+  // useEffect(() => {
+  //   const initializeTokens = async () => {
+  //     try {
+  //       const { data } = await instance.post("/auth/refresh", {});
+  //       accessToken = data.accessToken; // 새로운 액세스 토큰을 메모리에 저장
+  //     } catch (error) {
+  //       console.error("토큰 갱신 실패:", error);
+  //     }
+  //   };
+
+  //   initializeTokens();
+  // }, []);
 
   return (
     <div className="flex flex-col gap-[4rem]">
