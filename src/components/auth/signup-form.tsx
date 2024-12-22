@@ -71,6 +71,7 @@ export default function SignUpForm() {
         password,
         passwordConfirmation,
       });
+        
       const signInResponse = await instance.post<SignUpResponse>(
         "/auth/signIn",
         {
