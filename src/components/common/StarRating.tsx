@@ -16,7 +16,9 @@ function StarRating({
   size = "default",
 }: StarRatingProps) {
   const [hoverRating, setHoverRating] = useState<number | null>(null);
-  const [currentRating, setCurrentRating] = useState<number>(rating);
+  const [currentRating, setCurrentRating] = useState<number>(
+    Math.round(rating), //초기값 정수로 변환
+  );
 
   const handleStarClick = (newRating: number) => {
     if (isInteractive) {
@@ -39,10 +41,9 @@ function StarRating({
 
   const getStarFillPercentage = (starIndex: number, activeRating: number) => {
     if (starIndex <= activeRating) return 100;
-    if (starIndex === Math.ceil(activeRating)) return (activeRating % 1) * 100;
-    return 0;
+    return 0; //2가지 상태로만 함수 단순화(부분채움 로직제거)
   };
-
+  //d
   const starSize = size === "small" ? 24 : 30;
 
   const renderStars = () => {
