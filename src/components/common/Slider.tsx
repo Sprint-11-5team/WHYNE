@@ -3,7 +3,7 @@
 import React from "react";
 
 export default function Slider({
-  value = 5,
+  value = 50, //기본값 수정
   mode = "interactive",
   onChange,
   width = "200px",
@@ -26,8 +26,8 @@ export default function Slider({
       <input
         type="range"
         min={0}
-        max={10}
-        value={value}
+        max={100} //최대값 수정
+        value={value} //범위 직접 사용 가능
         onChange={handleChange}
         disabled={mode === "readonly"}
         className={`

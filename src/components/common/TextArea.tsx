@@ -4,6 +4,7 @@ import {
   ReactNode,
   MouseEvent,
 } from "react";
+import classNames from "classnames";
 
 type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   label?: string;
@@ -13,7 +14,20 @@ type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
 };
 
 const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ label, errorMessage, onClick, children, ...props }, ref) => {
+  ({ label, errorMessage, onClick, children, className, ...props }, ref) => {
+    const textareaClasses = classNames(
+      "flex w-full flex-shrink-0", // resize-none 제거
+      "items-center rounded-[1.6rem]",
+      {
+        "border-[0.2rem] border-primary": errorMessage,
+        "border-[0.1rem] border-gray-300": !errorMessage,
+      },
+      "bg-white  text-gray-800",
+      "hover:border-[0.2rem] hover:border-gray-800",
+      "focus:border-[0.2rem] focus:border-primary focus:outline-none",
+      className,
+    );
+
     return (
       <div className="inline-flex w-full shrink-0 flex-col items-start gap-[0.3rem] px-[1.2rem]">
         {label && (
@@ -26,16 +40,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         )}
         <textarea
           onClick={onClick}
-          className={`flex w-full flex-shrink-0 resize-none 
-          items-center rounded-[1.6rem] 
-          ${
-            errorMessage
-              ? "border-[0.2rem] border-primary"
-              : "border-[0.1rem] border-gray-300"
-          } 
-          bg-white px-[0.5rem] py-[0.88rem] text-gray-800 
-          focus:border-[0.2rem] focus:border-primary-100 focus:outline-none
-          h-[12rem] min-h-[12rem] max-h-[12rem]`}
+          className={textareaClasses}
           ref={ref}
           rows={4}
           {...props}

@@ -45,7 +45,11 @@ h-[3rem] flex items-center justify-center"
               <Slider
                 value={tasteValues[index]}
                 mode="interactive"
-                onChange={(value) => handleSliderChange(index, value)}
+                onChange={(newValue) => {
+                  const newTasteValues = [...tasteValues];
+                  newTasteValues[index] = newValue;
+                  setTasteValues(newTasteValues);
+                }}
                 width="100%"
                 height="0.4rem"
                 trackStyle={{
