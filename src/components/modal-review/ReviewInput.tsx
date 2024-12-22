@@ -32,17 +32,12 @@ export default function ReviewInput() {
           />
         </div>
       </section>
-      <TextArea
-        id="content"
-        name="content"
-        placeholder="후기를 작성해주세요"
-        style={{
-          marginBottom: "3.2rem",
-          width: "100%",
-          height: "20rem",
-          padding: "2rem",
-        }}
-        onChange={(e) => setContent(e.target.value)}
+      <TextArea 
+        id="content" 
+        name="content" 
+        placeholder="후기를 작성해주세요" 
+        className="mb-[3.2rem] w-full h-[20rem] p-[2rem] text-lg"
+        onChange={(e) => setContent(e.target.value)} 
       />
     </>
   );
