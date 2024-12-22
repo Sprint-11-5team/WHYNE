@@ -16,31 +16,40 @@ export default function Wines() {
         </h2>
         <Card />
       </section>
-      <div className="desktop:block tablet:flex tablet:justify-between tablet:gap-[1.6rem]">
-        <div className="desktop:block mobile:flex tablet:justify-between tablet:flex-row tablet:gap-[2.4rem] mobile:gap-[2rem] mobile:flex-col-reverse">
-          <FilterButton />
-          <SearchBar />
+      <div className="flex flex-col desktop:items-end tablet:items-center">
+        <div className="flex tablet:justify-between desktop:justify-end tablet:gap-[1.6rem] tablet:w-[70.4rem] tablet:flex-row mobile:flex-col">
+          <div className="desktop:justify-end mobile:flex tablet:justify-between tablet:flex-row tablet:gap-[2.4rem] mobile:gap-[2rem] mobile:flex-col-reverse">
+            <FilterButton />
+            <SearchBar />
+          </div>
+          <div className="desktop:hidden">
+            <Button
+              type="button"
+              size="large"
+              color="primary"
+              addClassName="font-bold text-lg text-center rounded-[1.6rem] py-[1.6rem] px-[17.2rem] flex justify-center items-center"
+              /*와인 등록 모달창 띄우기 */
+            >
+              와인 등록하기
+            </Button>
+          </div>
         </div>
-        <div className="desktop:flex desktop:justify-between desktop:gap-[6rem]">
-          <div className="desktop:w-[28.4rem] desktop:h-auto desktop:flex desktop:flex-col desktop:gap-[6rem]">
-            <div className="h-auto w-auto desktop:flex desktop:flex-col gap-[6rem] mobile:hidden">
+        <div className="desktop:flex desktop:gap-[6rem]">
+          <div className="w-[28.4rem] desktop:h-auto desktop:flex desktop:flex-col desktop:gap-[6rem] mobile:hidden">
+            <div className="h-auto w-auto desktop:flex desktop:flex-col gap-[6rem] ">
               <TypesFilter />
               <PriceFilter />
               <RatingFliter />
             </div>
-            <div className="tablet:flex mobile:hidden">
-              <Button
-                type="button"
-                size="large"
-                color="primary"
-                addClassName=" rounded-[1.6rem] py-[1.6rem] px-[17.2rem] flex justify-center items-center"
-                /*와인 등록 모달창 띄우기 */
-              >
-                <div className="font-bold text-lg text-center">
-                  와인 등록하기
-                </div>
-              </Button>
-            </div>
+            <Button
+              type="button"
+              size="large"
+              color="primary"
+              addClassName="font-bold text-lg text-center rounded-[1.6rem] py-[1.6rem] px-[17.2rem] flex justify-center items-center"
+              /*와인 등록 모달창 띄우기 */
+            >
+              와인 등록하기
+            </Button>
           </div>
           <CardList />
         </div>
