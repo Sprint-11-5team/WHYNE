@@ -1,7 +1,11 @@
 import Image from "next/image";
 import search from "../../../public/icons/small_search.svg";
 
-export default function SearchBar() {
+export default function Search() {
+  return <SearchBar />;
+}
+
+function SearchBar() {
   return (
     <>
       <div className="desktop:flex desktop:justify-end ">

@@ -20,12 +20,7 @@ export default function Card() {
             >
               4.8
             </span>
-            <Image
-              /*별점 보여주기*/ width={12}
-              src={star}
-              alt="별점"
-              objectFit="contain"
-            />
+            <Image /*별점 보여주기*/ width={18} src={star} alt="별점" />
             <h3
               /*name*/ className="font-regular text-gray-500 tablet:text-xs-tight mobile:text-[1rem]/[1.4rem]"
             >
@@ -40,7 +35,7 @@ export default function Card() {
             width={40}
             src={sample}
             alt="추천와인"
-            objectFit="contain"
+
             /*image */
           />
           <div className="flex flex-col gap-[0.5rem] tablet:w-[10rem] mobile:w-fill">
@@ -49,12 +44,7 @@ export default function Card() {
             >
               4.8
             </span>
-            <Image
-              /*별점 보여주기*/ width={12}
-              src={star}
-              alt="별점"
-              objectFit="contain"
-            />
+            <Image /*별점 보여주기*/ width={12} src={star} alt="별점" />
             <h3
               /*name*/ className="font-regular text-gray-500 tablet:text-xs-tight mobile:text-[1rem]/[1.4rem]"
             >
@@ -69,7 +59,7 @@ export default function Card() {
             width={40}
             src={sample}
             alt="추천와인"
-            objectFit="contain"
+
             /*image */
           />
           <div className="flex flex-col gap-[0.5rem] tablet:w-[10rem] mobile:w-fill">
@@ -78,12 +68,7 @@ export default function Card() {
             >
               4.8
             </span>
-            <Image
-              /*별점 보여주기*/ width={12}
-              src={star}
-              alt="별점"
-              objectFit="contain"
-            />
+            <Image /*별점 보여주기*/ width={12} src={star} alt="별점" />
             <h3
               /*name*/ className="font-regular text-gray-500 tablet:text-xs-tight mobile:text-[1rem]/[1.4rem]"
             >
@@ -98,7 +83,7 @@ export default function Card() {
             width={40}
             src={sample}
             alt="추천와인"
-            objectFit="contain"
+
             /*image */
           />
           <div className="flex flex-col gap-[0.5rem] tablet:w-[10rem] mobile:w-fill">
@@ -107,12 +92,7 @@ export default function Card() {
             >
               4.8
             </span>
-            <Image
-              /*별점 보여주기*/ width={12}
-              src={star}
-              alt="별점"
-              objectFit="contain"
-            />
+            <Image /*별점 보여주기*/ width={12} src={star} alt="별점" />
             <h3
               /*name*/ className="font-regular text-gray-500 tablet:text-xs-tight mobile:text-[1rem]/[1.4rem]"
             >
