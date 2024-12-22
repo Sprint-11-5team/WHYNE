@@ -553,6 +553,12 @@ template {
   .home-section-sub {
     @apply text-gray-500 font-regular text-[1.2rem]/[1.6rem];
   }
+  .slider-range {
+    @apply absolute w-full h-[0.6rem] rounded-[5rem] bg-primary cursor-pointer;
+  }
+  .slider-thumb {
+    @apply bg-white w-[2rem] h-[2rem] rounded-full border-solid border-[0.1rem] border-gray-300 drop-shadow-[0_0.2rem_2rem_0_rgba(0,0,0,0.4)];
+  }
 }
 
 @layer utilities {
