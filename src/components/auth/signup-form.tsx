@@ -7,21 +7,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import instance from "@/api/api";
-
-interface User {
-  id: number;
-  email: string;
-  nickname: string;
-  teamId: string;
-  updatedAt: string;
-  createdAt: string;
-  image: string | null;
-}
-interface SignUpResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: User;
-}
+import { useAuth } from "@/context/auth-provider";
 
 interface ErrorResponse {
   message: string;
@@ -52,6 +38,8 @@ export default function SignUpForm() {
     setHasError(hasError);
   };
 
+  const { login } = useAuth();
+
   const handleSignUpButtonClick = async (
     e: React.MouseEvent<HTMLButtonElement>,
   ) => {
@@ -71,18 +59,12 @@ export default function SignUpForm() {
         password,
         passwordConfirmation,
       });
-        
-      const signInResponse = await instance.post<SignUpResponse>(
-        "/auth/signIn",
-        {
-          email,
-          password,
-        },
-      );
 
-      const { accessToken, refreshToken } = signInResponse.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
+      await login({ email, password });
+
+      // const { accessToken, refreshToken } = signInResponse.data;
+      // localStorage.setItem("accessToken", accessToken);
+      // localStorage.setItem("refreshToken", refreshToken);
 
       router.replace("/");
     } catch (error) {
@@ -133,7 +115,7 @@ export default function SignUpForm() {
           id="password"
           name="password"
           type="password"
-          placeholder="영문, 숫자 포함 8자 이상" // 특수문자 포함이라고 수정?
+          placeholder="숫자, 영문, 특수문자로 제한"
           emptyErrorMessage="비밀번호는 필수 입력입니다."
           minLengthRule={8}
           validationRule="^([a-z]|[A-Z]|[0-9]|[!@#$%^&*])+$"
