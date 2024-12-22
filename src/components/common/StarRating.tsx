@@ -47,10 +47,10 @@ function StarRating({
 
   const renderStars = () => {
     const stars = [];
-    const effectiveRating = Math.round(hoverRating ?? currentRating); //수정
+    const effectiveRating = hoverRating ?? currentRating;
 
     for (let i = 1; i <= 5; i++) {
-      const isFilled = i <= effectiveRating; //수정
+      const fillPercentage = getStarFillPercentage(i, effectiveRating);
 
       stars.push(
         <Button
