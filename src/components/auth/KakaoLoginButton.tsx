@@ -10,16 +10,13 @@ const KakaoLoginButton = () => {
 
   const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
 
-  const handleKakaoLogin = async (e: React.MouseEvent) => {
-    e.preventDefault(); // 기본 동작인 링크 이동을 방지
-
+  const handleKakaoLogin = async () => {
     try {
       // 카카오 앱 등록을 수행
       const response = await registerOAuthApp("KAKAO"); // 카카오로 앱 등록
       console.log("카카오 OAuth 앱 등록 성공:", response);
 
       // OAuth 앱 등록 후 카카오 로그인 페이지로 리디렉션
-      window.location.href = kakaoLoginUrl;
     } catch (error) {
       console.error("카카오 OAuth 앱 등록 실패:", error);
       alert("카카오 OAuth 앱 등록에 실패했습니다. 다시 시도해주세요.");
