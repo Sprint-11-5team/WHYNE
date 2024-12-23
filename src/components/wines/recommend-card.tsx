@@ -5,7 +5,7 @@ import purpleStar from "../../../public/icons/purple_star.svg";
 
 interface SingleCardData {
   image: string;
-  avgRating?: number;
+  avgRating: number;
   name: string;
 }
 

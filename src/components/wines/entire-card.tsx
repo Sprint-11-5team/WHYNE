@@ -17,7 +17,7 @@ interface SingleCardData {
   price: number;
   avgRating: number;
   reviewCount: number;
-  recentReview?: RecentReview;
+  recentReview?: RecentReview | null;
 }
 
 interface EntireCardProp {
@@ -36,7 +36,8 @@ export default function EntireCard({ data }: EntireCardProp) {
     recentReview = {},
   } = data || {};
 
-  const { content = null } = recentReview;
+  const content =
+    recentReview?.content ?? "아직 리뷰가 없어요. 첫번쨰 리뷰어가 되어주세요!";
 
   return (
     <div className="tablet:mt-[6.2rem] mobile:mt-[3rem] h-auto max-w-[80rem] border-solid border-[0.1rem] border-gray-300 rounded-[1.6rem] shadow-md">
@@ -96,9 +97,7 @@ export default function EntireCard({ data }: EntireCardProp) {
           최신 후기
         </h3>
         <p className="font-regular text-gray-500 tablet:text-lg mobile:text-md">
-          {content
-            ? content
-            : "아직 리뷰가 없어요. 첫번쨰 리뷰어가 되어주세요!"}
+          {content}
         </p>
       </div>
     </div>
