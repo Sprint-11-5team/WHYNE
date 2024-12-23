@@ -8,6 +8,7 @@ import InputItem from "./input-item";
 import Image from "next/image";
 import { useAuth } from "@/context/auth-provider";
 import { useRouter } from "next/navigation";
+import KakaoLoginButton from "./KakaoLoginButton";
 
 export default function SigninForm() {
   const [email, setEmail] = useState("");
@@ -97,21 +98,7 @@ export default function SigninForm() {
           />
           Google로 시작하기
         </Button>
-        <Button
-          type="submit"
-          size="large"
-          color="white"
-          addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem] flex items-center justify-center"
-        >
-          <Image
-            src="/icons/kakao.svg"
-            alt="kakao 로고"
-            width={24}
-            height={24}
-            className="mr-2"
-          />
-          Kakao로 시작하기
-        </Button>
+        <KakaoLoginButton />
       </form>
 
       <p className="flex gap-[1rem] text-gray-500 text-[1.6rem] mx-auto">
