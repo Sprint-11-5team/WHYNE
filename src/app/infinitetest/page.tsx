@@ -120,14 +120,7 @@ const MyPage: React.FC = () => {
 
       {/* 데이터가 더 이상 없을 때 메시지 표시 */}
       {!hasMore && !isFetching && (
-        <div
-          style={{
-            marginTop: "20px",
-            textAlign: "center",
-            fontSize: "18px",
-            color: "#CCCCCC",
-          }}
-        >
+        <div className="mt-2 text-center text-[1.8rem] text-[#CCCCCC]">
           더 이상 데이터가 없습니다.
         </div>
       )}
