@@ -1,71 +1,138 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import InfiniteScroll from "../../components/InfiniteScroll/infiniteScroll"; // InfiniteScroll 컴포넌트 임포트
+import React, { useState, useEffect, useCallback } from "react";
+import InfiniteScroll from "../../components/InfiniteScroll/infiniteScroll";
+import axios, { AxiosInstance } from "axios";
 
-const App: React.FC = () => {
-  const [data, setData] = useState<string[]>([]); // 데이터 상태
-  const [isFetching, setIsFetching] = useState(false); // 데이터 로딩 중 상태
-  const [hasMore, setHasMore] = useState(true); // 더 이상 로드할 데이터 여부
-  const [page, setPage] = useState(1); // 페이지 번호 (페이지 단위로 데이터를 로드)
+interface Data {
+  id: number;
+  name: string;
+  region: string;
+  image: string;
+  price: number;
+  type: string;
+  avgRating: number;
+  reviewCount: number;
+  recentReview: {
+    user: {
+      id: number;
+      nickname: string;
+      image: string;
+    };
+    updatedAt: string;
+    createdAt: string;
+    content: string;
+    aroma: string[];
+    rating: number;
+    id: number;
+  };
+  userId: number;
+}
 
-  // 데이터 로드 함수
-  const loadData = useCallback(() => {
-    if (isFetching || !hasMore) return; // 데이터 로딩 중이거나, 더 이상 로드할 데이터가 없으면 리턴
+const MyPage: React.FC = () => {
+  const [data, setData] = useState<Data[]>([]); // 데이터 상태
+  const [isFetching, setIsFetching] = useState<boolean>(false); // 데이터 로딩 상태
+  const [hasMore, setHasMore] = useState<boolean>(true); // 더 이상 로드할 데이터가 있는지 여부
+  const [cursor, setCursor] = useState<number | null>(null); // cursor 타입을 number | null로 변경
 
-    setIsFetching(true);
+  const axiosInstance: AxiosInstance = axios.create({
+    baseURL: "https://winereview-api.vercel.app/11-5",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-    // 긴 텍스트를 사용하여 데이터 항목 크기 키우기
-    const newData = Array.from(
-      { length: 20 },
-      (_, index) =>
-        `Item ${20 * (page - 1) + index + 1} - This is a much longer piece of content with larger text and more details to make the data items larger and more informative.`,
-    );
+  const loadData = useCallback(
+    async (cursor: number | null) => {
+      if (isFetching || !hasMore) {
+        return; // isFetching이 true거나 hasMore가 false일 때 데이터 요청을 막음
+      }
 
-    // 새로 로드한 데이터 추가
-    setData((prevData) => [...prevData, ...newData]);
+      setIsFetching(true);
 
-    // 데이터가 100개 이상 로드되면 더 이상 데이터가 없다고 설정
-    if (data.length + 20 >= 100) {
-      setHasMore(false);
+      try {
+        const limit = 1;
+        const url = `/wines?limit=${limit}&cursor=${cursor ?? 0}`; // cursor를 숫자형으로 API에 전달
+
+        const response = await axiosInstance.get(url);
+        const result = response.data;
+
+        console.log("API Response:", result); // 응답 데이터 전체 확인
+
+        // 응답 데이터 구조에 맞게 수정
+        const newData = Array.isArray(result.list) ? result.list : []; // result.list로 수정
+        const nextCursor = result.nextCursor; // nextCursor로 수정
+
+        console.log("Data:", newData); // 데이터 확인
+        console.log("Next Cursor:", nextCursor); // 커서 확인
+
+        if (newData.length > 0) {
+          setData((prevData) => [...prevData, ...newData]);
+        }
+
+        setCursor(nextCursor); // 새로운 cursor 값을 숫자형으로 설정
+
+        if (!nextCursor) {
+          setHasMore(false); // 커서가 없으면 더 이상 데이터 없음
+        }
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        setIsFetching(false);
+      }
+    },
+    [axiosInstance, isFetching, hasMore], // 의존성 배열
+  );
+
+  useEffect(() => {
+    if (hasMore) {
+      loadData(cursor); // 첫 번째 로딩 시 cursor 값을 전달
     }
+  }, [cursor, loadData, hasMore]);
 
-    setIsFetching(false); // 로딩 상태 종료
-    setPage((prevPage) => prevPage + 1); // 페이지 번호 증가
-  }, [isFetching, hasMore, page, data]); // 의존성 배열에 정확한 상태를 넣어야 함
+  console.log(data); // 데이터를 콘솔에서 확인
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Infinite Scroll Test</h1>
+      <h1>My Infinite Scroll Page</h1>
       <InfiniteScroll
-        loadData={loadData} // 데이터 로딩 함수 전달
-        isFetching={isFetching} // 로딩 상태 전달
-        hasMore={hasMore} // 더 이상 로드할 데이터가 있는지 여부 전달
+        loadData={loadData}
+        isFetching={isFetching}
+        hasMore={hasMore}
+        cursor={cursor} // cursor 값 전달
       >
-        <ul style={{ padding: 0 }}>
-          {data.map((item, index) => (
-            <li
-              key={index}
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          {data.map((item) => (
+            <div
+              key={item.id}
               style={{
-                padding: "20px", // 패딩을 추가하여 항목 크기 증가
-                marginBottom: "15px", // 항목 사이에 공간 추가
-                border: "1px solid #ddd", // 항목에 경계선 추가
-                borderRadius: "8px", // 둥근 모서리
-                fontSize: "18px", // 폰트 크기 키우기
-                backgroundColor: "#f9f9f9", // 항목 배경 색상
-                lineHeight: "1.6", // 텍스트 간격 증가
+                border: "1px solid #ccc",
+                padding: "100px",
+                backgroundColor: "#CCCCCC",
+                borderRadius: "5px",
               }}
             >
-              {item}
-            </li>
+              <strong>{item.id}</strong>: {item.name}
+            </div>
           ))}
-        </ul>
+        </div>
       </InfiniteScroll>
 
-      {isFetching && <p>Loading...</p>}
-      {!hasMore && <p>No more data to load.</p>}
+      {/* 데이터가 더 이상 없을 때 메시지 표시 */}
+      {!hasMore && !isFetching && (
+        <div
+          style={{
+            marginTop: "20px",
+            textAlign: "center",
+            fontSize: "18px",
+            color: "#CCCCCC",
+          }}
+        >
+          더 이상 데이터가 없습니다.
+        </div>
+      )}
     </div>
   );
 };
 
-export default App;
+export default MyPage;

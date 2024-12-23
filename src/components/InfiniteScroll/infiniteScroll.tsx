@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useCallback } from "react";
 
 interface InfiniteScrollProps {
-  loadData: () => void; // 데이터를 로드하는 함수
-  isFetching: boolean; // 데이터를 불러오는 중인지 여부
-  hasMore: boolean; // 더 이상 로드할 데이터가 있는지 여부
+  loadData: (cursor: number | null) => void; // cursor 타입을 number | null로 변경
+  isFetching: boolean;
+  hasMore: boolean;
+  cursor: number | null; // cursor 타입을 number | null로 변경
   children: React.ReactNode;
 }
 
@@ -11,6 +12,7 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
   loadData,
   isFetching,
   hasMore,
+  cursor,
   children,
 }) => {
   const sensorRef = useRef<HTMLDivElement | null>(null);
@@ -18,9 +20,9 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
   // 데이터를 더 로드하는 함수 (useCallback으로 최적화)
   const handleLoadMore = useCallback(() => {
     if (!isFetching && hasMore) {
-      loadData(); // 데이터 로드
+      loadData(cursor); // cursor를 인자로 전달하여 데이터 로드
     }
-  }, [isFetching, hasMore, loadData]); // isFetching과 hasMore만 의존성으로 설정
+  }, [isFetching, hasMore, loadData, cursor]); // cursor를 의존성 배열에 추가
 
   // IntersectionObserver를 사용하여 스크롤 끝을 감지
   useEffect(() => {
