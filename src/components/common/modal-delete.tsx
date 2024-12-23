@@ -32,12 +32,15 @@ export default function DeleteModal({
     <div className="fixed inset-0 z-10 flex items-center justify-center">
       {/* 배경 레이어 */}
       <div
-        className="fixed inset-0 bg-black opacity-50"
+        className="fixed inset-0 bg-black bg-opacity-50"
         onClick={onCancel} // 배경 클릭 시 닫기
       />
 
       {/* 모달 컨텐츠 */}
-      <div className="rounded-[1.6rem] border-[0.1rem] border-solid border-gray-300 fixed z-20 w-[35rem] max-w-lg overflow-y-auto bg-white pt-[3.2rem] pr-[1.6rem] pb-[2.4rem] pl-[1.6rem] shadow-lg mob:mx-[1rem] mob:w-[calc(100%-2rem)]">
+      <div
+        className="rounded-[1.6rem] border-[0.1rem] border-solid border-gray-300 fixed z-20 bg-white pt-[3.2rem] pr-[1.6rem] pb-[2.4rem] pl-[1.6rem] shadow-lg 
+                      w-[35rem] max-w-lg mob:w-[calc(100%-2rem)] sm:w-[90%] md:w-[50rem]"
+      >
         {/* 타이틀 */}
         <h1 className="m-0 mb-[4rem] text-center text-xl font-bold mob:text-lg">
           정말 삭제하시겠습니까?
