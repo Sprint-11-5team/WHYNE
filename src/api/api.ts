@@ -3,6 +3,9 @@ import axios from "axios";
 // Axios 인스턴스 생성
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export default instance;

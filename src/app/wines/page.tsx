@@ -1,69 +1,116 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import PriceFilter from "@/components/wines/PriceFilter";
-import RatingFliter from "@/components/wines/RatingFilter";
-import TypesFilter from "@/components/wines/TypesFilter";
+import { useState, useCallback, useEffect } from "react";
+import instance from "@/api/api";
+import PriceFilter from "@/components/wines/price-filter";
+import RatingFliter from "@/components/wines/rating-filter";
+import TypesFilter from "@/components/wines/types-filter";
 import Button from "@/components/common/Button";
-import FilterButton from "@/components/wines/FilterButton";
-import SearchBar from "@/components/wines/SearchBar";
-import Card from "@/components/wines/Card";
-import CardList from "@/components/wines/CardList";
+import FilterButton from "@/components/wines/filter-button";
+import Search from "@/components/wines/search";
+import RecommendCard from "@/components/wines/recommend-card";
+import EntireCard from "@/components/wines/entire-card";
 
-const wines = [
-  { id: 1, name: "Red Wine 1", type: "Red", rating: 4.7, price: 50000 },
-  { id: 2, name: "White Wine 1", type: "White", rating: 4.3, price: 700000 },
-  {
-    id: 3,
-    name: "Sparkling Wine 1",
-    type: "Sparkling",
-    rating: 3.9,
-    price: 80000,
-  },
-  { id: 4, name: "Red Wine 2", type: "Red", rating: 3.8, price: 80000 },
-  { id: 5, name: "White Wine 2", type: "White", rating: 2.8, price: 700000 },
-];
+interface WineProps {
+  id: number;
+  image: string;
+  name: string;
+  region: string;
+  price: number;
+  avgRating: number;
+  reviewCount: number;
+  recentReview?: {
+    content?: string | null;
+  };
+}
+
+// 와인 목록을 가져오는 함수 (공통화)
+const fetchData = async (url: string, queryParams: string) => {
+  try {
+    const { data } = await instance.get(`${url}?${queryParams}`);
+    return data;
+  } catch (error) {
+    console.error(`${url} 데이터 업로드 실패:`, error);
+    alert((error as Error).message);
+    return null; // 실패 시 null 반환
+  }
+};
 
 export default function Wines() {
-  const [entireList, setEntierList] = useState(wines);
+  const [recommendList, setRecommendList] = useState<WineProps[]>([]);
+  const [entireList, setEntireList] = useState<WineProps[]>([]); // 필터링된 와인 목록
+  const [filters, setFilters] = useState({
+    limit: 5,
+    type: "",
+    minPrice: 0,
+    maxPrice: 500000,
+    rating: 0,
+    name: "",
+  }); // 필터 상태 관리
+
+  // 필터 값에 따라 쿼리 파라미터 생성
+  const createQueryParams = useCallback(() => {
+    const { type, minPrice, maxPrice, rating, name } = filters;
+    let queryParams = `limit=10`;
+
+    if (type) queryParams += `&type=${type}`;
+    if (minPrice || maxPrice)
+      queryParams += `&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+    if (rating) queryParams += `&rating=${rating}`;
+    if (name) queryParams += `&name=${name}`;
+
+    return queryParams;
+  }, [filters]);
+
+  // 추천 와인 목록 가져오기
+  const fetchRecommendData = useCallback(async () => {
+    const queryParams = "limit=10";
+    console.log("Fetching recommended wines with:", queryParams);
+    const data = await fetchData("/wines/recommended", queryParams);
+    console.log("Fetched recommended data:", data);
+    if (data && Array.isArray(data)) {
+      setRecommendList(data);
+    } else {
+      setRecommendList([]);
+    }
+  }, []);
+
+  // 전체 와인 목록 가져오기
+  const fetchEntireData = useCallback(async () => {
+    const queryParams = createQueryParams(); // 동적으로 필터 값으로 쿼리 파라미터 생성
+    const data = await fetchData("/wines", queryParams);
+    if (data && Array.isArray(data.list)) {
+      setEntireList(data.list);
+    } else {
+      setEntireList([]);
+    }
+  }, [createQueryParams]);
+
+  // 필터 값이 변경될 때마다 데이터 새로 가져오기
+  useEffect(() => {
+    fetchEntireData();
+    fetchRecommendData();
+  }, [filters, fetchEntireData, fetchRecommendData]);
 
   // 검색 필터
-  const handleInputChange = (term: string) => {
-    const filtered = wines.filter((wines) =>
-      wines.name.toLowerCase().includes(term.toLowerCase()),
-    );
-    setEntierList(filtered); // 검색어에 맞는 상품을 필터링
+  const handleInputChange = (name: string) => {
+    setFilters((prev) => ({ ...prev, name }));
   };
 
   // 종류별 필터링 함수
   const handleTypeChange = (type: string) => {
-    const filtered = wines.filter((wines) => wines.type === type); // 종류에 따라 필터링
-    setEntierList(filtered); // 필터링된 데이터 업데이트
+    setFilters((prev) => ({ ...prev, type }));
   };
 
-  const handleRatingChange = (ranges: [number, number][]) => {
-    if (ranges.length === 0) {
-      // 선택된 범위가 없으면 전체 데이터 표시
-      setEntierList(wines);
-      console.log("전체 데이터  표시:", setEntierList);
-      return;
-    }
-
-    // 선택된 범위에 맞는 데이터 필터링
-    const filtered = wines.filter((wines) =>
-      ranges.some(([min, max]) => wines.rating >= min && wines.rating <= max),
-    );
-    setEntierList(filtered);
-    console.log("Filtered wines:", filtered);
+  // 평점 필터링 함수
+  const handleRatingChange = (rating: number) => {
+    setFilters((prev) => ({ ...prev, rating }));
   };
 
   // 가격대 필터링 함수
   const handlePriceChange = useCallback(
     (minPrice: number, maxPrice: number) => {
-      const filtered = wines.filter(
-        (wine) => wine.price >= minPrice && wine.price <= maxPrice,
-      );
-      setEntierList(filtered);
+      setFilters((prev) => ({ ...prev, minPrice, maxPrice }));
     },
     [],
   );
@@ -74,13 +121,23 @@ export default function Wines() {
         <h2 className="font-bold text-gray-800 tablet:text-[2rem]/[2.4rem] mobile:text-[1.8rem]/[2.1rem]">
           이번 달 추천 와인
         </h2>
-        <Card />
+        {recommendList.length > 0 ? (
+          <ul>
+            {recommendList.map((data) => (
+              <li key={data.id}>
+                <RecommendCard data={data} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>와인 추천을 준비중이예요!</p>
+        )}
       </section>
       <div className="flex flex-col desktop:items-end tablet:items-center">
         <div className="flex tablet:justify-between desktop:justify-end tablet:gap-[1.6rem] tablet:w-[70.4rem] tablet:flex-row mobile:flex-col">
-          <div className="desktop:justify-end mobile:flex tablet:justify-between tablet:flex-row tablet:gap-[2.4rem] mobile:gap-[2rem] mobile:flex-col-reverse">
+          <div className="desktop:justify mobile:flex tablet:justify-between tablet:flex-row tablet:gap-[2.4rem] mobile:gap-[2rem] mobile:flex-col-reverse">
             <FilterButton />
-            <SearchBar onChange={handleInputChange} />
+            <Search onChange={handleInputChange} />
           </div>
           <div className="desktop:hidden">
             <Button
@@ -113,12 +170,9 @@ export default function Wines() {
           </div>
           {entireList.length > 0 ? (
             <ul>
-              {entireList.map((wine) => (
-                <li
-                  key={wine.id}
-                  className="tablet:mt-[6.2rem] mobile:mt-[3rem] h-auto max-w-[80rem] border-solid border-[0.1rem] border-gray-300 rounded-[1.6rem] shadow-md"
-                >
-                  <CardList />
+              {entireList.map((data) => (
+                <li key={data.id}>
+                  <EntireCard data={data} />
                 </li>
               ))}
             </ul>

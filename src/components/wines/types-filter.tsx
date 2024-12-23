@@ -5,7 +5,7 @@ interface TypesFilterProps {
 }
 
 export default function TypesFilter({ onChange }: TypesFilterProps) {
-  const wineTypes = ["Red", "White", "Sparkling"];
+  const wineTypes = ["RED", "WHITE", "SPARKLING"];
 
   // 타입 클릭 핸들러
   const handleTypeClick = (type: string) => {
