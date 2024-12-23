@@ -181,8 +181,8 @@ export default function AddWine({ onClose }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <article className="flex-1 px-[1.6rem] py-[2rem] tablet:p-[3.2rem]">
-        <h1 className="text-xl tablet:text-2xl font-bold mb-[2.4rem] tablet:mb-[3.2rem]">
+      <article className="flex-1 px-[2.4rem]">
+        <h1 className="text-xl tablet:text-2xl font-bold mt-[2.4rem] mb-[2.4rem] tablet:mb-[3.2rem]">
           와인 등록
         </h1>
 
