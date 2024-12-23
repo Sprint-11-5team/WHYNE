@@ -37,12 +37,12 @@ function SearchBar({ onChange }: { onChange: (search: string) => void }) {
   }, [searchTerm, onChange]); // searchTerm만 의존성 배열에 추가
   return (
     <>
-      <div className="flex relative gap-[1rem] items-center desktop:w-[76rem] desktop:h-[4.8rem] tablet:w-[39.6rem] tablet:h-[4.8rem] mobile:w-full mobile:h-[3.8rem]">
+      <div className="flex desktop:justify-end relative gap-[1rem] items-center desktop:w-[76rem] desktop:h-[4.8rem] tablet:w-[39.6rem] tablet:h-[4.8rem] mobile:w-full mobile:h-[3.8rem]">
         <Image
           width={20}
           src={search}
           alt="검색하기"
-          className="absolute z-10 tablet:left-[2.5rem] mobile:left-[1.5rem]"
+          className="absolute z-10 desktop:right-[24.5rem] tablet:right-[35rem] mobile:right-[39rem]"
         />
         <label htmlFor="search">
           <input

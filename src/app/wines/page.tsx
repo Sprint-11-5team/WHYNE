@@ -122,7 +122,7 @@ export default function Wines() {
           이번 달 추천 와인
         </h2>
         {recommendList.length > 0 ? (
-          <ul>
+          <ul className="flex tablet:gap-[1.5rem] mobile:gap-[1rem]">
             {recommendList.map((data) => (
               <li key={data.id}>
                 <RecommendCard data={data} />
@@ -135,7 +135,7 @@ export default function Wines() {
       </section>
       <div className="flex flex-col desktop:items-end tablet:items-center">
         <div className="flex tablet:justify-between desktop:justify-end tablet:gap-[1.6rem] tablet:w-[70.4rem] tablet:flex-row mobile:flex-col">
-          <div className="desktop:justify mobile:flex tablet:justify-between tablet:flex-row tablet:gap-[2.4rem] mobile:gap-[2rem] mobile:flex-col-reverse">
+          <div className="mobile:flex tablet:justify-between tablet:flex-row tablet:gap-[2.4rem] mobile:gap-[2rem] mobile:flex-col-reverse">
             <FilterButton />
             <Search onChange={handleInputChange} />
           </div>

@@ -22,7 +22,7 @@ export default function RecommendCard({ data }: RecommendedCardProp) {
 
   return (
     <div className="card-container flex justify-center items-end shadow-mdr tablet:mt-[3rem] mobile:mt-[2rem] tablet:w-[23.2rem] tablet:h-[18.5rem] mobile:w-[19.3rem] mobile:h-[16rem]">
-      <div className="flex tablet:gap-[2.8rem] mobile:gap-[2.5rem] tablet:w-[17.2rem] tablet:h-[16.1rem] mobile:w-[14.3rem]">
+      <div className="flex tablet:gap-[2.8rem] mobile:gap-[2.5rem] tablet:w-[17.2rem] tablet:h-[16.1rem] mobile:w-[14.3rem] mobile:h-[13.6rem]">
         <Image
           width={44}
           height={161}
