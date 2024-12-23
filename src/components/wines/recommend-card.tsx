@@ -15,7 +15,7 @@ interface RecommendedCardProp {
 
 export default function RecommendCard({ data }: RecommendedCardProp) {
   if (!data) {
-    return <div>추천 와인을 고르는 중입니다</div>;
+    return <p>추천 와인을 고르는 중입니다</p>;
   }
 
   const { image = "", avgRating = 0, name = "" } = data || {};

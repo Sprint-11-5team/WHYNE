@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
 import instance from "@/api/api";
 import PriceFilter from "@/components/wines/price-filter";
 import RatingFliter from "@/components/wines/rating-filter";
@@ -10,6 +12,10 @@ import FilterButton from "@/components/wines/filter-button";
 import Search from "@/components/wines/search";
 import RecommendCard from "@/components/wines/recommend-card";
 import EntireCard from "@/components/wines/entire-card";
+import arrowRight from "../../../public/icons/right.svg";
+import "swiper/css";
+import "swiper/css/navigation";
+import Image from "next/image";
 
 interface WineProps {
   id: number;
@@ -122,13 +128,46 @@ export default function Wines() {
           이번 달 추천 와인
         </h2>
         {recommendList.length > 0 ? (
-          <ul className="flex tablet:gap-[1.5rem] mobile:gap-[1rem]">
-            {recommendList.map((data) => (
-              <li key={data.id}>
-                <RecommendCard data={data} />
-              </li>
-            ))}
-          </ul>
+          <div className="relative group w-full">
+            <Swiper
+              modules={[Navigation]}
+              slidesPerView="auto" // 기본 슬라이드 수
+              spaceBetween={40}
+              centeredSlides={false}
+              loop={true}
+              navigation={{
+                nextEl: ".swiper-button-next", // 커스텀 버튼 지정
+              }} // 네비게이션 버튼 추가
+              breakpoints={{
+                // 화면 크기에 따른 슬라이드 수 조정
+                375: {
+                  slidesPerView: 2,
+                },
+                744: {
+                  slidesPerView: 3,
+                },
+                1024: {
+                  slidesPerView: 5,
+                },
+              }}
+              className="w-full swiper-wrapper"
+            >
+              {recommendList.map((data) => (
+                <SwiperSlide key={data.id}>
+                  <RecommendCard data={data} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            {/* 커스텀 네비게이션 버튼 */}
+            <button className="swiper-button-next absolute top-2/3 right-0 transform -translate-y-1/2 bg-gray-200 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Image
+                src={arrowRight}
+                width={24}
+                height={24}
+                alt="추천 와인 더보기"
+              />
+            </button>
+          </div>
         ) : (
           <p>와인 추천을 준비중이예요!</p>
         )}
