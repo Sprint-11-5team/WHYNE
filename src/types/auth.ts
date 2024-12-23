@@ -23,3 +23,8 @@ export interface AuthResponse {
   refreshToken: string;
   user: User;
 }
+
+export interface UpdateMeRequest {
+  nickname?: string;
+  image?: string | null;
+}

@@ -3,11 +3,11 @@
 import Link from "next/link";
 import Button from "../common/Button";
 import InputItem from "./input-item";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import instance from "@/api/api";
 import { useAuth } from "@/context/auth-provider";
+import { useRouter } from "next/navigation";
 
 interface ErrorResponse {
   message: string;
@@ -23,8 +23,6 @@ export default function SignUpForm() {
 
   const [hasError, setHasError] = useState(true);
 
-  const router = useRouter();
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -38,7 +36,9 @@ export default function SignUpForm() {
     setHasError(hasError);
   };
 
-  const { login } = useAuth();
+  const { user, login } = useAuth(false);
+
+  const router = useRouter();
 
   const handleSignUpButtonClick = async (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -61,12 +61,6 @@ export default function SignUpForm() {
       });
 
       await login({ email, password });
-
-      // const { accessToken, refreshToken } = signInResponse.data;
-      // localStorage.setItem("accessToken", accessToken);
-      // localStorage.setItem("refreshToken", refreshToken);
-
-      router.replace("/");
     } catch (error) {
       const axiosError = error as AxiosError;
       console.error(axiosError.response?.data || axiosError.message);
@@ -80,6 +74,12 @@ export default function SignUpForm() {
       );
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, [user, router]);
 
   return (
     <div className="flex flex-col gap-[4rem]">
