@@ -8,7 +8,7 @@ interface PriceFilterProps {
 
 export default function PriceFilter({ onChange }: PriceFilterProps) {
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(1000000);
+  const [maxPrice, setMaxPrice] = useState(500000);
 
   // onChange를 호출하는 핸들러를 useCallback으로 메모화
   const handleFilterChange = useCallback(() => {
@@ -53,15 +53,15 @@ export default function PriceFilter({ onChange }: PriceFilterProps) {
         <div
           className="absolute h-[0.6rem] bg-primary rounded-full"
           style={{
-            left: `${(minPrice / 1000000) * 100}%`,
-            right: `${100 - (maxPrice / 1000000) * 100}%`,
+            left: `${(minPrice / 500000) * 100}%`,
+            right: `${100 - (maxPrice / 500000) * 100}%`,
           }}
         />
         {/* 최소값 손잡이 */}
         <input
           type="range"
           min={0}
-          max={1000000}
+          max={500000}
           step={1000}
           value={minPrice}
           onChange={handleMinChange}
@@ -71,7 +71,7 @@ export default function PriceFilter({ onChange }: PriceFilterProps) {
         <input
           type="range"
           min={0}
-          max={1000000}
+          max={500000}
           step={1000}
           value={maxPrice}
           onChange={handleMaxChange}

@@ -13,13 +13,14 @@ import FilterButton from "@/components/wines/filter-button";
 import Search from "@/components/wines/search";
 import RecommendCard from "@/components/wines/recommend-card";
 import EntireCard from "@/components/wines/entire-card";
+import FilterModal from "@/components/wines/modal/filter-modal";
 import ReviewProvider from "@/provider/usereviewmodals";
 import AddReviewModal from "@/components/modal-review/AddReviewModal";
 import arrowRight from "../../../public/icons/right.svg";
 import "swiper/css";
 import "swiper/css/navigation";
 
-interface WineProps {
+interface Wine {
   id: number;
   image: string;
   name: string;
@@ -45,21 +46,34 @@ const fetchData = async (url: string, queryParams: string) => {
 };
 
 export default function Wines() {
-  const [recommendList, setRecommendList] = useState<WineProps[]>([]);
-  const [entireList, setEntireList] = useState<WineProps[]>([]); // 필터링된 와인 목록
+  const [recommendList, setRecommendList] = useState<Wine[]>([]);
+  const [entireList, setEntireList] = useState<Wine[]>([]); // 필터링된 와인 목록
   const [filters, setFilters] = useState({
     limit: 5,
     type: "",
     minPrice: 0,
     maxPrice: 500000,
     rating: 0,
-    name: "",
   }); // 필터 상태 관리
+  const [search, setSearch] = useState({ name: "" });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 초기화 함수
+  const handleReset = () => {
+    setFilters({
+      limit: 5,
+      type: "",
+      minPrice: 0,
+      maxPrice: 500000,
+      rating: 0,
+    });
+  };
 
   // 필터 값에 따라 쿼리 파라미터 생성
   const createQueryParams = useCallback(() => {
-    const { type, minPrice, maxPrice, rating, name } = filters;
+    const { type, minPrice, maxPrice, rating } = filters;
+    const { name } = search;
     let queryParams = `limit=10`;
 
     if (type) queryParams += `&type=${type}`;
@@ -69,7 +83,7 @@ export default function Wines() {
     if (name) queryParams += `&name=${name}`;
 
     return queryParams;
-  }, [filters]);
+  }, [filters, search]);
 
   // 추천 와인 목록 가져오기
   const fetchRecommendData = useCallback(async () => {
@@ -98,7 +112,7 @@ export default function Wines() {
   // 필터 값이 변경될 때마다 데이터 새로 가져오기
   useEffect(() => {
     fetchEntireData();
-  }, [filters, fetchEntireData]);
+  }, [filters, search, fetchEntireData]);
 
   useEffect(() => {
     fetchRecommendData();
@@ -106,7 +120,7 @@ export default function Wines() {
 
   // 검색 필터
   const handleInputChange = (name: string) => {
-    setFilters((prev) => ({ ...prev, name }));
+    setSearch((prev) => ({ ...prev, name }));
   };
 
   // 종류별 필터링 함수
@@ -129,6 +143,16 @@ export default function Wines() {
 
   const handleModalOpen = () => {
     setIsModalOpen(!isModalOpen);
+  };
+
+  // 모달 상태를 토글하는 함수
+  const handleModalToggle = () => {
+    setIsModalOpen((prev) => !prev); // 이전 상태를 반전시킴
+  };
+
+  const handleFilterApply = () => {
+    console.log("필터 적용:", filters);
+    handleModalToggle(); // 필터 적용 후 모달 닫기
   };
 
   return (
@@ -185,7 +209,18 @@ export default function Wines() {
       <div className="flex flex-col desktop:items-end tablet:items-center">
         <div className="flex tablet:justify-between desktop:justify-end tablet:gap-[1.6rem] tablet:w-[70.4rem] tablet:flex-row mobile:flex-col">
           <div className="mobile:flex tablet:justify-between tablet:flex-row tablet:gap-[2.4rem] mobile:gap-[2rem] mobile:flex-col-reverse">
-            <FilterButton />
+            <FilterButton onClick={handleModalOpen} />
+            {/* 필터 모달 컴포넌트 */}
+            <FilterModal
+              isOpen={isModalOpen}
+              onToggle={handleModalToggle}
+              filters={filters}
+              onFilterApply={handleFilterApply}
+              onFilterReset={handleReset}
+              onTypeChange={handleTypeChange}
+              onPriceChange={handlePriceChange}
+              onRatingChange={handleRatingChange}
+            />
             <Search onChange={handleInputChange} />
           </div>
           <div className="desktop:hidden tablet:static tablet:mt-0 mobile:sticky mobile:mt-[2.5rem]">
