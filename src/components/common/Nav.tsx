@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import logo from "../../../public/icons/white_medium_logo.svg";
-import profile from "../../../public/images/example_profile.svg";
+import profile from "../../../public/images/profile_white.svg";
 
 export default function Nav() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,10 +45,9 @@ export default function Nav() {
               <Image
                 src={profile}
                 alt="프로필 이미지"
-                layout="responsive"
                 objectFit="contain"
-                width={1}
-                height={1}
+                width={45}
+                height={45}
                 className="object-cover"
               />
             </button>
