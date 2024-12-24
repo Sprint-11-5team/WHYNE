@@ -1,22 +1,31 @@
 "use client";
 
-import { useState } from "react";
-import { loginUser } from "../../api/api";
+import { useEffect, useState } from "react";
+// import { loginUser } from "../../api/api";
 import Link from "next/link";
 import Button from "../common/Button";
 import InputItem from "./input-item";
 import Image from "next/image";
+import { useAuth } from "@/context/auth-provider";
+import { useRouter } from "next/navigation";
+import KakaoLoginButton from "./KakaoLoginButton";
 
 export default function SigninForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(""); // 이메일 에러 상태 추가
 
+  const { user, login } = useAuth(false);
+
+  const router = useRouter();
+
   const handleLogin = async () => {
     try {
-      const response = await loginUser({ email, password });
-      localStorage.setItem("accessToken", response.data.token);
-      window.location.href = "/"; // 로그인 후 홈으로 리디렉션
+      await login({ email, password });
+      router.push("/");
+      // const response = await loginUser({ email, password });
+      // localStorage.setItem("accessToken", response.data.token);
+      // window.location.href = "/";
     } catch (error) {
       // error 객체를 콘솔로 출력하여 디버깅 할 수 있도록 처리
       console.error("로그인 중 오류:", error);
@@ -25,6 +34,12 @@ export default function SigninForm() {
       setEmail(""); // 이메일 초기화
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, [user, router]);
 
   return (
     <div className="flex flex-col gap-[4rem]">
@@ -83,21 +98,7 @@ export default function SigninForm() {
           />
           Google로 시작하기
         </Button>
-        <Button
-          type="submit"
-          size="large"
-          color="white"
-          addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem] flex items-center justify-center"
-        >
-          <Image
-            src="/icons/kakao.svg"
-            alt="kakao 로고"
-            width={24}
-            height={24}
-            className="mr-2"
-          />
-          Kakao로 시작하기
-        </Button>
+        <KakaoLoginButton />
       </form>
 
       <p className="flex gap-[1rem] text-gray-500 text-[1.6rem] mx-auto">

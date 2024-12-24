@@ -3,25 +3,11 @@
 import Link from "next/link";
 import Button from "../common/Button";
 import InputItem from "./input-item";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import instance from "@/api/api";
-
-interface User {
-  id: number;
-  email: string;
-  nickname: string;
-  teamId: string;
-  updatedAt: string;
-  createdAt: string;
-  image: string | null;
-}
-interface SignUpResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: User;
-}
+import { useAuth } from "@/context/auth-provider";
+import { useRouter } from "next/navigation";
 
 interface ErrorResponse {
   message: string;
@@ -37,8 +23,6 @@ export default function SignUpForm() {
 
   const [hasError, setHasError] = useState(true);
 
-  const router = useRouter();
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -51,6 +35,10 @@ export default function SignUpForm() {
   const handleErrorChange = (hasError: boolean) => {
     setHasError(hasError);
   };
+
+  const { user, login } = useAuth(false);
+
+  const router = useRouter();
 
   const handleSignUpButtonClick = async (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -71,20 +59,8 @@ export default function SignUpForm() {
         password,
         passwordConfirmation,
       });
-        
-      const signInResponse = await instance.post<SignUpResponse>(
-        "/auth/signIn",
-        {
-          email,
-          password,
-        },
-      );
 
-      const { accessToken, refreshToken } = signInResponse.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-
-      router.replace("/");
+      await login({ email, password });
     } catch (error) {
       const axiosError = error as AxiosError;
       console.error(axiosError.response?.data || axiosError.message);
@@ -99,9 +75,15 @@ export default function SignUpForm() {
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, [user, router]);
+
   return (
     <div className="flex flex-col gap-[4rem]">
-      <form className="gap-[2.4rem] flex flex-col">
+      <form className="flex flex-col gap-[2.4rem] mobile:gap-[1.6rem]">
         <InputItem
           label="이메일"
           id="email"
@@ -133,7 +115,7 @@ export default function SignUpForm() {
           id="password"
           name="password"
           type="password"
-          placeholder="영문, 숫자 포함 8자 이상" // 특수문자 포함이라고 수정?
+          placeholder="숫자, 영문, 특수문자로 제한"
           emptyErrorMessage="비밀번호는 필수 입력입니다."
           minLengthRule={8}
           validationRule="^([a-z]|[A-Z]|[0-9]|[!@#$%^&*])+$"
@@ -162,7 +144,8 @@ export default function SignUpForm() {
           type="submit"
           size="large"
           color="primary"
-          addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem]"
+          addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem]
+          mobile:px-[12.7rem] mobile:py-[1.2rem] mobile:text-[1.4rem] mobile:mt-[3.2rem]"
           onClick={handleSignUpButtonClick}
         >
           가입하기
@@ -171,7 +154,7 @@ export default function SignUpForm() {
       <p className="flex gap-[1rem] text-gray-500 text-[1.6rem] mx-auto">
         계정이 이미 있으신가요?
         <Link href="/signin" aria-label="로그인으로 이동">
-          <span className="text-primary text-[1.6rem] font-medium underline">
+          <span className="text-primary text-[1.6rem] font-medium underline mobile:text-[1.4rem]">
             로그인하기
           </span>
         </Link>
