@@ -25,8 +25,13 @@ export default function Signin() {
           window.location.href = "/"; // 로그인 후 홈으로 리디렉션
         })
         .catch((error) => {
-          console.error("카카오 로그인 오류", error);
-          alert("카카오 로그인에 실패했습니다.");
+          if (error.response) {
+            console.error("Error response", error.response.data);
+            console.error("Error status:", error.response.status);
+          } else {
+            console.error("카카오 로그인 오류", error);
+            alert("카카오 로그인에 실패했습니다.");
+          }
         })
         .finally(() => {
           setIsLoading(false);
