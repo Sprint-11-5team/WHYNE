@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -23,45 +23,32 @@ instance.interceptors.request.use(
   },
 );
 
-// 응답 인터셉터 추가: 401 Unauthorized 오류 처리
+interface CustomAxiosRequestConfig extends AxiosRequestConfig {
+  _retry?: boolean;
+}
+
 instance.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      // 액세스 토큰 만료 시
+  (res) => res,
+  async (error) => {
+    const originalRequest = error.config as CustomAxiosRequestConfig;
+    if (error.response?.status === 401 && !originalRequest._retry) {
       const refreshToken = localStorage.getItem("refreshToken");
-
       if (refreshToken) {
-        try {
-          const refreshResponse = await instance.post("/auth/refresh", {
-            refreshToken,
-          });
-          const newAccessToken = refreshResponse.data.accessToken;
+        const res = await instance.post("/auth/refresh-token", {
+          refreshToken,
+        });
 
-          // 새 액세스 토큰을 로컬 스토리지에 저장
-          localStorage.setItem("accessToken", newAccessToken);
+        const { accessToken } = res.data;
+        localStorage.setItem("accessToken", accessToken);
 
-          // 실패한 요청을 새 액세스 토큰으로 다시 시도
-          const originalConfig = error.config as AxiosRequestConfig;
-          originalConfig.headers = {
-            ...originalConfig.headers,
-            Authorization: `Bearer ${newAccessToken}`,
-          };
-          return instance(originalConfig); // 재시도
-        } catch (refreshError) {
-          // 리프레시 토큰도 만료된 경우 로그아웃 처리
-          console.error("리프레시 토큰 만료", refreshError);
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-          window.location.href = "/signin";
-        }
-      } else {
-        console.error("리프레시 토큰 없음");
-        alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-        window.location.href = "/signin";
+        // originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+        originalRequest._retry = true;
+
+        // 원래의 요청을 새로운 토큰으로 다시 보냄
+        return instance(originalRequest);
       }
     }
+    alert("로그인이 필요합니다.");
 
     return Promise.reject(error);
   },
@@ -108,6 +95,33 @@ export const refreshToken = async (data: RefreshTokenRequest) => {
     return response;
   } catch (error) {
     console.error("토큰 갱신 오류", error);
+    throw error;
+  }
+};
+
+// OAuth 앱 등록 함수
+export const registerOAuthApp = async (provider: string) => {
+  try {
+    // 환경변수에서 appKey를 가져옵니다.
+    const appKey = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID; // 카카오 API 키 (혹은 구글 API 키로 수정 가능)
+
+    if (!appKey) {
+      throw new Error("appKey가 설정되지 않았습니다. 환경변수를 확인해주세요.");
+    }
+
+    // POST요청
+    const data = {
+      appKey, // 카카오 또는 구글 API 키
+      provider, // 'KAKAO' 또는 'GOOGLE'
+    };
+
+    // POST 요청을 보내어 OAuth 앱 등록
+    const response = await instance.post("/oauthApps", data); // 여기서 "/oauthApps" 사용
+
+    // 응답 반환
+    return response;
+  } catch (error) {
+    console.error("OAuth 앱 등록 오류:", error);
     throw error;
   }
 };
