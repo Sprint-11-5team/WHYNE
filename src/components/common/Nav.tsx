@@ -29,6 +29,10 @@ export default function Nav() {
   //   router.push("/");
   // };
 
+  const handleLogoClick = () => {
+    window.location.reload(); // 로고 클릭 시 페이지 새로 고침
+  };
+
   const handleLogout = () => {
     logout();
     setShowMenu(false);
@@ -42,7 +46,7 @@ export default function Nav() {
   return (
     <header className="nav-container flex-between tablet:py-[1.1rem] mobile:py-[1.5rem] tablet:px-[6rem] mobile:px-[2rem] tablet:h-[7rem] mobile:h-[5rem] tablet:mt-[2.4rem] mobile:mt-[1.6rem] mx-auto">
       <nav className="w-full flex-between">
-        <Link href="/">
+        <Link href="/" onClick={handleLogoClick}>
           <Image width={52} height={15} src={logo} alt="와인 로고" />
         </Link>
         {user ? (
