@@ -95,8 +95,11 @@ export default function Wines() {
   // 필터 값이 변경될 때마다 데이터 새로 가져오기
   useEffect(() => {
     fetchEntireData();
+  }, [filters, fetchEntireData]);
+
+  useEffect(() => {
     fetchRecommendData();
-  }, [filters, fetchEntireData, fetchRecommendData]);
+  }, [fetchRecommendData]);
 
   // 검색 필터
   const handleInputChange = (name: string) => {
@@ -132,7 +135,7 @@ export default function Wines() {
             <Swiper
               modules={[Navigation]}
               slidesPerView="auto" // 기본 슬라이드 수
-              spaceBetween={40}
+              spaceBetween={20}
               centeredSlides={false}
               loop={true}
               navigation={{
@@ -141,10 +144,10 @@ export default function Wines() {
               breakpoints={{
                 // 화면 크기에 따른 슬라이드 수 조정
                 375: {
-                  slidesPerView: 2,
+                  slidesPerView: 3,
                 },
                 744: {
-                  slidesPerView: 3,
+                  slidesPerView: 4,
                 },
                 1024: {
                   slidesPerView: 5,
