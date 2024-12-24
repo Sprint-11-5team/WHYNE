@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 
 type ModalProps = {
@@ -44,28 +43,29 @@ function Modal({ isOpen, onClose, children, className = "" }: ModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-50 flex items-end tablet:items-center tablet:justify-center">
       <div
         className="fixed inset-0 bg-black opacity-50 transition-opacity duration-300"
         onClick={onClose}
       />
-
-      <div className="fixed inset-x-0 bottom-0 tablet:inset-y-0 flex items-end tablet:items-center tablet:justify-center">
-        <div
-          className={`
-            relative z-20
-            bg-white 
-            w-full
-            tablet:w-[52.8rem]
-            max-h-[85vh] tablet:max-h-[98vh]
-            rounded-t-[2rem] tablet:rounded-[2rem]
-            overflow-y-auto
-            ${getAnimationClass()}
-            ${className}
-          `}
-        >
-          {children}
-        </div>
+      <div
+        className={`
+          relative z-20
+          bg-white 
+          w-full
+          tablet:max-w-[46rem]
+          h-[90vh]
+          tablet:h-auto
+          tablet:min-h-[50vh]
+          tablet:max-h-[90vh]
+          rounded-t-[2rem] tablet:rounded-[2rem]
+          flex flex-col
+          overflow-hidden
+          ${getAnimationClass()}
+          ${className}
+        `}
+      >
+        <div className="flex flex-col h-full overflow-auto">{children}</div>
       </div>
     </div>
   );
