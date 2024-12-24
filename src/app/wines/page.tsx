@@ -178,12 +178,12 @@ export default function Wines() {
             <FilterButton />
             <Search onChange={handleInputChange} />
           </div>
-          <div className="desktop:hidden">
+          <div className="desktop:hidden tablet:static tablet:mt-0 mobile:sticky mobile:mt-[2.5rem]">
             <Button
               type="button"
               size="large"
               color="primary"
-              addClassName="font-bold text-lg text-center rounded-[1.6rem] py-[1.6rem] px-[17.2rem] flex justify-center items-center"
+              addClassName="font-bold text-lg text-center rounded-[1.6rem] tablet:py-[1.6rem] tablet:px-[6rem] flex justify-center items-center tablet:shadow-none tablet:w-auto mobile:w-[34.3rem] tablet:static tablet:translate-x-0 mobile:fixed mobile:translate-x-1/2 mobile:right-1/2 mobile:bottom-[1.5rem] mobile:p-[1.6rem] mobile:shadow-xl"
               /*와인 등록 모달창 띄우기 */
             >
               와인 등록하기
@@ -192,7 +192,7 @@ export default function Wines() {
         </div>
         <div className="desktop:flex desktop:gap-[6rem]">
           <div className="w-[28.4rem] desktop:h-auto desktop:flex desktop:flex-col desktop:gap-[6rem] mobile:hidden">
-            <div className="h-auto w-auto desktop:flex desktop:flex-col gap-[6rem] ">
+            <div className="h-auto w-auto mt-[5.9rem] desktop:flex desktop:flex-col gap-[6rem] ">
               <TypesFilter onChange={handleTypeChange} />
               <PriceFilter onChange={handlePriceChange} />
               <RatingFliter onChange={handleRatingChange} />
@@ -201,7 +201,7 @@ export default function Wines() {
               type="button"
               size="large"
               color="primary"
-              addClassName="font-bold text-lg text-center rounded-[1.6rem] py-[1.6rem] px-[17.2rem] flex justify-center items-center"
+              addClassName="font-bold text-lg text-center rounded-[1.6rem] p-[1.6rem] flex justify-center items-center"
               /*와인 등록 모달창 띄우기 */
             >
               와인 등록하기

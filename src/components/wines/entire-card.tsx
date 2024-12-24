@@ -40,7 +40,7 @@ export default function EntireCard({ data }: EntireCardProp) {
     recentReview?.content ?? "아직 리뷰가 없어요. 첫번쨰 리뷰어가 되어주세요!";
 
   return (
-    <div className="tablet:mt-[6.2rem] mobile:mt-[3rem] h-auto max-w-[80rem] border-solid border-[0.1rem] border-gray-300 rounded-[1.6rem] shadow-md">
+    <div className="tablet:mt-[6.2rem] mobile:mt-[3rem] h-auto desktop:w-[80rem] tablet:w-[70rem] mobile:w-[34.3rem] border-solid border-[0.1rem] border-gray-300 rounded-[1.6rem] shadow-md">
       <div className="flex desktop:gap-[8rem] tablet:gap-[4.7rem] mobile:gap-[3.6rem] border-b-[0.1rem] border-gray-300 border-solid desktop:pt-[4rem] desktop:pl-[6rem] tablet:pt-[4rem] tablet:pl-[4rem] mobile:pt-[3rem] mobile:pl-[2rem] desktop:pr-[5rem] tablet:pr-[4rem] mobile:pr-[3rem]">
         <Image
           width={60}

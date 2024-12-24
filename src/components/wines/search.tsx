@@ -37,18 +37,18 @@ function SearchBar({ onChange }: { onChange: (search: string) => void }) {
   }, [searchTerm, onChange]); // searchTerm만 의존성 배열에 추가
   return (
     <>
-      <div className="flex desktop:justify-end relative gap-[1rem] items-center desktop:w-[76rem] desktop:h-[4.8rem] tablet:w-[39.6rem] tablet:h-[4.8rem] mobile:w-full mobile:h-[3.8rem]">
+      <div className="flex desktop:justify-end relative gap-[1rem] items-center desktop:w-[80rem] desktop:h-[4.8rem] tablet:w-[39.6rem] tablet:h-[4.8rem] mobile:w-[34.3rem] mobile:h-[3.8rem]">
         <Image
           width={20}
           src={search}
           alt="검색하기"
-          className="absolute z-10 desktop:right-[24.5rem] tablet:right-[35rem] mobile:right-[39rem]"
+          className="absolute z-10 desktop:left-[2.5rem] tablet:right-[35rem] mobile:left-[1.7rem]"
         />
         <label htmlFor="search">
           <input
             type="search"
             placeholder="와인명을 검색해 보세요"
-            className="w-full rounded-[5rem] text-gray-500 border-solid border-[0.1rem] border-gray-300 tablet:h-[4.8rem] mobile:h-[3.8rem] tablet:font-regular mobile:font-medium tablet:text-lg mobile:text-md tablet:pl-[5.5rem] mobile:pl-[4.5rem] py-[1.4rem] tablet:px-[2rem] mobile:px-[1.5rem]"
+            className="w-full rounded-[5rem] text-gray-500 border-solid border-[0.1rem] border-gray-300 desktop:w-[80rem] tablet:w-[39.6rem] mobile:w-[34.3rem] tablet:h-[4.8rem] mobile:h-[3.8rem] tablet:font-regular mobile:font-medium tablet:text-lg mobile:text-md tablet:pl-[5.5rem] mobile:pl-[4.5rem] py-[1.4rem] tablet:px-[2rem] mobile:px-[1.5rem]"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </label>
