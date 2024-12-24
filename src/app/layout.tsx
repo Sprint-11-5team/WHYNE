@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
-// import LandingNav from "@/components/common/Nav";
 import { AuthProvider } from "@/context/auth-provider";
 import ClientWrapper from "@/components/common/nav-wrapper";
 
