@@ -9,28 +9,13 @@ import profile from "../../../public/images/profile_white.svg";
 import { useAuth } from "@/context/auth-provider";
 
 export default function Nav() {
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const router = useRouter();
 
   const { user, logout } = useAuth(false);
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("accessToken");
-  //   if (token) {
-  //     setIsLoggedIn(true);
-  //   }
-  // }, []);
-
-  // const handleLogout = () => {
-  //   localStorage.removeItem("accessToken");
-  //   setIsLoggedIn(false);
-  //   setShowMenu(false);
-  //   router.push("/");
-  // };
-
   const handleLogoClick = () => {
-    window.location.reload(); // 로고 클릭 시 페이지 새로 고침
+    window.location.reload();
   };
 
   const handleLogout = () => {
