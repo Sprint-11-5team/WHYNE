@@ -19,8 +19,8 @@ function Chip({
 }: ChipProps): React.ReactElement {
   const baseClasses = `
     rounded-full 
-    min-h-[2.875rem] tablet:min-h-[4rem]
-    min-w-[4rem] tablet:min-w-[2.875rem]
+    min-h-[2.875rem] tablet:min-h-[4.6rem]
+    min-w-[4rem] tablet:min-w-[6.4rem]
     px-[1.125rem]
     py-[0.625rem]
     gap-[0.625rem]

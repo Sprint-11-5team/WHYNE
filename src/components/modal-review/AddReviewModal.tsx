@@ -3,7 +3,7 @@
 import { useReviewModalStore } from "@/provider/usereviewmodals";
 import { FormEvent } from "react";
 import Button from "@/components/common/Button";
-import Modal from "@/components/common/modal-container";
+import Modalv from "@/components/common/modal-container-review";
 import ReviewInput from "@/components/modal-review/ReviewInput";
 import TagSelector from "@/components/modal-review/TagSelector";
 import TasteSlider from "@/components/modal-review/TasteSlider";
@@ -34,7 +34,7 @@ export default function AddReviewModal({ isOpen, onClick }: ModalProps) {
   };
 
 return (
-    <Modal isOpen={isOpen} onClose={onClick}>
+    <Modalv isOpen={isOpen} onClose={onClick}>
       <div className="w-full h-auto rounded-[1.8rem] bg-white pt-[3.2rem] px-[2.4rem] pb-[2.4rem] tablet:pt-[2.4rem] tablet:px-[2.4rem] tablet:pb-[2.4rem]">
         <section className="flex justify-between items-center">
           <h1 className="text-gray-800 m-0 font-bold text-[2rem] tablet:text-[2.4rem]">
@@ -80,6 +80,6 @@ return (
           </div>
         </form>
       </div>
-    </Modal>
+    </Modalv>
   );
 }

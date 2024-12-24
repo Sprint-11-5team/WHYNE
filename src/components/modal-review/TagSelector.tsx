@@ -37,7 +37,7 @@ export default function TagSelector() {
   ];
 
   return (
-    <div className="flex flex-wrap gap-[0.8rem] tablet:gap-[1rem]">
+    <div className="h-[16.8rem] tablet:h-[21.4rem] flex flex-wrap gap-[0.8rem] tablet:gap-[1rem]">
       {tags.map((tag) => (
         <Chips
           key={tag}

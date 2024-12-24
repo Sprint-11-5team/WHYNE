@@ -8,10 +8,10 @@ import wine from "../../../public/icons/wine.svg";
 
 export default function ReviewInput() {
   const { setContent, setRating, wineName } = useReviewModalStore();
-
+//dd
   return (
     <>
-      <section className="w-full tablet:w-[45.6rem] flex items-center gap-[1rem] mt-[4.8rem] px-[1.2rem]">
+      <section className="w-full flex items-center gap-[1rem] mt-[4.8rem] px-[1.2rem]">
         <div className="relative bg-gray-100 h-[6.7rem] w-[6.7rem] tablet:h-[6.8rem] tablet:w-[6.8rem] rounded-[1rem] p-[0.7rem] flex items-center justify-center">
           <Image
             width={100}
