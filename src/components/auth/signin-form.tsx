@@ -75,7 +75,8 @@ export default function SigninForm() {
           type="submit"
           size="large"
           color="primary"
-          addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem]"
+          addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem]
+          mobile:px-[12.7rem] mobile:py-[1.4rem] mobile:text-[1.4rem] mobile:mt-[3.2rem] mobile:h-[4.8rem]"
           onClick={(e) => {
             e.preventDefault();
             handleLogin();
@@ -87,7 +88,8 @@ export default function SigninForm() {
           type="submit"
           size="large"
           color="white"
-          addClassName="text-[1.6rem] font-bold mt-[0.8rem] rounded-[1.6rem] flex items-center justify-center"
+          addClassName="text-[1.6rem] font-bold mt-[0.2rem] rounded-[1.6rem] flex items-center justify-center
+          mobile:px-[6rem] mobile:py-[1.4rem] mobile:text-[1.4rem] mobile:mt-[0.2rem] mobile:h-[4.8rem] "
         >
           <Image
             src="/icons/google.svg"
@@ -104,7 +106,7 @@ export default function SigninForm() {
       <p className="flex gap-[1rem] text-gray-500 text-[1.6rem] mx-auto">
         계정이 없으신가요?
         <Link href="/signup" aria-label="회원가입으로 이동">
-          <span className="text-primary text-[1.6rem] font-medium underline">
+          <span className="text-primary text-[1.4rem] font-medium underline">
             회원가입 하기
           </span>
         </Link>
