@@ -115,7 +115,7 @@ export default function SignUpForm() {
           id="password"
           name="password"
           type="password"
-          placeholder="숫자, 영문, 특수문자로 제한"
+          placeholder="숫자, 영문, 특수문자만 입력 가능(8자 이상)"
           emptyErrorMessage="비밀번호는 필수 입력입니다."
           minLengthRule={8}
           validationRule="^([a-z]|[A-Z]|[0-9]|[!@#$%^&*])+$"
