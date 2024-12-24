@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import Image from "next/image";
 import instance from "@/api/api";
 import PriceFilter from "@/components/wines/price-filter";
 import RatingFliter from "@/components/wines/rating-filter";
@@ -12,12 +13,11 @@ import FilterButton from "@/components/wines/filter-button";
 import Search from "@/components/wines/search";
 import RecommendCard from "@/components/wines/recommend-card";
 import EntireCard from "@/components/wines/entire-card";
+import ReviewProvider from "@/provider/usereviewmodals";
+import AddReviewModal from "@/components/modal-review/AddReviewModal";
 import arrowRight from "../../../public/icons/right.svg";
 import "swiper/css";
 import "swiper/css/navigation";
-import Image from "next/image";
-import ReviewProvider from "@/provider/usereviewmodals";
-import AddReviewModal from "@/components/modal-review/AddReviewModal";
 
 interface WineProps {
   id: number;
