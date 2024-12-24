@@ -18,7 +18,10 @@ export default function Signin() {
     if (kakaoCode) {
       // 카카오 로그인 후 인가 코드가 존재하면 토큰 요청
       setIsLoading(true);
-      signInWithKakao({ redirectUri: window.location.href, token: kakaoCode })
+      signInWithKakao({
+        redirectUri: "http://localhost:3000/signin",
+        token: kakaoCode,
+      })
         .then((response) => {
           // 토큰을 받아서 로컬 스토리지에 저장
           localStorage.setItem("accessToken", response.data.token);
