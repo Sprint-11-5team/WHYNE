@@ -16,6 +16,8 @@ import arrowRight from "../../../public/icons/right.svg";
 import "swiper/css";
 import "swiper/css/navigation";
 import Image from "next/image";
+import ReviewProvider from "@/provider/usereviewmodals";
+import AddReviewModal from "@/components/modal-review/AddReviewModal";
 
 interface WineProps {
   id: number;
@@ -53,6 +55,7 @@ export default function Wines() {
     rating: 0,
     name: "",
   }); // 필터 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 필터 값에 따라 쿼리 파라미터 생성
   const createQueryParams = useCallback(() => {
@@ -124,6 +127,10 @@ export default function Wines() {
     [],
   );
 
+  const handleModalOpen = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
     <div className="flex flex-column w-auto max-w-[114rem] my-0 mx-auto">
       <section className="w-full max-w-[114rem] tablet:mt-[2rem] mobile:mt-[1.5rem] tablet:mb-[4rem] mobile:mb-[2.4rem] h-auto rounded-[1.6rem] tablet:p-[3rem] mobile:p-[2rem] bg-gray-100">
@@ -182,15 +189,18 @@ export default function Wines() {
             <Search onChange={handleInputChange} />
           </div>
           <div className="desktop:hidden tablet:static tablet:mt-0 mobile:sticky mobile:mt-[2.5rem]">
-            <Button
-              type="button"
-              size="large"
-              color="primary"
-              addClassName="font-bold text-lg text-center rounded-[1.6rem] tablet:py-[1.6rem] tablet:px-[6rem] flex justify-center items-center tablet:shadow-none tablet:w-auto mobile:w-[34.3rem] tablet:static tablet:translate-x-0 mobile:fixed mobile:translate-x-1/2 mobile:right-1/2 mobile:bottom-[1.5rem] mobile:p-[1.6rem] mobile:shadow-xl"
-              /*와인 등록 모달창 띄우기 */
-            >
-              와인 등록하기
-            </Button>
+            <ReviewProvider>
+              <Button
+                type="button"
+                size="large"
+                color="primary"
+                addClassName="font-bold text-lg text-center rounded-[1.6rem] tablet:py-[1.6rem] tablet:px-[6rem] flex justify-center items-center tablet:shadow-none tablet:w-auto mobile:w-[34.3rem] tablet:static tablet:translate-x-0 mobile:fixed mobile:translate-x-1/2 mobile:right-1/2 mobile:bottom-[1.5rem] mobile:p-[1.6rem] mobile:shadow-xl"
+                onClick={handleModalOpen}
+              >
+                와인 등록하기
+              </Button>
+              <AddReviewModal isOpen={isModalOpen} onClick={handleModalOpen} />
+            </ReviewProvider>
           </div>
         </div>
         <div className="desktop:flex desktop:gap-[6rem]">
@@ -200,15 +210,18 @@ export default function Wines() {
               <PriceFilter onChange={handlePriceChange} />
               <RatingFliter onChange={handleRatingChange} />
             </div>
-            <Button
-              type="button"
-              size="large"
-              color="primary"
-              addClassName="font-bold text-lg text-center rounded-[1.6rem] p-[1.6rem] flex justify-center items-center"
-              /*와인 등록 모달창 띄우기 */
-            >
-              와인 등록하기
-            </Button>
+            <ReviewProvider>
+              <Button
+                type="button"
+                size="large"
+                color="primary"
+                addClassName="font-bold text-lg text-center rounded-[1.6rem] p-[1.6rem] flex justify-center items-center"
+                onClick={handleModalOpen}
+              >
+                와인 등록하기
+              </Button>
+              <AddReviewModal isOpen={isModalOpen} onClick={handleModalOpen} />
+            </ReviewProvider>
           </div>
           {entireList.length > 0 ? (
             <ul>
