@@ -1,18 +1,37 @@
-"use client";
-
 import Button from "@/components/common/Button";
-import StarRating from "@/components/common/StarRating";
+import Image from "next/image";
+import defaultStar from "../../../../public/icons/star.svg";
+import purpleStar from "../../../../public/icons/purple_star.svg";
 
-export default function RatingDetails() {
+interface RatingDetailsProps {
+  avgRating?: number;
+  reviewCount?: number;
+}
+
+export default function RatingDetails({
+  avgRating = 0,
+  reviewCount = 0,
+}: RatingDetailsProps) {
   return (
     <div className="flex flex-col aspect-[280/311] w-[28rem] gap-[3rem]">
-      <div>
-        <div className="flex aspect-[218/64]">
-          <h2 className="aspect-[86/64] text-[5.4rem] font-extrabold">4.8</h2>
-          <div className="flex flex-col">
-            <StarRating />
-            <p className="aspect-[90/17] text-gray-500 text-[1.4rem]">
-              5,446개의 후기
+      <div className="flex flex-col gap-[2rem]">
+        <div className="flex gap-[2rem]">
+          <h2 className="text-[5.4rem] font-extrabold">{avgRating}</h2>
+          <div className="flex flex-col gap-[0.5rem]">
+            <div className="flex">
+              {[...Array(5)].map((_, index) => (
+                <Image
+                  key={index}
+                  width={24}
+                  height={24}
+                  src={index < Math.round(avgRating) ? purpleStar : defaultStar} // 별점에 따라 채운 별 or 빈 별
+                  alt={`별 ${index + 1}`}
+                  className="w-[2.4rem] h-[2.4rem]"
+                />
+              ))}
+            </div>
+            <p className="text-gray-500 text-[1.4rem]">
+              {reviewCount}개의 후기
             </p>
           </div>
         </div>
