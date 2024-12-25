@@ -44,30 +44,28 @@ function Modal({ isOpen, onClose, children, className = "" }: ModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end tablet:items-center tablet:justify-center">
+    <div className="fixed h-auto inset-0 z-50 flex tablet:items-center tablet:justify-center">
       <div
-        className="fixed inset-0 bg-black opacity-50 transition-opacity duration-300"
+        className="fixed flex h-auto inset-0 bg-black opacity-50 transition-opacity duration-300"
         onClick={onClose}
       />
 
       <div
         className={`
-          flex flex-col h-auto
+          flex flex-col
           relative z-20
           bg-white 
-          w-full
-          mobile:h-auto
-          overflow-auto
-          m-auto
+          w-auto
+          tablet:h-auto
+          my-0
+          mx-auto
           ${getAnimationClass()}
           ${className}
         `}
       >
-        {/* <div className="flex flex-col h-full overflow-auto my-0 mx-auto"> */}
         {children}
       </div>
     </div>
-    // </div>
   );
 }
 
