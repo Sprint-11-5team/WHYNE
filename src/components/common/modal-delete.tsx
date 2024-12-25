@@ -2,17 +2,18 @@
 
 import { useEffect } from "react";
 import Button from "@/components/common/Button";
+import {deleteWine} from '@/api/wine.api';
 
 type DeleteModalProps = {
   isOpen: boolean;
-  onCancel: () => void; // 배경 클릭 또는 취소 버튼 동작
-  onConfirm: () => void; // 삭제 버튼 동작
+  onCancel: () => void;
+  id: number;  // id prop 추가
 };
 
 export default function DeleteModal({
   isOpen,
   onCancel,
-  onConfirm,
+  id,
 }: DeleteModalProps) {
   useEffect(() => {
     if (isOpen) {
@@ -25,6 +26,19 @@ export default function DeleteModal({
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  // 삭제 로직 추가
+  const handleDeleteWine = async () => {
+    try {
+      console.log(id);
+      await deleteWine({id});
+      alert('와인이 삭제되었습니다.');
+      onCancel(); 
+    } catch (error) {
+      console.error('와인 삭제 오류:', error);
+      alert('와인 삭제에 실패했습니다.');
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -52,7 +66,8 @@ export default function DeleteModal({
             type="button"
             size="medium"
             color="white"
-            addClassName="!text-gray-500 text-[1.6rem] rounded-[1rem] font-bold flex items-center justify-center min-h-[5rem] tablet:min-h-[5.4rem]"            onClick={onCancel}
+            addClassName="!text-gray-500 text-[1.6rem] rounded-[1rem] font-bold flex items-center justify-center min-h-[5rem] tablet:min-h-[5.4rem]"            
+            onClick={onCancel}
             style={{ flexGrow: "1" }}
           >
             취소
@@ -64,7 +79,7 @@ export default function DeleteModal({
             color="primary"
             addClassName="text-white text-[1.6rem] rounded-[1rem] font-bold flex items-center justify-center min-h-[5rem] tablet:min-h-[5.4rem]"
             style={{ flexGrow: "1" }}
-            onClick={onConfirm}
+            onClick={handleDeleteWine}
           >
             삭제하기
           </Button>
