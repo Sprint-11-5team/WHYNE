@@ -36,7 +36,7 @@ export default function SignUpForm() {
     setHasError(hasError);
   };
 
-  const { user, login } = useAuth(false);
+  const { user, login } = useAuth();
 
   const router = useRouter();
 
@@ -151,7 +151,7 @@ export default function SignUpForm() {
           가입하기
         </Button>
       </form>
-      <p className="flex gap-[1rem] text-gray-500 text-[1.6rem] mx-auto">
+      <p className="flex gap-[1rem] text-gray-500 text-[1.4rem] mx-auto">
         계정이 이미 있으신가요?
         <Link href="/signin" aria-label="로그인으로 이동">
           <span className="text-primary text-[1.6rem] font-medium underline mobile:text-[1.4rem]">
