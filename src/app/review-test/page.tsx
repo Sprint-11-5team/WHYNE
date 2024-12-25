@@ -14,9 +14,10 @@ function Test() {
   const handleReviewClick = () => {
     setIsReviewOpen(!isReviewOpen);
   };
+  
 
   const wineDetail = {
-    id: 1,
+    id: 1264,
     name: "테스트 와인"
   };
 

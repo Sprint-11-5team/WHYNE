@@ -40,6 +40,8 @@ export type ReviewModalProps = {
   onUpdate?: (data: ReviewResponse) => void;  // any를 구체적인 타입으로 변경
 };
 
+
+
 export default function ReviewModal({
   isOpen,
   onClick,
@@ -58,6 +60,7 @@ export default function ReviewModal({
   const { mutate: updateReview } = useUpdateReview();
   const { mutate: addReview } = useAddReview();
 
+  
   const {
     rating,
     content,
@@ -71,39 +74,39 @@ export default function ReviewModal({
     setSelectedTags,
   } = useReviewModalStore();
 
-  useEffect(() => {
-    if (isOpen && mode === 'edit' && reviewId && refetchReview) {
-      refetchReview(); // 모달이 열릴 때 데이터를 다시 불러옴
-    } else {
-      resetReview();
-    }
+// 데이터 fetch
+useEffect(() => {
+  if (isOpen && mode === 'edit' && reviewId && refetchReview) {
+    refetchReview();
+  } else {
+    resetReview();
+  }
+}, [isOpen, mode, reviewId, refetchReview, resetReview]);
 
-    if (mode === 'edit' && serverReviewData && !isReviewLoading) {
-      setId(serverReviewData.id);
-      setContent(serverReviewData.content);
-      setRating(serverReviewData.rating);
-      setTasteValues([
-        serverReviewData.lightBold,
-        serverReviewData.smoothTannic,
-        serverReviewData.drySweet,
-        serverReviewData.softAcidic,
-      ]);
-      setSelectedTags(serverReviewData.aroma);
-    }
-  }, [
-    mode,
-    setId,
-    setContent,
-    setRating,
-    setTasteValues,
-    setSelectedTags,
-    resetReview,
-    serverReviewData,
-    isOpen,
-    isReviewLoading,
-    refetchReview,
-    reviewId,
-  ]);
+// 데이터 설정
+useEffect(() => {
+  if (mode === 'edit' && serverReviewData && !isReviewLoading) {
+    setId(serverReviewData.id);
+    setContent(serverReviewData.content);
+    setRating(serverReviewData.rating);
+    setTasteValues([
+      serverReviewData.lightBold,
+      serverReviewData.smoothTannic,
+      serverReviewData.drySweet,
+      serverReviewData.softAcidic,
+    ]);
+    setSelectedTags(serverReviewData.aroma);
+  }
+}, [
+  mode, 
+  serverReviewData, 
+  isReviewLoading,
+  setId,
+  setContent,
+  setRating,
+  setTasteValues,
+  setSelectedTags
+]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

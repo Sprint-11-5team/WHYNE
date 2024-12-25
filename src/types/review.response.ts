@@ -1,5 +1,5 @@
  
-import { Aroma } from "@/types/aroma";
+import { Aroma } from "@/types/tasting";
 
 // 리뷰 작성자 정보
 export type ReviewUser = {
