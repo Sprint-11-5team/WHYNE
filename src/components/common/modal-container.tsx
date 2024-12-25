@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 
 type ModalProps = {
@@ -49,7 +48,6 @@ function Modal({ isOpen, onClose, children, className = "" }: ModalProps) {
         className="fixed inset-0 bg-black opacity-50 transition-opacity duration-300"
         onClick={onClose}
       />
-
       <div
         className={`
           relative z-20
