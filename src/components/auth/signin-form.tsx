@@ -32,6 +32,8 @@ export default function SigninForm() {
       // 이메일 혹은 비밀번호가 잘못됐다는 메시지를 설정
       setEmailError("이메일 혹은 비밀번호를 확인해주세요");
       setEmail(""); // 이메일 초기화
+
+      alert("아이디 또는 비밀번호가 틀립니다.");
     }
   };
 
@@ -67,7 +69,7 @@ export default function SigninForm() {
           required
         />
         <Link href="/signup" aria-label="회원가입으로 이동">
-          <span className="text-primary text-[1.6rem] font-medium underline">
+          <span className="text-primary text-[1.4rem] font-medium underline">
             비밀번호를 잊으셨나요?
           </span>
         </Link>
