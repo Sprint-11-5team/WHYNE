@@ -2,18 +2,20 @@
 
 import { useEffect } from "react";
 import Button from "@/components/common/Button";
-import {deleteWine} from '@/api/wine.api';
+import {deleteWine, deleteReview} from '@/api/wine.api';
 
 type DeleteModalProps = {
   isOpen: boolean;
   onCancel: () => void;
-  id: number;  // id prop 추가
+  id: number;
+  type: 'wine' | 'review';  // 타입만 추가
 };
 
 export default function DeleteModal({
   isOpen,
   onCancel,
   id,
+  type
 }: DeleteModalProps) {
   useEffect(() => {
     if (isOpen) {
@@ -27,18 +29,22 @@ export default function DeleteModal({
     };
   }, [isOpen]);
 
-  // 삭제 로직 추가
-  const handleDeleteWine = async () => {
+  const handleDelete = async () => {
     try {
-      console.log(id);
-      await deleteWine({id});
-      alert('와인이 삭제되었습니다.');
-      onCancel(); 
+      if (type === 'wine') {
+        await deleteWine({ id });
+        alert('와인이 삭제되었습니다.');
+      } else {
+        await deleteReview({ id });
+        alert('리뷰가 삭제되었습니다.');
+      }
+      onCancel();
     } catch (error) {
-      console.error('와인 삭제 오류:', error);
-      alert('와인 삭제에 실패했습니다.');
+      console.error(`${type} 삭제 오류:`, error);
+      alert(`${type === 'wine' ? '와인' : '리뷰'} 삭제에 실패했습니다.`);
     }
   };
+
 
   if (!isOpen) return null;
 
@@ -79,7 +85,7 @@ export default function DeleteModal({
             color="primary"
             addClassName="text-white text-[1.6rem] rounded-[1rem] font-bold flex items-center justify-center min-h-[5rem] tablet:min-h-[5.4rem]"
             style={{ flexGrow: "1" }}
-            onClick={handleDeleteWine}
+            onClick={handleDelete}
           >
             삭제하기
           </Button>
@@ -88,3 +94,13 @@ export default function DeleteModal({
     </div>
   );
 }
+
+/*
+페이지에서 사용예시
+<DeleteModal 
+  isOpen={isDeleteModalOpen}
+  onCancel={() => setIsDeleteModalOpen(false)}
+  id={id}
+  type="wine"  // 또는 "review"
+/>
+*/
