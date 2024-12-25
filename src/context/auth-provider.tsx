@@ -117,9 +117,6 @@ export function useAuth(required?: boolean) {
 
   useEffect(() => {
     if (required && !context.user && !context.isPending) {
-      console.log(required);
-      console.log(context.user);
-      console.log(context.isPending);
       alert("로그인이 필요합니다.");
       router.push("/signin");
     }
