@@ -8,11 +8,13 @@ type ReviewState = {
   wineId: number;
   wineName: string;
   rating: number;
+  id: number | undefined;  // id 타입 정의
   setContent: (content: string) => void;
   setSelectedTags: (tags: string[]) => void;
   setTasteValues: (values: number[]) => void;
   setWineId: (id: number) => void;
   setRating: (rating: number) => void;
+  setId: (id: number) => void;  // setId 추가
   resetReview: () => void;
 };
 
@@ -30,11 +32,14 @@ const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
   const [wineId, setWineId] = useState(TestWineDetail.id);
   const [wineName] = useState(TestWineDetail.name);
   const [rating, setRating] = useState(0);
+  const [id, setId] = useState<number | undefined>(undefined);  // id state 추가
 
   const resetReview = () => {
     setContent("");
     setSelectedTags([]);
     setTasteValues([50, 50, 50, 50]);
+    setRating(0);
+    setId(undefined);  // id도 리셋
   };
 
   const value = {
@@ -44,11 +49,13 @@ const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
     wineId,
     wineName,
     rating,
+    id,  // id 추가
     setContent,
     setSelectedTags,
     setTasteValues,
     setWineId,
     setRating,
+    setId,  // setId 추가
     resetReview,
   };
 
