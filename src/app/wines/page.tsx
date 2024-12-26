@@ -19,6 +19,7 @@ import AddWine from "@/components/common/modal-add-wine";
 import arrowRight from "../../../public/icons/right.svg";
 import "swiper/css";
 import "swiper/css/navigation";
+import InfiniteScroll from "@/components/InfiniteScroll/infiniteScroll"; // 무한스크롤 추가
 
 interface Wine {
   id: number;
@@ -49,22 +50,22 @@ export default function Wines() {
   const [recommendList, setRecommendList] = useState<Wine[]>([]);
   const [entireList, setEntireList] = useState<Wine[]>([]); // 필터링된 와인 목록
   const [filters, setFilters] = useState({
-    limit: 5,
+    limit: 10,
     type: "",
     minPrice: 0,
     maxPrice: 500000,
     rating: 0,
   }); // 필터 상태 관리
   const [search, setSearch] = useState({ name: "" });
-
+  const [cursor, setCursor] = useState<number | null>(0); // cursor 상태 추가
+  const [hasMore, setHasMore] = useState<boolean>(true); // 더 많은 데이터가 있는지 여부
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-
   const [isAddWineModalOpen, setIsAddWineModalOpen] = useState(false);
 
   // 초기화 함수
   const handleReset = () => {
     setFilters({
-      limit: 5,
+      limit: 10,
       type: "",
       minPrice: 0,
       maxPrice: 500000,
@@ -100,20 +101,40 @@ export default function Wines() {
     }
   }, []);
 
-  // 전체 와인 목록 가져오기
-  const fetchEntireData = useCallback(async () => {
-    const queryParams = createQueryParams(); // 동적으로 필터 값으로 쿼리 파라미터 생성
-    const data = await fetchData("/wines", queryParams);
-    if (data && Array.isArray(data.list)) {
-      setEntireList(data.list);
-    } else {
-      setEntireList([]);
-    }
-  }, [createQueryParams]);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
+
+  // 전체 와인 목록 가져오기 (무한스크롤을 위한 데이터 로딩)
+  const fetchEntireData = useCallback(
+    async (cursor: number | null) => {
+      if (isFetching || !hasMore) {
+        return; // isFetching이 true일 때는 더 이상 데이터를 요청하지 않도록 막음
+      }
+
+      setIsFetching(true); // 데이터 로딩 시작
+      console.log("Fetching wines with cursor:", cursor);
+
+      let queryParams = createQueryParams(); // queryParams를 let으로 선언
+      if (cursor !== null) {
+        queryParams += `&cursor=${cursor}`; // 커서를 추가하여 요청
+      }
+      const data = await fetchData("/wines", queryParams);
+      if (data && Array.isArray(data.list)) {
+        setEntireList((prev) => [...prev, ...data.list]); // 기존 목록에 새 데이터 추가
+        setCursor(data.nextCursor); // 새로운 커서 업데이트
+        if (!data.nextCursor) {
+          setHasMore(false); // 더 이상 데이터가 없으면 hasMore를 false로 설정
+        }
+      } else {
+        setEntireList([]);
+      }
+      setIsFetching(false);
+    },
+    [createQueryParams, isFetching, hasMore],
+  );
 
   // 필터 값이 변경될 때마다 데이터 새로 가져오기
   useEffect(() => {
-    fetchEntireData();
+    fetchEntireData(0); // 처음에는 커서를 0으로 시작
   }, [filters, search, fetchEntireData]);
 
   useEffect(() => {
@@ -194,7 +215,7 @@ export default function Wines() {
               className="w-full swiper-wrapper"
             >
               {recommendList.map((data) => (
-                <SwiperSlide key={data.id}>
+                <SwiperSlide key={`recommend-${data.id}`}>
                   <RecommendCard data={data} />
                 </SwiperSlide>
               ))}
@@ -213,6 +234,7 @@ export default function Wines() {
           <p>와인 추천을 준비중이예요!</p>
         )}
       </section>
+
       <div className="flex flex-col desktop:items-end tablet:items-center">
         <div className="flex tablet:justify-between desktop:justify-end tablet:gap-[1.6rem] tablet:w-[70.4rem] tablet:flex-row mobile:flex-col">
           <div className="mobile:flex tablet:justify-between tablet:flex-row tablet:gap-[2.4rem] mobile:gap-[2rem] mobile:flex-col-reverse">
@@ -265,19 +287,28 @@ export default function Wines() {
               <AddWine onClose={handleAddWineModalOpen} />
             </Modal>
           </div>
-          {entireList.length > 0 ? (
-            <ul>
-              {entireList.map((data) => (
-                <li key={data.id}>
-                  <EntireCard data={data} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-600">
-              일치하는 와인이 없습니다. 다음에 다시 시도해주세요.
-            </p>
-          )}
+          <InfiniteScroll
+            loadData={async () => {
+              console.log("Loading more wines..."); // 무한 스크롤에서 데이터를 더 불러오기 시작할 때 콘솔 찍기
+              await fetchEntireData(cursor); // fetchEntireData를 호출하여 데이터를 로드
+              console.log("Data loaded, current cursor:", cursor); // 데이터가 로드된 후 커서 상태 콘솔 찍기
+            }}
+            isFetching={isFetching}
+            hasMore={hasMore}
+            cursor={cursor}
+          >
+            {entireList.length > 0 ? (
+              <ul>
+                {entireList.map((data, index) => (
+                  <li key={`entire-${data.id}-${cursor}-${index}`}>
+                    <EntireCard data={data} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>와인 목록을 불러오는 중입니다...</p>
+            )}
+          </InfiniteScroll>
         </div>
       </div>
     </div>
