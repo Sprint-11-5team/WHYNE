@@ -15,6 +15,7 @@ import instance from "@/api/api";
 import RatingDetails from "./rating-details";
 import DetailNoReview from "./detail-no-review";
 import DeleteModal from "@/components/common/modal-delete";
+// import ReviewModal from "@/components/modal-review/modal-review-edit";
 
 interface Review {
   id: number;
@@ -67,7 +68,7 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
   const [isExpand, setIsExpand] = useState<Record<number, boolean>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  // const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null);
 
   async function toggleLike(reviewId: number, isLiked: boolean) {
@@ -133,10 +134,10 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
     setIsDeleteModalOpen(false);
   }
 
-  function openEditModal(review: Review) {
-    setSelectedReviewId(review.id);
-    setIsEditModalOpen(true);
-  }
+  // function openEditModal(review: Review) {
+  //   setSelectedReviewId(review.id);
+  //   setIsEditModalOpen(true);
+  // }
 
   return (
     <div>
@@ -191,7 +192,7 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
                         <div className=" z-10">
                           <DropDownMenu
                             onDelete={() => openDeleteModal(review.id)}
-                            onEdit={() => openEditModal(review)}
+                            // onEdit={() => openEditModal(review)}
                           >
                             <div className="relative desktop:w-[3.8rem] desktop:h-[3.8rem] tablet:w-[3.8rem] tablet:h-[3.8rem] mobile:w-[3.2rem] mobile:h-[3.2rem]">
                               <Image
