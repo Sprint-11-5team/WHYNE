@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AddWine from "@/components/common/modal-add-wine";
+import AddWine from "@/components/modal-wine/modal-add-wine";
 import DropDownMenu from "@/components/common/dropdown-menu";
 
 export default function TestPage() {

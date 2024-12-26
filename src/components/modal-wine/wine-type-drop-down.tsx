@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { WineType } from "@/types/tasting";
-import Input from "@/components/common/input";
+import Input from "@/components/modal-wine/input";
 
 interface WineTypeDropdownProps {
   value: WineType;
@@ -20,9 +20,9 @@ const WineTypeDropdown: React.FC<WineTypeDropdownProps> = ({
   const [localError, setLocalError] = useState<string | undefined>(error);
 
   const options = [
-    { value: WineType.Red, label: "Red" },
-    { value: WineType.White, label: "White" },
-    { value: WineType.Sparkling, label: "Sparkling" },
+    { value: WineType.RED, label: "Red" },
+    { value: WineType.WHITE, label: "White" },
+    { value: WineType.SPARKLING, label: "Sparkling" },
   ];
 
   const ArrowIcon = ({ isUp }: { isUp?: boolean }) => (
