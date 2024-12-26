@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAuth(required: boolean) {
+export function useAuth(required?: boolean) {
   const context = useContext(AuthContext);
   const router = useRouter();
 
@@ -115,6 +115,7 @@ export function useAuth(required: boolean) {
 
   useEffect(() => {
     if (required && !context.user && !context.isPending) {
+      alert("로그인이 필요합니다.");
       router.push("/signin");
     }
   }, [context.user, context.isPending, router, required]);
