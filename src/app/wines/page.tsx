@@ -95,18 +95,20 @@ export default function Wines() {
     setIsLoading(true);
     const queryParams = createQueryParams();
     const data = await fetchData("/wines", queryParams);
+
     if (data && Array.isArray(data.list)) {
       // 대소문자 관계없이 검색
       const filteredData = data.list.filter(
         (wine: Wine) =>
           wine.name.toLowerCase().includes(search.name.toLowerCase()), // 대소문자 무시
       );
-
+      console.log("filteredData", filteredData);
       setEntireList(filteredData);
     } else {
       setEntireList([]);
     }
     setIsLoading(false);
+    console.log("대소문자 확인", data.list);
   }, [createQueryParams, search.name]);
 
   // 필터 값이 변경될 때마다 데이터 새로 가져오기
