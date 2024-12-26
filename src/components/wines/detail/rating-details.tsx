@@ -95,9 +95,9 @@ export default function RatingDetails({ id }: WineID) {
           ].map((ratings, index) => (
             <div
               key={index}
-              className="flex items-center justify-center gap-[1.5rem]"
+              className="w-[33rem] flex items-center justify-center"
             >
-              <p className="text-center text-[1.6rem] text-gray-500 leading-[2.4rem]">
+              <p className="text-center text-[1.6rem] text-gray-500 leading-[2.4rem] mr-[1.5rem]">
                 {ratings.label}
               </p>
               <div className="flex flex-shrink-0 h-[1.9rem] justify-center items-center">
