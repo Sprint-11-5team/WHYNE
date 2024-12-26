@@ -61,6 +61,8 @@ export default function Wines() {
   const [hasMore, setHasMore] = useState<boolean>(true); // 더 많은 데이터가 있는지 여부
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isAddWineModalOpen, setIsAddWineModalOpen] = useState(false);
+  const [initialLoad, setInitialLoad] = useState<boolean>(true);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   // 초기화 함수
   const handleReset = () => {
@@ -74,19 +76,26 @@ export default function Wines() {
   };
 
   // 필터 값에 따라 쿼리 파라미터 생성
-  const createQueryParams = useCallback(() => {
-    const { type, minPrice, maxPrice, rating } = filters;
-    const { name } = search;
-    let queryParams = `limit=10`;
+  const createQueryParams = useCallback(
+    (cursor: number | null) => {
+      const { type, minPrice, maxPrice, rating } = filters;
+      const { name } = search;
+      let queryParams = `limit=10`;
 
-    if (type) queryParams += `&type=${type}`;
-    if (minPrice || maxPrice)
-      queryParams += `&minPrice=${minPrice}&maxPrice=${maxPrice}`;
-    if (rating) queryParams += `&rating=${rating}`;
-    if (name) queryParams += `&name=${name}`;
+      if (type) queryParams += `&type=${type}`;
+      if (minPrice || maxPrice)
+        queryParams += `&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+      if (rating) queryParams += `&rating=${rating}`;
+      if (name) queryParams += `&name=${name}`;
 
-    return queryParams;
-  }, [filters, search]);
+      if (cursor !== null) {
+        queryParams += `&cursor=${cursor}`; // 커서를 추가하여 요청
+      }
+
+      return queryParams;
+    },
+    [filters, search],
+  );
 
   // 추천 와인 목록 가져오기
   const fetchRecommendData = useCallback(async () => {
@@ -101,9 +110,6 @@ export default function Wines() {
     }
   }, []);
 
-  const [isFetching, setIsFetching] = useState<boolean>(false);
-
-  // 전체 와인 목록 가져오기 (무한스크롤을 위한 데이터 로딩)
   const fetchEntireData = useCallback(
     async (cursor: number | null) => {
       if (isFetching || !hasMore) {
@@ -113,24 +119,39 @@ export default function Wines() {
       setIsFetching(true); // 데이터 로딩 시작
       console.log("Fetching wines with cursor:", cursor);
 
-      let queryParams = createQueryParams(); // queryParams를 let으로 선언
-      if (cursor !== null) {
-        queryParams += `&cursor=${cursor}`; // 커서를 추가하여 요청
-      }
-      const data = await fetchData("/wines", queryParams);
-      if (data && Array.isArray(data.list)) {
-        setEntireList((prev) => [...prev, ...data.list]); // 기존 목록에 새 데이터 추가
-        setCursor(data.nextCursor); // 새로운 커서 업데이트
-        if (!data.nextCursor) {
-          setHasMore(false); // 더 이상 데이터가 없으면 hasMore를 false로 설정
+      // createQueryParams 함수로 기본 쿼리 파라미터 생성
+      const queryParams = createQueryParams(cursor);
+
+      // 커서 값이 존재하면 쿼리 파라미터에 추가
+
+      try {
+        const data = await fetchData("/wines", queryParams); // fetchData()로 데이터 요청
+
+        if (data && Array.isArray(data.list)) {
+          setEntireList((prev) => [...prev, ...data.list]); // 기존 목록에 새 데이터 추가
+          setCursor(data.nextCursor); // 새로운 커서 업데이트
+
+          if (!data.nextCursor) {
+            setHasMore(false); // 커서가 없으면 더 이상 데이터가 없으므로 hasMore를 false로 설정
+          }
+        } else {
+          setEntireList([]); // 데이터가 없으면 기존 목록을 초기화
         }
-      } else {
-        setEntireList([]);
+      } catch (error) {
+        console.error("Error fetching data:", error); // 에러 처리
+      } finally {
+        setIsFetching(false); // 데이터 로딩 끝
+        setInitialLoad(false); // 첫 번째 로딩 후 초기 로딩 상태 false로 변경
       }
-      setIsFetching(false);
     },
-    [createQueryParams, isFetching, hasMore],
+    [createQueryParams, isFetching, hasMore], // 의존성 배열
   );
+
+  useEffect(() => {
+    if (initialLoad) {
+      fetchEntireData(cursor); // 첫 번째 로딩 시 cursor 값을 전달
+    }
+  }, [cursor, fetchEntireData, hasMore, initialLoad]);
 
   // 필터 값이 변경될 때마다 데이터 새로 가져오기
   useEffect(() => {
