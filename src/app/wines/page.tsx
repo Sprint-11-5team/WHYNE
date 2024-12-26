@@ -5,6 +5,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import Image from "next/image";
 import instance from "@/api/api";
+import { removeEmptyField } from "./util";
+import {
+  WineParam,
+  Filters,
+  WineListType,
+  WineType,
+} from "@/components/wines/wine";
 import PriceFilter from "@/components/wines/price-filter";
 import RatingFliter from "@/components/wines/rating-filter";
 import TypesFilter from "@/components/wines/types-filter";
@@ -19,14 +26,35 @@ import AddWine from "@/components/common/modal-add-wine";
 import arrowRight from "../../../public/icons/right.svg";
 import "swiper/css";
 import "swiper/css/navigation";
-import { Filters } from "@/components/wines/wine";
-import { Wine } from "@/components/wines/wine";
+
+const InitialFilters: Filters = {
+  limit: 10,
+  type: "",
+  minPrice: 0,
+  maxPrice: 500000,
+  rating: 0,
+};
 
 // 와인 목록을 가져오는 함수 (공통화)
-const fetchData = async (url: string, queryParams: string) => {
+const fetchData = async (
+  url: string,
+  { limit = 10, cursor, type, minPrice, maxPrice, rating, name }: WineParam,
+): Promise<WineListType | null> => {
+  const param = removeEmptyField({
+    limit,
+    cursor,
+    type,
+    minPrice,
+    maxPrice,
+    rating,
+    name,
+  });
+
   try {
-    const { data } = await instance.get(`${url}?${queryParams}`);
-    return data;
+    const response = await instance.get(`${url}`, {
+      params: param,
+    });
+    return response.data;
   } catch (error) {
     console.error(`${url} 데이터 업로드 실패:`, error);
     alert((error as Error).message);
@@ -35,113 +63,78 @@ const fetchData = async (url: string, queryParams: string) => {
 };
 
 export default function Wines() {
-  const [recommendList, setRecommendList] = useState<Wine[]>([]);
-  const [entireList, setEntireList] = useState<Wine[]>([]); // 필터링된 와인 목록
+  const [recommendList, setRecommendList] = useState<WineType[]>([]);
+  const [entireList, setEntireList] = useState<WineListType>({
+    list: [],
+    nextCursor: 0,
+    totalCount: 0,
+  }); // 전체 와인 목록
   const [isLoading, setIsLoading] = useState<boolean>(false); // 로딩 상태 추가
-  const [filters, setFilters] = useState<Filters>({
-    limit: 5,
-    type: "",
-    minPrice: 0,
-    maxPrice: 500000,
-    rating: 0,
-  }); // 필터 상태 관리
-  const [search, setSearch] = useState({ name: "" });
+
+  const [filters, setFilters] = useState<Filters>(InitialFilters);
 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-
   const [isAddWineModalOpen, setIsAddWineModalOpen] = useState(false);
 
-  // 초기화 함수
   const handleReset = () => {
-    setFilters({
-      limit: 5,
-      type: "",
-      minPrice: 0,
-      maxPrice: 500000,
-      rating: 0,
-    });
+    setFilters(InitialFilters);
   };
-
-  // 필터 값에 따라 쿼리 파라미터 생성
-  const createQueryParams = useCallback(() => {
-    const { type, minPrice, maxPrice, rating } = filters;
-    const { name } = search;
-    let queryParams = `limit=10`;
-
-    if (type) queryParams += `&type=${type}`;
-    if (minPrice || maxPrice)
-      queryParams += `&minPrice=${minPrice}&maxPrice=${maxPrice}`;
-    if (rating) queryParams += `&rating=${rating}`;
-    if (name) queryParams += `&name=${name}`;
-
-    return queryParams;
-  }, [filters, search]);
 
   // 추천 와인 목록 가져오기
   const fetchRecommendData = useCallback(async () => {
-    const queryParams = "limit=10";
-    console.log("Fetching recommended wines with:", queryParams);
-    const data = await fetchData("/wines/recommended", queryParams);
-    console.log("Fetched recommended data:", data);
-    if (data && Array.isArray(data)) {
-      setRecommendList(data);
-    } else {
-      setRecommendList([]);
-    }
+    console.log("Fetching recommended wines with:", { limit: 10 });
+    const response = await fetchData("/wines/recommended", { limit: 10 });
+    console.log("Fetched recommended data:", response);
+    if (response === null) return;
+    setRecommendList(response);
+    console.log("Fetched recommended data setState:", response);
   }, []);
 
-  // 전체 와인 목록 가져오기
-  const fetchEntireData = useCallback(async () => {
-    setIsLoading(true);
-    const queryParams = createQueryParams();
-    const data = await fetchData("/wines", queryParams);
-
-    if (data && Array.isArray(data.list)) {
-      // 대소문자 관계없이 검색
-      const filteredData = data.list.filter(
-        (wine: Wine) =>
-          wine.name.toLowerCase().includes(search.name.toLowerCase()), // 대소문자 무시
-      );
-      console.log("filteredData", filteredData);
-      setEntireList(filteredData);
-    } else {
-      setEntireList([]);
-    }
-    setIsLoading(false);
-    console.log("대소문자 확인", data.list);
-  }, [createQueryParams, search.name]);
-
   // 필터 값이 변경될 때마다 데이터 새로 가져오기
-  useEffect(() => {
-    fetchEntireData();
-  }, [filters, search, fetchEntireData]);
+  // useEffect(() => {
+  // fetchEntireData();
+  // }, [filters, search, fetchEntireData]);
 
   useEffect(() => {
     fetchRecommendData();
   }, [fetchRecommendData]);
 
+  useEffect(() => {
+    const fetchDataAsync = async () => {
+      const response = await fetchData("/wines", { limit: 10 });
+      console.log(response);
+      if (response === null) return;
+      setEntireList(response);
+    };
+    fetchDataAsync();
+  }, [entireList.nextCursor]);
+
   // 검색 필터
-  const handleInputChange = (name: string) => {
-    setSearch((prev) => ({ ...prev, name }));
+  const handleInputChange = async (name: string) => {
+    setFilters((prev) => ({ ...prev, name }));
+    const data = await fetchData("/wines", { limit: 10, name });
+    if (data === null) return;
+    setEntireList((print) => ({ ...print, list: data.list }));
   };
 
-  // 종류별 필터링 함수
-  const handleTypeChange = (type: string) => {
-    setFilters((prev) => ({ ...prev, type }));
+  const handleFilterChange = (
+    filterType: "type" | "rating" | "price",
+    value: Filters,
+  ) => {
+    setFilters((prev) => {
+      switch (filterType) {
+        case "type":
+          return { ...prev, type: value.type };
+        case "rating":
+          return { ...prev, rating: value.rating };
+        case "price":
+          const { minPrice, maxPrice } = value; // 가격은 객체로 받음
+          return { ...prev, minPrice, maxPrice };
+        default:
+          return prev; // 알 수 없는 필터 타입은 변경하지 않음
+      }
+    });
   };
-
-  // 평점 필터링 함수
-  const handleRatingChange = (rating: number) => {
-    setFilters((prev) => ({ ...prev, rating }));
-  };
-
-  // 가격대 필터링 함수
-  const handlePriceChange = useCallback(
-    (minPrice: number, maxPrice: number) => {
-      setFilters((prev) => ({ ...prev, minPrice, maxPrice }));
-    },
-    [],
-  );
 
   // 각각의 핸들러 함수도 분리
   const handleFilterModalOpen = () => {
@@ -224,9 +217,9 @@ export default function Wines() {
               filters={filters}
               onFilterApply={handleFilterApply}
               onFilterReset={handleReset}
-              onTypeChange={handleTypeChange}
-              onPriceChange={handlePriceChange}
-              onRatingChange={handleRatingChange}
+              onTypeChange={() => handleFilterChange("type", filters)}
+              onPriceChange={() => handleFilterChange("price", filters)}
+              onRatingChange={() => handleFilterChange("rating", filters)}
             />
             <Search onChange={handleInputChange} />
           </div>
@@ -248,9 +241,11 @@ export default function Wines() {
         <div className="desktop:flex desktop:gap-[6rem]">
           <div className="w-[28.4rem] desktop:h-auto desktop:flex desktop:flex-col desktop:gap-[6rem] mobile:hidden">
             <div className="h-auto w-auto mt-[5.9rem] desktop:flex desktop:flex-col gap-[6rem] ">
-              <TypesFilter onChange={handleTypeChange} />
+              <TypesFilter
+                onChange={() => handleFilterChange("type", filters)}
+              />
               <PriceFilter
-                onChange={handlePriceChange}
+                onChange={() => handleFilterChange("price", filters)}
                 filters={{
                   minPrice: filters.minPrice,
                   maxPrice: filters.maxPrice,
@@ -258,7 +253,7 @@ export default function Wines() {
                 resetValues={{ minPrice: 0, maxPrice: 500000 }}
               />
               <RatingFliter
-                onChange={handleRatingChange}
+                onChange={() => handleFilterChange("rating", filters)}
                 filters={{ rating: filters.rating }} // filters 객체에서 rating 값만 넘겨줌
                 resetRating={0}
               />
@@ -278,9 +273,9 @@ export default function Wines() {
           </div>
           {isLoading ? (
             <p className="text-gray-600">와인을 준비중입니다...</p> // 로딩 중 문구 표시
-          ) : entireList.length > 0 ? (
+          ) : entireList.list.length > 0 ? (
             <ul>
-              {entireList.map((data) => (
+              {entireList.list.map((data) => (
                 <li key={data.id}>
                   <EntireCard data={data} />
                 </li>
