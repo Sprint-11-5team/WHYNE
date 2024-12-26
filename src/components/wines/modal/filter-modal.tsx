@@ -84,7 +84,7 @@ export default function FilterModal({
             color="secondary"
             type="reset"
             onClick={handleReset}
-            addClassName="w-[9.6rem] h-[5.4rem] py-[1rem] px-[1.6rem] font-bold text-bold text-lg text-center"
+            addClassName="w-[9.6rem] h-[5.4rem] py-[1rem] px-[1.6rem] font-bold text-lg text-center flex items-center justify-center"
           >
             초기화
           </Button>
@@ -93,7 +93,7 @@ export default function FilterModal({
             color="primary"
             type="submit"
             onClick={onFilterApply}
-            addClassName="w-[21rem] h-[5.4rem] py-[1rem] px-[1.6rem] font-bold text-bold text-lg"
+            addClassName="w-[21rem] h-[5.4rem] py-[1rem] px-[1.6rem] font-bold text-lg flex items-center justify-center"
           >
             필터 적용하기
           </Button>
