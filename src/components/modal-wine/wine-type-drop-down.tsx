@@ -28,16 +28,19 @@ const WineTypeDropdown: React.FC<WineTypeDropdownProps> = ({
   const ArrowIcon = ({ isUp }: { isUp?: boolean }) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="1.75rem"
-      height="1.75rem"
+      className="w-6 h-6"
       viewBox="0 0 24 24"
-      fill="#7E57C2"
+      fill="none"
+      stroke="#7E57C2"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       style={{
-        transform: isUp ? "rotate(180deg)" : "rotate(0deg)",
         transition: "transform 0.2s ease",
+        transform: `rotate(${isUp ? 180 : 0}deg)`
       }}
     >
-      <path d="M7 10l5 5 5-5z" />
+      <path d="M7 9l5 5 5-5" />
     </svg>
   );
 
@@ -79,44 +82,42 @@ const WineTypeDropdown: React.FC<WineTypeDropdownProps> = ({
       ? "와인 타입을 선택해주세요."
       : localError;
 
-  return (
-    <div className="relative">
-      <div className="relative" onClick={handleDropdownClick}>
-        <Input
-          value={selectedLabel}
-          placeholder="와인 종류 선택"
-          readOnly
-          error={displayError}
-          className="pr-[3.5rem]"
-        />
-        <div className="absolute right-[1rem] top-1/2 transform -translate-y-1/2">
-          <ArrowIcon isUp={isOpen} />
-        </div>
-      </div>
-
-      {isOpen && (
-        <div className="absolute items-center right-0 mt-[0.8rem] w-full h-[15.6rem] border-solid border-[0.1rem] border-gray-300 rounded-[1.4rem] flex flex-col p-[0.4rem] bg-white z-50">
-          {options.map((option) => (
-            <div
-              key={option.value}
-              onClick={() => handleSelection(option.value)}
-              className={`
-          w-full h-[5.2rem] text-[1.6rem] font-medium leading-[3rem] flex items-center px-[2rem] text-gray-800 
-          rounded-[1.2rem]
-          ${
-            value === option.value
-              ? "bg-[#f1edfc] text-primary"
-              : "hover:bg-[#f1edfc] hover:text-primary"
-          }
-        `}
-            >
-              {option.label}
+      return (
+        <div className="relative">
+          <div className="relative" onClick={handleDropdownClick}>  {/* 여기에 onClick 추가 */}
+            <Input
+              value={selectedLabel}
+              placeholder="와인 종류 선택"
+              readOnly
+              error={displayError}
+              className="pr-[3.5rem]"
+            />
+            <div className="absolute right-[1rem] top-[1.4rem] pointer-events-none">
+              <ArrowIcon isUp={isOpen} />
             </div>
-          ))}
+          </div>
+      
+          {isOpen && (
+            <div className="absolute items-center right-0 mt-[0.8rem] w-full h-[15.6rem] border-solid border-[0.1rem] border-gray-300 rounded-[1.4rem] flex flex-col p-[0.4rem] bg-white z-50">
+              {options.map((option) => (
+                <div
+                  key={option.value}
+                  onClick={() => handleSelection(option.value)}
+                  className={`
+                    w-full h-[5.2rem] text-[1.6rem] font-medium leading-[3rem] flex items-center px-[2rem] text-gray-800 
+                    rounded-[1.2rem]
+                    ${value === option.value
+                      ? "bg-[#f1edfc] text-primary"
+                      : "hover:bg-[#f1edfc] hover:text-primary"
+                    }
+                  `}
+                >
+                  {option.label}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      )}
-    </div>
-  );
-};
-
+      );
+    }
 export default WineTypeDropdown;
