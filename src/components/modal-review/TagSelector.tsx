@@ -2,6 +2,7 @@
 
 import { useReviewModalStore } from "@/provider/usereviewmodals";
 import Chips from "@/components/common/Chips";
+import { useEffect } from "react";
 
 interface TagSelctorProps {
   selectedTags: string[];
@@ -9,6 +10,10 @@ interface TagSelctorProps {
 
 export default function TagSelector({ selectedTags }: TagSelctorProps) {
   const { setSelectedTags } = useReviewModalStore();
+
+  useEffect(() => {
+    setSelectedTags(selectedTags);
+  }, [selectedTags, setSelectedTags]);
 
   const handleTagClick = (tag: string) => {
     if (selectedTags.includes(tag)) {

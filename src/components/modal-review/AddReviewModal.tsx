@@ -14,7 +14,9 @@ import { Aroma, mapTagToAroma } from "../wines/detail/detail-wine-tag";
 type ModalProps = {
   isOpen: boolean;
   onClick: () => void;
+  onEdit: () => void;
   id: string;
+  reviewId: number;
   isEditing?: boolean;
   initialData?: {
     rating: number;
@@ -28,6 +30,7 @@ export default function AddReviewModal({
   isOpen,
   onClick,
   id,
+  reviewId,
   isEditing = false,
   initialData,
 }: ModalProps) {
@@ -46,7 +49,7 @@ export default function AddReviewModal({
         content: initialData.content,
         selectedTags: initialData.selectedTags,
         tasteValues: initialData.tasteValues,
-        wineId: Number(id),
+        // wineId: Number(id),
         rating: initialData.rating,
       });
       console.log(initialData);
@@ -56,7 +59,7 @@ export default function AddReviewModal({
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const wineId = Number(id);
+    // const wineId = Number(id);
 
     const formData = {
       rating,
@@ -68,12 +71,12 @@ export default function AddReviewModal({
         .map(mapTagToAroma)
         .filter((tag): tag is Aroma => tag !== undefined),
       content,
-      wineId,
+      // wineId,
     };
 
     try {
       const res: AxiosResponse = isEditing
-        ? await instance.patch(`/reviews/${id}`, formData)
+        ? await instance.patch(`/reviews/${reviewId}`, formData)
         : await instance.post("/reviews", formData);
 
       if (res.status === 200) {
@@ -88,8 +91,8 @@ export default function AddReviewModal({
     } catch (error) {
       console.error("리뷰 제출 중 오류 발생:", error);
     } finally {
-      resetReview();
       onClick();
+      resetReview();
     }
   };
 

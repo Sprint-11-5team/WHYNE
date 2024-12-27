@@ -244,6 +244,8 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
                                 isOpen={isModalOpen}
                                 onClick={() => setIsModalOpen(false)}
                                 id={wineid}
+                                reviewId={selectedReviewId!}
+                                onEdit={() => handleEdit(review.id)}
                                 isEditing={isEditing}
                                 initialData={initialData || undefined}
                               />
