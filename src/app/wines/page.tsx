@@ -117,17 +117,17 @@ export default function Wines() {
     setIsAddWineModalOpen(!isAddWineModalOpen);
   };
 
-  const handleReset = async () => {
-    const response = await fetchData("/wines", InitialFilters); // 초기 필터값으로 API 호출
-    if (response) setEntireList(response); // 초기 상태로 데이터 설정
-  };
+  // const handleReset = async () => {
+  //   const response = await fetchData("/wines", InitialFilters); // 초기 필터값으로 API 호출
+  //   if (response) setEntireList(response); // 초기 상태로 데이터 설정
+  // };
 
   // 모달 상태를 토글하는 함수
-  const handleModalToggle = useCallback(() => {
+  const handleModalToggle = () => {
     setIsFilterModalOpen((prev) => !prev); // 상태 반전
-  }, []);
+  };
 
-  const fetchFilteredData = useCallback(async (filters = InitialFilters) => {
+  const fetchFilteredData = async (filters = InitialFilters) => {
     setIsLoading(true);
     try {
       const response = await fetchData("/wines", filters);
@@ -137,7 +137,7 @@ export default function Wines() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
   console.log("와인 페이지");
 
@@ -201,10 +201,12 @@ export default function Wines() {
               isOpen={isFilterModalOpen}
               onToggle={handleFilterModalOpen}
               onFilterApply={(filters) => {
-                fetchFilteredData({ ...InitialFilters, ...filters }); // 필터값으로 데이터 요청
+                fetchFilteredData({ ...InitialFilters, ...filters });
                 handleModalToggle(); // 모달 닫기
               }}
-              onFilterReset={handleReset}
+              onFilterReset={() => {
+                fetchFilteredData(InitialFilters); // 초기 필터로 API 호출
+              }}
               onTypeChange={(type) => console.log({ type })}
               onPriceChange={(minPrice, maxPrice) =>
                 console.log({ minPrice, maxPrice })
