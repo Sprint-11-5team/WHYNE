@@ -104,10 +104,10 @@ export default function MyReviewCard({ review }: { review: Review }) {
   // }
 
   return (
-    <div className="desktop:w-[80rem] tablet:w-full mobile:w-full min-h-[20.2rem] border-solid border-[0.1rem] bg-white rounded-[1.6rem] border-gray-300 p-[2.4rem_4rem]">
+    <div className="desktop:w-[80rem] desktop:p-[2.4rem_4rem] tablet:w-full tablet:p-[2.4rem_4rem] mobile:w-full mobile:p-[1.6rem_2rem] min-h-[20.2rem] border-solid border-[0.1rem] bg-white rounded-[1.6rem] border-gray-300 ">
       <div className="flex justify-between items-center">
         <div className="flex items-center">
-          <div className="desktop:w-[8rem] desktop:h-[4.2rem] tablet:w-[8rem] tablet:h-[3.8rem] mobile:w-[6rem] mobile:h-[3.2rem] mr-[1.5rem] rounded-[1.2rem] p-[0.8rem_1.5rem] bg-[#f1edfc] flex items-center">
+          <div className="desktop:w-[8rem] desktop:h-[4.2rem] desktop:p-[0.8rem_1.5rem] tablet:w-[8rem] tablet:h-[3.8rem] tablet:p-[0.8rem_1.5rem] mobile:w-[6rem] mobile:h-[3.2rem] mobile:p-[0.8rem_1rem] mr-[1.5rem] rounded-[1.2rem]  bg-[#f1edfc] flex items-center">
             <Image
               src={StarFill}
               alt="별점"

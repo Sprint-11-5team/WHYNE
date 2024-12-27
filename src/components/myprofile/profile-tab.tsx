@@ -64,8 +64,8 @@ export default function ProfileTab() {
 
   return (
     <div className="desktop:w-[80rem] desktop:h-[3.2rem] tablet:w-full mobile:w-full">
-      <div className="flex justify-between items-center">
-        <div className="">
+      <div className="flex justify-between items-center ">
+        <div className="desktop:mb-[2.2rem] tablet:mb-[2.2rem] mobile:mb-0">
           <button
             className={`
               desktop:w-[9.6rem] desktop:h-[3.2rem] desktop:text-[2rem] desktop:leading-[3.2rem]
@@ -89,7 +89,7 @@ export default function ProfileTab() {
             내가 등록한 와인
           </button>
         </div>
-        <p className="font-regular desktop:text-[1.4rem] desktop:leading-[2.4rem] tablet:text-[1.4rem] tablet:leading-[2.4rem] mobile:text-[1.2rem] mobile:leading-[1.8rem] text-right text-primary">
+        <p className="desktop:mb-[2.2rem] tablet:mb-[2.2rem] mobile:mb-[1.5rem] font-regular desktop:text-[1.4rem] desktop:leading-[2.4rem] tablet:text-[1.4rem] tablet:leading-[2.4rem] mobile:text-[1.2rem] mobile:leading-[1.8rem] text-right text-primary">
           {`총 ${totalCount}개`}
         </p>
       </div>
@@ -97,7 +97,7 @@ export default function ProfileTab() {
       {isLoading && <div></div>}
       <div>
         {activeTab === "reviews" ? (
-          <div className="mt-[2.2rem] space-y-[2rem] ">
+          <div className="mt-[2.2rem] space-y-[2rem]">
             {reviews.map((review) => (
               <MyReviewCard key={review.id} review={review} />
             ))}

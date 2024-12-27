@@ -31,9 +31,9 @@ export default function MyWineCard({ wine }: { wine: Wine }) {
   }
 
   return (
-    <div className="desktop:w-[80rem] tablet:w-full mobile:w-full min-h-[27rem] flex">
-      <div className="mt-[4rem]">
-        <div className="relative desktop:w-[80rem] desktop:h-[22.8rem] tablet:w-full] talbet:h-[22.8rem] mobile:w-full mobile:h-[22.8rem] border-solid border-[0.1rem] bg-white rounded-[1.6rem] border-gray-300 flex desktop:pl-[6rem] tablet:pl-[6rem] mobile:pl-[2rem]">
+    <div className="desktop:w-[80rem] tablet:w-full mobile:w-full desktop:min-h-[24.8rem] tablet:min-h-[24.8rem] mobile:min-h-[18rem] my-[2rem]">
+      <div className="mt-[4rem] ">
+        <div className="relative desktop:w-[80rem] desktop:h-[22.8rem] tablet:w-full tablet:h-[22.8rem] mobile:w-full mobile:h-[16.4rem] border-solid border-[0.1rem] bg-white rounded-[1.6rem] border-gray-300 flex desktop:pl-[6rem] tablet:pl-[6rem] mobile:pl-[2rem] ">
           <div className="relative desktop:w-[7.6rem] desktop:h-[27rem] tablet:w-[7.6rem] tablet:h-[27rem] mobile:w-[5.3rem] mobile:h-[18.5rem] overflow-hidden self-end">
             <Image
               src={wine.image}
@@ -45,12 +45,12 @@ export default function MyWineCard({ wine }: { wine: Wine }) {
             />
           </div>
           <div className="w-full flex justify-between">
-            <div className="m-[3rem_0_3rem_4rem]">
-              <div className="mb-[2rem]">
-                <p className="break-words w-full text-[3rem] font-semibold leading-[3.58rem] text-gray-800 mb-[2rem]">
+            <div className="desktop:m-[3rem_0_3rem_4rem] tablet:m-[3rem_0_3rem_4rem] mobile:m-[2rem_0_1.65rem_2rem]">
+              <div className="desktop:mb-[2rem] tablet:mb-[2rem] mobile:mb-[0.45rem]">
+                <p className="break-words w-full desktop:text-[3rem] tablet:text-[3rem] mobile:text-[2rem] font-semibold desktop:leading-[3.58rem] tablet:leading-[3.58rem] mobile:leading-[2.387rem] text-gray-800 desktop:mb-[2rem] tablet:mb-[2rem] mobile:mb-[1.5rem]">
                   {wine.name}
                 </p>
-                <p className="text-[1.6rem] font-regular leading-[2.6rem] text-gray-500">
+                <p className="desktop:text-[1.6rem] desktop:leading-[2.6rem] tablet:text-[1.6rem] tablet:leading-[2.6rem] mobile:text-[1.4rem] mobile:leading-[2.4rem] text-gray-500 font-regular">
                   {wine.region}
                 </p>
               </div>
@@ -58,13 +58,13 @@ export default function MyWineCard({ wine }: { wine: Wine }) {
                 className="
               desktop:min-w-[11.4rem] desktop:h-[3.7rem] desktop:p-[0.55rem_1.5rem] desktop:text-[1.8rem] desktop:leading-[2.6rem]
               tablet:min-w-[11.4rem] tablet:h-[3.7rem] tablet:p-[0.55rem_1.5rem] tablet:text-[1.8rem] tablet:leading-[2.6rem]
-              mobile:min-w-[11.4rem] mobile:h-[3.7rem] mobile:p-[0.55rem_1.5rem] mobile:text-[1.8rem] mobile:leading-[2.6rem]
+              mobile:min-w-[8.6rem] mobile:h-[3.6rem] mobile:p-[0.6rem_1rem] mobile:text-[1.4rem] mobile:leading-[2.4rem]
               bg-[#F1EDFC] rounded-[1.2rem] gap-[1rem] text-primary font-bold  inline-block"
               >
                 ₩ {formatPrice(wine.price)}
               </p>
             </div>
-            <div className="m-[3rem_4rem]">
+            <div className="desktop:m-[3rem_4rem] tablet:m-[3rem_4rem] mobile:m-[2rem]">
               <DropDownMenu onDelete={openDeleteModal}>
                 <Image
                   src={MenuIcon}
