@@ -2,13 +2,14 @@ import DetailWineCard from "@/components/wines/detail/detail-wine-card";
 import DetailReviewCard from "@/components/wines/detail/detail-review-card";
 
 interface WineDetailPageProps {
-  params: {
+  params: Promise<{
     wineid: string;
-  };
+  }>;
 }
 
-export default function WineDetailPage({ params }: WineDetailPageProps) {
-  const { wineid } = params;
+export default async function WineDetailPage(props: WineDetailPageProps) {
+  const params = await props.params;
+  const { wineid } = await params;
   return (
     <div>
       <div className="flex flex-col mt-[2rem]">
