@@ -32,7 +32,7 @@ const InitialFilters: Filters = {
   type: "",
   minPrice: 0,
   maxPrice: 500000,
-  rating: 0,
+  rating: 3,
 };
 
 // 와인 목록을 가져오는 함수 (공통화)
@@ -77,7 +77,9 @@ export default function Wines() {
   // 추천 와인 목록 가져오기
   const fetchRecommendData = useCallback(async () => {
     const response = await fetchData("/wines/recommended", { limit: 10 });
-    if (response) setRecommendList(response);
+    if (response) {
+      setRecommendList(response);
+    }
   }, []);
 
   // 와인 목록 가져오기
@@ -102,11 +104,35 @@ export default function Wines() {
     if (response) setEntireList(response);
   };
 
-  const handleFilterChange = async (updatedValues: Partial<Filters>) => {
-    const updatedFilters = { ...InitialFilters, ...updatedValues };
-    const response = await fetchData("/wines", updatedFilters);
-    if (response) setEntireList(response);
-  };
+  const handleFilterChange = useCallback(
+    async (updatedValues: Partial<Filters>) => {
+      const updatedFilters = { ...InitialFilters, ...updatedValues };
+      const response = await fetchData("/wines", updatedFilters);
+      if (response) setEntireList(response);
+    },
+    [],
+  );
+
+  const handleTypeChange = useCallback(
+    (type: string) => {
+      handleFilterChange({ type });
+    },
+    [handleFilterChange],
+  );
+
+  const handlePriceChange = useCallback(
+    (minPrice: number, maxPrice: number) => {
+      handleFilterChange({ minPrice, maxPrice });
+    },
+    [handleFilterChange],
+  );
+
+  const handleRatingChange = useCallback(
+    (rating: number) => {
+      handleFilterChange({ rating });
+    },
+    [handleFilterChange],
+  );
 
   // 각각의 핸들러 함수도 분리
   const handleFilterModalOpen = () => {
@@ -116,11 +142,6 @@ export default function Wines() {
   const handleAddWineModalOpen = () => {
     setIsAddWineModalOpen(!isAddWineModalOpen);
   };
-
-  // const handleReset = async () => {
-  //   const response = await fetchData("/wines", InitialFilters); // 초기 필터값으로 API 호출
-  //   if (response) setEntireList(response); // 초기 상태로 데이터 설정
-  // };
 
   // 모달 상태를 토글하는 함수
   const handleModalToggle = () => {
@@ -206,12 +227,11 @@ export default function Wines() {
               }}
               onFilterReset={() => {
                 fetchFilteredData(InitialFilters); // 초기 필터로 API 호출
+                handleModalToggle(); // 모달 닫기
               }}
-              onTypeChange={(type) => console.log({ type })}
-              onPriceChange={(minPrice, maxPrice) =>
-                console.log({ minPrice, maxPrice })
-              }
-              onRatingChange={(rating) => console.log({ rating })}
+              onTypeChange={handleTypeChange}
+              onPriceChange={handlePriceChange}
+              onRatingChange={handleRatingChange}
             />
             <Search onChange={handleSearchChange} />
           </div>
@@ -238,11 +258,9 @@ export default function Wines() {
                 onChange={(minPrice, maxPrice) =>
                   handleFilterChange({ minPrice, maxPrice })
                 }
-                resetValues={{ minPrice: 0, maxPrice: 500000 }}
               />
               <RatingFliter
                 onChange={(rating) => handleFilterChange({ rating })}
-                resetRating={0}
               />
             </div>
             <Button

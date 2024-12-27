@@ -38,6 +38,7 @@ export interface WineType {
     id: number;
   } | null;
   userId: number;
+  likes: [];
 }
 
 export interface WineListType {
