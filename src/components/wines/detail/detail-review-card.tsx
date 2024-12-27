@@ -12,6 +12,9 @@ import StarFill from "@/../public/icons/star_fill.svg";
 import { useEffect, useState } from "react";
 import api from "@/api/api";
 import axios from "axios";
+import AddReviewModal from "@/components/modal-review/AddReviewModal";
+import instance from "@/api/api";
+import ReviewProvider from "@/provider/usereviewmodals";
 
 interface Review {
   id: number;
@@ -63,6 +66,40 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isExpand, setIsExpand] = useState<Record<number, boolean>>({});
   const [isLoading, setIsLoading] = useState(true);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [initialData, setInitialData] = useState<{
+    rating: number;
+    content: string;
+    tasteValues: number[];
+    selectedTags: Aroma[]; // 여기서 Aroma[] 타입을 보장
+  } | null>(null);
+
+  async function handleEdit(reviewId: number) {
+    setIsEditing(true);
+    try {
+      const response = await instance.get(`/reviews/${reviewId}`);
+      if (response.status === 200) {
+        const { rating, content, tasteValues, selectedTags } = response.data;
+
+        // selectedTags를 Aroma[]로 변환
+        const aromaTags = ((selectedTags as string[]) || []).filter(
+          (tag): tag is Aroma => Object.keys(AromaMapping).includes(tag),
+        );
+
+        setInitialData({
+          rating,
+          content,
+          tasteValues,
+          selectedTags: aromaTags, // 변환된 Aroma[]를 할당
+        });
+        setIsModalOpen(true); // 모달 열기
+      }
+    } catch (error) {
+      console.error("리뷰 데이터를 불러오는 중 오류 발생:", error);
+    }
+  }
 
   async function toggleLike(reviewId: number, isLiked: boolean) {
     try {
@@ -173,11 +210,22 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
                 </button>
 
                 <div className=" z-10">
-                  <DropDownMenu>
+                  <DropDownMenu onEdit={() => handleEdit(review.id)}>
                     <div className="relative desktop:w-[3.8rem] desktop:h-[3.8rem] tablet:w-[3.8rem] tablet:h-[3.8rem] mobile:w-[3.2rem] mobile:h-[3.2rem]">
                       <Image src={MenuIcon} alt="메뉴 아이콘" layout="fill" />
                     </div>
                   </DropDownMenu>
+                  {isModalOpen && (
+                    <ReviewProvider>
+                      <AddReviewModal
+                        isOpen={isModalOpen}
+                        onClick={() => setIsModalOpen(false)}
+                        id={wineid}
+                        isEditing={isEditing}
+                        initialData={initialData || undefined}
+                      />
+                    </ReviewProvider>
+                  )}
                 </div>
               </div>
             </div>
