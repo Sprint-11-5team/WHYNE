@@ -5,7 +5,7 @@ import MenuIcon from "@/../public/icons/menu.svg";
 import DeleteModal from "../common/modal-delete";
 import { useEffect, useState } from "react";
 import instance from "@/api/api";
-import ReviewModal from "../modal-review/modal-review-edit";
+// import ReviewModal from "../modal-review/modal-review-edit";
 
 function timeAgo(createdAt: string): string {
   const now = new Date();
@@ -41,7 +41,7 @@ export default function MyReviewCard({ review }: { review: Review }) {
   const [wineName, setWineName] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  // const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [deleteReviewId, setDeleteReviewId] = useState<number | null>(null);
 
   async function fetchWineId(reviewId: number) {
@@ -95,13 +95,13 @@ export default function MyReviewCard({ review }: { review: Review }) {
     setIsDeleteModalOpen(false);
   }
 
-  function openEditModal() {
-    setIsEditModalOpen(true);
-  }
+  // function openEditModal() {
+  //   setIsEditModalOpen(true);
+  // }
 
-  function closeEditModal() {
-    setIsEditModalOpen(false);
-  }
+  // function closeEditModal() {
+  //   setIsEditModalOpen(false);
+  // }
 
   return (
     <div className="desktop:w-[80rem] tablet:w-full mobile:w-full min-h-[20.2rem] border-solid border-[0.1rem] bg-white rounded-[1.6rem] border-gray-300 p-[2.4rem_4rem]">
