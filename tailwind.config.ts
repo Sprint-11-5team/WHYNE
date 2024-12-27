@@ -31,7 +31,21 @@ export default {
 
       mobile: "375px",
       // => @media (min-width: 375px) { ... }
+
+      'pt-default': {'raw': '(min-height: 600px) and (max-height: 799px)'},
+      'pt-800': {'raw': '(min-height: 800px) and (max-height: 819px)'},
+      'pt-820': {'raw': '(min-height: 820px)'},
+        'h-600': {'raw': '(min-height: 600px) and (max-height: 666px)'},
+        'h-667': {'raw': '(min-height: 667px) and (max-height: 739px)'},
+        'h-740': {'raw': '(min-height: 740px) and (max-height: 799px)'},
+        'h-800': {'raw': '(min-height: 800px) and (max-height: 819px)'},
+        'h-820': {'raw': '(min-height: 820px) and (max-height: 843px)'},
+        'h-844': {'raw': '(min-height: 844px) and (max-height: 895px)'},
+        'h-896': {'raw': '(min-height: 896px) and (max-height: 1023px)'},
+        'h-1024': {'raw': '(min-height: 1024px)'}
+      
     },
+    //새로 추가
     extend: {
       fontSize: {
         "3xl": [
@@ -87,7 +101,7 @@ export default {
       },
       boxShadow: {
         "filter-modal": "0.2rem 0.2rem 2rem 0 rgba(0, 0, 0, 0.04)",
-        sm: "0 0.2rem 2rem 0 rgba(0, 0, 0, 0.4)",
+        sm: "0 0.2rem 2rem 0 rgba(0, 0, 0, 0.04)",
         mdl: "0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)",
         mdr: "-0.4rem 0.4rem 1.4rem rgba(188, 188, 188, 0.2)",
         md: [
