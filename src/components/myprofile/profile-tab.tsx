@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import MyReviewCard, { Review } from "./my-review-card";
 import MyWineCard, { Wine } from "./my-wine-card";
 import "@/../public/images/placeholder1.png";
@@ -18,7 +18,7 @@ export default function ProfileTab() {
   const [hasMoreReviews, setHasMoreReviews] = useState(true); // 더 불러올 리뷰 데이터 여부
   const [hasMoreWines, setHasMoreWines] = useState(true); // 더 불러올 와인 데이터 여부
 
-  const initialLimit = 1; // 데이터 로딩 개수
+  const initialLimit = 5; // 데이터 로딩 개수
 
   // 리뷰 데이터 가져오기 (useCallback으로 메모이제이션)
   const fetchReviews = useCallback(
@@ -106,13 +106,13 @@ export default function ProfileTab() {
   );
 
   // 탭 변경 시 데이터 가져오기
-  useEffect(() => {
-    if (activeTab === "reviews") {
-      fetchReviews(reviewCursor);
-    } else {
-      fetchWines(wineCursor);
-    }
-  }, [activeTab, reviewCursor, wineCursor, fetchReviews, fetchWines]);
+  // useEffect(() => {
+  //   if (activeTab === "reviews") {
+  //     fetchReviews(reviewCursor);
+  //   } else {
+  //     fetchWines(wineCursor);
+  //   }
+  // }, [activeTab, reviewCursor, wineCursor, fetchReviews, fetchWines]);
 
   return (
     <div className="desktop:w-[80rem] desktop:h-[3.2rem] tablet:w-full mobile:w-full">
