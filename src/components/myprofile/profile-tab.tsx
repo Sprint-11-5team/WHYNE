@@ -105,15 +105,6 @@ export default function ProfileTab() {
     [isLoading, hasMoreWines],
   );
 
-  // 탭 변경 시 데이터 가져오기
-  // useEffect(() => {
-  //   if (activeTab === "reviews") {
-  //     fetchReviews(reviewCursor);
-  //   } else {
-  //     fetchWines(wineCursor);
-  //   }
-  // }, [activeTab, reviewCursor, wineCursor, fetchReviews, fetchWines]);
-
   return (
     <div className="desktop:w-[80rem] desktop:h-[3.2rem] tablet:w-full mobile:w-full">
       <div className="flex justify-between items-center ">
