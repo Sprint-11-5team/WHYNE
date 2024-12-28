@@ -5,38 +5,39 @@ import TextArea from "@/components/common/TextArea";
 import { useReviewModalStore } from "@/provider/usereviewmodals";
 import Image from "next/image";
 import wine from "../../../public/icons/wine.svg";
-// import { useEffect, useState } from "react";
-// import instance from "@/api/api";
+import { useEffect, useState } from "react";
+import instance from "@/api/api";
 
-// interface WineDetails {
-//   name: string;
-// }
+interface WineDetails {
+  name: string;
+}
 
 interface WineIdProps {
   id: string;
   content: string;
 }
 
-export default function ReviewInput({ content }: WineIdProps) {
-  const { setContent, setRating, wineName } = useReviewModalStore();
-  // const [wineName, setWineName] = useState<WineDetails | null>(null);
+export default function ReviewInput({ id, content }: WineIdProps) {
+  const { setContent, setRating } = useReviewModalStore();
 
-  // useEffect(() => {
-  //   if (id) {
-  //     async function GetWineName() {
-  //       try {
-  //         const res = await instance.get(`/wines/${id}`);
-  //         setWineName(res.data);
-  //       } catch (error) {
-  //         console.error("와인 이름 가져오기 실패", error);
-  //       } finally {
-  //       }
-  //     }
-  //     GetWineName();
-  //   }
-  // }, [id]);
+  const [wineName, setWineName] = useState<WineDetails | null>(null);
 
-  // const wineNameText = wineName ? wineName.name : "와인 이름 로딩 중...";
+  useEffect(() => {
+    if (id) {
+      async function getWineName() {
+        try {
+          const res = await instance.get(`/wines/${id}`);
+          setWineName(res.data);
+        } catch (error) {
+          console.error("와인 이름 가져오기 실패", error);
+        } finally {
+        }
+      }
+      getWineName();
+    }
+  }, [id]);
+
+  const wineNameText = wineName ? wineName.name : "와인 이름 로딩 중...";
 
   return (
     <>
@@ -52,7 +53,7 @@ export default function ReviewInput({ content }: WineIdProps) {
         </div>
         <div className="flex flex-col min-w-0 gap-[0.8rem]">
           <p className="ml-[0.5rem] mt-[1rem] break-words whitespace-normal text-lg tablet:text-2lg font-semiBold">
-            {wineName}
+            {wineNameText}
           </p>
 
           <StarRating

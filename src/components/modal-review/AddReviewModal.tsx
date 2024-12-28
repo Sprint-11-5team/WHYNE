@@ -14,9 +14,7 @@ import { Aroma, mapTagToAroma } from "../wines/detail/detail-wine-tag";
 type ModalProps = {
   isOpen: boolean;
   onClick: () => void;
-  onEdit?: () => void;
   id: string;
-  reviewId?: number;
   isEditing?: boolean;
   initialData?: {
     rating: number;
@@ -30,7 +28,6 @@ export default function AddReviewModal({
   isOpen,
   onClick,
   id,
-  reviewId,
   isEditing = false,
   initialData,
 }: ModalProps) {
@@ -76,7 +73,7 @@ export default function AddReviewModal({
 
     try {
       const res: AxiosResponse = isEditing
-        ? await instance.patch(`/reviews/${reviewId}`, formData)
+        ? await instance.patch(`/reviews/${id}`, formData)
         : await instance.post("/reviews", formData);
 
       if (res.status === 200) {
@@ -91,8 +88,8 @@ export default function AddReviewModal({
     } catch (error) {
       console.error("리뷰 제출 중 오류 발생:", error);
     } finally {
-      onClick();
       resetReview();
+      onClick();
     }
   };
 

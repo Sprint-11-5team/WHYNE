@@ -13,10 +13,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AddReviewModal from "@/components/modal-review/AddReviewModal";
 import instance from "@/api/api";
-import ReviewProvider from "@/provider/usereviewmodals";
 import RatingDetails from "./rating-details";
 import DetailNoReview from "./detail-no-review";
 import DeleteModal from "@/components/common/modal-delete";
+// import { useReviewModalStore } from "@/provider/usereviewmodals";
 
 interface Review {
   id: number;
@@ -80,6 +80,14 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
     tasteValues: number[];
     selectedTags: Aroma[]; // 여기서 Aroma[] 타입을 보장
   } | null>(null);
+
+  // const { setWineId } = useReviewModalStore();
+
+  // useEffect(() => {
+  //   if (wineid) {
+  //     setWineId(Number(wineid));
+  //   }
+  // }, [wineid, setWineId]);
 
   async function handleEdit(reviewId: number) {
     setIsEditing(true);
@@ -239,17 +247,13 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
                             </div>
                           </DropDownMenu>
                           {isModalOpen && (
-                            <ReviewProvider>
-                              <AddReviewModal
-                                isOpen={isModalOpen}
-                                onClick={() => setIsModalOpen(false)}
-                                id={wineid}
-                                reviewId={selectedReviewId!}
-                                onEdit={() => handleEdit(review.id)}
-                                isEditing={isEditing}
-                                initialData={initialData || undefined}
-                              />
-                            </ReviewProvider>
+                            <AddReviewModal
+                              isOpen={isModalOpen}
+                              onClick={() => setIsModalOpen(false)}
+                              id={wineid}
+                              isEditing={isEditing}
+                              initialData={initialData || undefined}
+                            />
                           )}
                         </div>
                       </div>
@@ -361,7 +365,7 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
           <RatingDetails id={wineid} />
         </div>
       ) : (
-        <DetailNoReview />
+        <DetailNoReview wineid={wineid} />
       )}
       <DeleteModal
         isOpen={isDeleteModalOpen}
