@@ -82,11 +82,3 @@ export type WineListType = {
   recentReview: RecentReview | null; // nullable true
   userId?: number;
 };
-
-export interface NewWineType {
-  name: string;
-  region: string;
-  image: string;
-  price: number;
-  type: string;
-}
