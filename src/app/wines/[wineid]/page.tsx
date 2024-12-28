@@ -1,12 +1,12 @@
 import DetailWineCard from "@/components/wines/detail/detail-wine-card";
 import DetailReviewCard from "@/components/wines/detail/detail-review-card";
 
-export default function WineDetailPage({
+export default async function WineDetailPage({
   params,
 }: {
   params: { wineid: string };
 }) {
-  const wineid = params.wineid;
+  const { wineid } = await params;
 
   return (
     <div>

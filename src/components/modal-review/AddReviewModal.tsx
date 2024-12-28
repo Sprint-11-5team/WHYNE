@@ -14,9 +14,9 @@ import { Aroma, mapTagToAroma } from "../wines/detail/detail-wine-tag";
 type ModalProps = {
   isOpen: boolean;
   onClick: () => void;
-  onEdit: () => void;
+  onEdit?: () => void;
   id: string;
-  reviewId: number;
+  reviewId?: number;
   isEditing?: boolean;
   initialData?: {
     rating: number;
@@ -49,7 +49,7 @@ export default function AddReviewModal({
         content: initialData.content,
         selectedTags: initialData.selectedTags,
         tasteValues: initialData.tasteValues,
-        // wineId: Number(id),
+        wineId: Number(id),
         rating: initialData.rating,
       });
       console.log(initialData);
@@ -59,7 +59,7 @@ export default function AddReviewModal({
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // const wineId = Number(id);
+    const wineId = Number(id);
 
     const formData = {
       rating,
@@ -71,7 +71,7 @@ export default function AddReviewModal({
         .map(mapTagToAroma)
         .filter((tag): tag is Aroma => tag !== undefined),
       content,
-      // wineId,
+      wineId,
     };
 
     try {

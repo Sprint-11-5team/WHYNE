@@ -1,5 +1,12 @@
 "use client";
-import { createContext, useContext, useState, useCallback } from "react";
+import instance from "@/api/api";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 
 type ReviewState = {
   content: string;
@@ -33,7 +40,7 @@ const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tasteValues, setTasteValues] = useState([50, 50, 50, 50]);
   const [wineId, setWineId] = useState(TestWineDetail.id);
-  const [wineName] = useState(TestWineDetail.name);
+  const [wineName, setWineName] = useState<string>("");
   const [rating, setRating] = useState(0);
   const [id, setId] = useState<number | undefined>(undefined);
 
@@ -53,6 +60,21 @@ const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
     setRating(0);
     setId(undefined);
   }, []); // useCallback으로 감싸기
+
+  useEffect(() => {
+    if (wineId) {
+      async function GetWineName() {
+        try {
+          const res = await instance.get(`/wines/${wineId}`);
+          setWineName(res.data.name);
+        } catch (error) {
+          console.error("와인 이름 가져오기 실패", error);
+          setWineName("와인 이름 로딩 실패");
+        }
+      }
+      GetWineName();
+    }
+  }, [wineId]);
 
   const value = {
     content,
