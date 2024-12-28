@@ -5,21 +5,21 @@ import Chips from "@/components/common/Chips";
 import { useEffect } from "react";
 
 interface TagSelctorProps {
-  selectedTags: string[];
+  aroma: string[];
 }
 
-export default function TagSelector({ selectedTags }: TagSelctorProps) {
-  const { setSelectedTags } = useReviewModalStore();
+export default function TagSelector({ aroma }: TagSelctorProps) {
+  const { setAroma } = useReviewModalStore();
 
   useEffect(() => {
-    setSelectedTags(selectedTags);
-  }, [selectedTags, setSelectedTags]);
+    setAroma(aroma);
+  }, [aroma, setAroma]);
 
   const handleTagClick = (tag: string) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter((t) => t !== tag));
+    if (aroma.includes(tag)) {
+      setAroma(aroma.filter((t) => t !== tag));
     } else {
-      setSelectedTags([...selectedTags, tag]);
+      setAroma([...aroma, tag]);
     }
   };
 
@@ -51,7 +51,7 @@ export default function TagSelector({ selectedTags }: TagSelctorProps) {
         <Chips
           key={tag}
           label={tag}
-          selected={selectedTags.includes(tag)}
+          selected={aroma.includes(tag)}
           onClick={() => handleTagClick(tag)}
           isDisabled={false}
         />

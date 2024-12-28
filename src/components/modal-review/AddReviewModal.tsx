@@ -15,12 +15,16 @@ type ModalProps = {
   isOpen: boolean;
   onClick: () => void;
   id: string;
+  reviewId: number;
   isEditing?: boolean;
   initialData?: {
     rating: number;
     content: string;
-    tasteValues: number[];
-    selectedTags: Aroma[];
+    lightBold: number;
+    smoothTannic: number;
+    drySweet: number;
+    softAcidic: number;
+    aroma: Aroma[];
   };
 };
 
@@ -28,14 +32,18 @@ export default function AddReviewModal({
   isOpen,
   onClick,
   id,
+  reviewId,
   isEditing = false,
   initialData,
 }: ModalProps) {
   const {
     rating,
     content,
-    tasteValues,
-    selectedTags,
+    lightBold,
+    smoothTannic,
+    drySweet,
+    softAcidic,
+    aroma: aroma,
     resetReview,
     setReviewData,
   } = useReviewModalStore();
@@ -44,8 +52,11 @@ export default function AddReviewModal({
     if (isEditing && initialData) {
       setReviewData({
         content: initialData.content,
-        selectedTags: initialData.selectedTags,
-        tasteValues: initialData.tasteValues,
+        aroma: initialData.aroma,
+        lightBold: initialData.lightBold,
+        smoothTannic: initialData.smoothTannic,
+        drySweet: initialData.drySweet,
+        softAcidic: initialData.softAcidic,
         wineId: Number(id),
         rating: initialData.rating,
       });
@@ -60,11 +71,11 @@ export default function AddReviewModal({
 
     const formData = {
       rating,
-      lightBold: tasteValues[0],
-      smoothTannic: tasteValues[1],
-      drySweet: tasteValues[2],
-      softAcidic: tasteValues[3],
-      aroma: selectedTags
+      lightBold,
+      smoothTannic,
+      drySweet,
+      softAcidic,
+      aroma: aroma
         .map(mapTagToAroma)
         .filter((tag): tag is Aroma => tag !== undefined),
       content,
@@ -73,7 +84,8 @@ export default function AddReviewModal({
 
     try {
       const res: AxiosResponse = isEditing
-        ? await instance.patch(`/reviews/${id}`, formData)
+        ? // id 를 reviewid로 바꿔야 함
+          await instance.patch(`/reviews/${reviewId}`, formData)
         : await instance.post("/reviews", formData);
 
       if (res.status === 200) {
@@ -120,7 +132,7 @@ export default function AddReviewModal({
               와인의 맛은 어땠나요?
             </p>
           </div>
-          <TasteSlider tasteValues={tasteValues} />
+          <TasteSlider />
           <div className="relative inline-block mt-[4rem] mb-[2rem]">
             <p
               className="text-gray-800 font-bold text-[1.6rem] tablet:text-[1.8rem] cursor-pointer 
@@ -132,7 +144,7 @@ export default function AddReviewModal({
               기억에 남는 향이 있나요?
             </p>
           </div>
-          <TagSelector selectedTags={selectedTags} />
+          <TagSelector aroma={aroma} />
           <div className="flex mt-[4rem]">
             <Button
               type="submit"

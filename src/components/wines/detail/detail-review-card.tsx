@@ -77,35 +77,41 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
   const [initialData, setInitialData] = useState<{
     rating: number;
     content: string;
-    tasteValues: number[];
-    selectedTags: Aroma[]; // 여기서 Aroma[] 타입을 보장
+    lightBold: number;
+    smoothTannic: number;
+    drySweet: number;
+    softAcidic: number;
+    aroma: Aroma[]; // 여기서 Aroma[] 타입을 보장
   } | null>(null);
-
-  // const { setWineId } = useReviewModalStore();
-
-  // useEffect(() => {
-  //   if (wineid) {
-  //     setWineId(Number(wineid));
-  //   }
-  // }, [wineid, setWineId]);
 
   async function handleEdit(reviewId: number) {
     setIsEditing(true);
     try {
       const response = await instance.get(`/reviews/${reviewId}`);
       if (response.status === 200) {
-        const { rating, content, tasteValues, selectedTags } = response.data;
+        const {
+          rating,
+          content,
+          lightBold,
+          smoothTannic,
+          drySweet,
+          softAcidic,
+          aroma,
+        } = response.data;
 
-        // selectedTags를 Aroma[]로 변환
-        const aromaTags = ((selectedTags as string[]) || []).filter(
+        // aroma를 Aroma[]로 변환
+        const aromaTags = ((aroma as string[]) || []).filter(
           (tag): tag is Aroma => Object.keys(AromaMapping).includes(tag),
         );
 
         setInitialData({
           rating,
           content,
-          tasteValues,
-          selectedTags: aromaTags, // 변환된 Aroma[]를 할당
+          lightBold,
+          smoothTannic,
+          drySweet,
+          softAcidic,
+          aroma: aromaTags, // 변환된 Aroma[]를 할당
         });
         setIsModalOpen(true); // 모달 열기
       }
@@ -251,6 +257,7 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
                               isOpen={isModalOpen}
                               onClick={() => setIsModalOpen(false)}
                               id={wineid}
+                              reviewId={review.id}
                               isEditing={isEditing}
                               initialData={initialData || undefined}
                             />

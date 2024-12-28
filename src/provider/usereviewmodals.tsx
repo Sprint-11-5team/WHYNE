@@ -3,15 +3,21 @@ import { createContext, useContext, useState, useCallback } from "react";
 
 type ReviewState = {
   content: string;
-  selectedTags: string[];
-  tasteValues: number[];
+  aroma: string[];
+  lightBold: number;
+  smoothTannic: number;
+  drySweet: number;
+  softAcidic: number;
   wineId?: number;
   wineName?: string;
   rating: number;
   id: number | undefined;
   setContent: (content: string) => void;
-  setSelectedTags: (tags: string[]) => void;
-  setTasteValues: (values: number[]) => void;
+  setAroma: (tags: string[]) => void;
+  setLightBold: (value: number) => void;
+  setSmoothTannic: (value: number) => void;
+  setDrySweet: (value: number) => void;
+  setSoftAcidic: (value: number) => void;
   setWineId: (id: number) => void;
   setRating: (rating: number) => void;
   setId: (id: number) => void;
@@ -25,8 +31,11 @@ export const ReviewContext = createContext<ReviewState | null>(null);
 
 const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
   const [content, setContent] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [tasteValues, setTasteValues] = useState([50, 50, 50, 50]);
+  const [aroma, setAroma] = useState<string[]>([]);
+  const [lightBold, setLightBold] = useState(0);
+  const [smoothTannic, setSmoothTannic] = useState(0);
+  const [drySweet, setDrySweet] = useState(0);
+  const [softAcidic, setSoftAcidic] = useState(0);
   const [wineId, setWineId] = useState<number>();
   const [wineName] = useState<string>();
   const [rating, setRating] = useState(0);
@@ -34,8 +43,11 @@ const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
 
   const setReviewData = useCallback((data: Partial<ReviewState>) => {
     if (data.content !== undefined) setContent(data.content);
-    if (data.selectedTags !== undefined) setSelectedTags(data.selectedTags);
-    if (data.tasteValues !== undefined) setTasteValues(data.tasteValues);
+    if (data.aroma !== undefined) setAroma(data.aroma);
+    if (data.lightBold !== undefined) setLightBold(data.lightBold);
+    if (data.smoothTannic !== undefined) setSmoothTannic(data.smoothTannic);
+    if (data.drySweet !== undefined) setDrySweet(data.drySweet);
+    if (data.softAcidic !== undefined) setSoftAcidic(data.softAcidic);
     if (data.wineId !== undefined) setWineId(data.wineId);
     if (data.rating !== undefined) setRating(data.rating);
     if (data.id !== undefined) setId(data.id);
@@ -43,23 +55,32 @@ const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
 
   const resetReview = useCallback(() => {
     setContent("");
-    setSelectedTags([]);
-    setTasteValues([50, 50, 50, 50]);
+    setAroma([]);
+    setLightBold(0);
+    setSmoothTannic(0);
+    setDrySweet(0);
+    setSoftAcidic(0);
     setRating(0);
     setId(undefined);
   }, []); // useCallback으로 감싸기
 
   const value = {
     content,
-    selectedTags,
-    tasteValues,
+    aroma,
+    lightBold,
+    smoothTannic,
+    drySweet,
+    softAcidic,
     wineId,
     wineName,
     rating,
     id,
     setContent,
-    setSelectedTags,
-    setTasteValues,
+    setAroma,
+    setLightBold,
+    setSmoothTannic,
+    setDrySweet,
+    setSoftAcidic,
     setWineId,
     setRating,
     setId,

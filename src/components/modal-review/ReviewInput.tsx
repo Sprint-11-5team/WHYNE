@@ -13,8 +13,8 @@ interface WineDetails {
 }
 
 interface WineIdProps {
-  id: string;
-  content: string;
+  id?: string;
+  content?: string;
 }
 
 export default function ReviewInput({ id, content }: WineIdProps) {
