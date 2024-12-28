@@ -92,18 +92,18 @@ export default function FilterModal({
             <RatingFilter onChange={setRating} resetRating={initialRating} />
           </div>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-[1rem]">
           <Button
-            size="small"
+            size="large"
             color="secondary"
             type="reset"
             onClick={handleReset}
-            addClassName="w-[9.6rem] h-[5.4rem] py-[1rem] px-[1.6rem] font-bold text-bold text-lg text-center"
+            addClassName="w-[10rem] h-[5.5rem] rounded-[1.2rem] font-bold text-lg text-center flex items-center justify-center"
           >
             초기화
           </Button>
           <Button
-            size="small"
+            size="large"
             color="primary"
             type="submit"
             onClick={handleApply}
