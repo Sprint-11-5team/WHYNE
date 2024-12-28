@@ -9,7 +9,7 @@ interface RatingApp {
 
 export default function RatingFliter({
   onChange,
-  resetRating = 3, // 초기값 설정
+  resetRating = 0, // 초기값 설정
 }: RatingApp) {
   const [selectedRating, setSelectedRating] = useState<number | null>(
     resetRating,
