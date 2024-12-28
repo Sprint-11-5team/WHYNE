@@ -31,35 +31,79 @@ export default function ProfileTab() {
           params: { limit: initialLimit, cursor },
         });
 
-      const { list, totalCount } = response.data;
+        const { list, totalCount, nextCursor } = response.data;
+        console.log("Reviews data:", list);
+        console.log("Total reviews count:", totalCount);
+        console.log("Next cursor for reviews:", nextCursor);
 
-      setReviews(list);
-      setTotalCount(totalCount);
-    } catch (error) {
-      console.error("리뷰 데이터 불러오기 실패", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+        // 중복되지 않는 데이터만 추가
+        setReviews((prevReviews) => {
+          const uniqueReviews = [
+            ...prevReviews,
+            ...list.filter(
+              (newReview: Review) =>
+                !prevReviews.some((review) => review.id === newReview.id),
+            ),
+          ];
+          return uniqueReviews;
+        });
 
-  // 와인 데이터
-  async function fetchWines() {
-    try {
-      setIsLoading(true);
-      const response = await instance.get("/users/me/wines", {
-        params: { limit },
-      });
+        setTotalCount(totalCount);
+        setReviewCursor(nextCursor); // 커서 저장
 
-      const { list, totalCount } = response.data;
+        if (!nextCursor) {
+          setHasMoreReviews(false); // 더 이상 로드할 데이터 없으면 false
+        }
+      } catch (error) {
+        console.error("리뷰 데이터 불러오기 실패", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isLoading, hasMoreReviews],
+  );
 
-      setWines(list);
-      setTotalCount(totalCount);
-    } catch (error) {
-      console.error("와인 데이터 불러오기 실패", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  // 와인 데이터 가져오기 (useCallback으로 메모이제이션)
+  const fetchWines = useCallback(
+    async (cursor: number | null) => {
+      if (isLoading || !hasMoreWines) return; // 로딩 중이거나 더 이상 불러올 데이터가 없으면 return
+      console.log("Fetching wines with cursor:", cursor);
+      try {
+        setIsLoading(true);
+        const response = await instance.get("/users/me/wines", {
+          params: { limit: initialLimit, cursor },
+        });
+
+        const { list, totalCount, nextCursor } = response.data;
+        console.log("Wines data:", list);
+        console.log("Total wines count:", totalCount);
+        console.log("Next cursor for wines:", nextCursor);
+
+        // 중복되지 않는 데이터만 추가
+        setWines((prevWines) => {
+          const uniqueWines = [
+            ...prevWines,
+            ...list.filter(
+              (newWine: Wine) =>
+                !prevWines.some((wine) => wine.id === newWine.id),
+            ),
+          ];
+          return uniqueWines;
+        });
+
+        setTotalCount(totalCount);
+        setWineCursor(nextCursor); // 커서 저장
+        if (!nextCursor) {
+          setHasMoreWines(false); // 더 이상 로드할 데이터 없으면 false
+        }
+      } catch (error) {
+        console.error("와인 데이터 불러오기 실패", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isLoading, hasMoreWines],
+  );
 
   // 탭 변경 시 데이터 가져오기
   // useEffect(() => {
@@ -73,26 +117,21 @@ export default function ProfileTab() {
   return (
     <div className="desktop:w-[80rem] desktop:h-[3.2rem] tablet:w-full mobile:w-full">
       <div className="flex justify-between items-center ">
-        <div className="desktop:mb-[2.2rem] tablet:mb-[2.2rem] mobile:mb-0">
+        <div>
           <button
-            className={`desktop:w-[9.6rem] desktop:h-[3.2rem] desktop:text-[2rem] desktop:leading-[3.2rem] tablet:w-[9.6rem] tablet:h-[3.2rem] tablet:text-[2rem] tablet:leading-[3.2rem] mobile:w-auto mobile:h-[2.6rem] mobile:text-[1.8rem] mobile:leading-[2.6rem] font-semibold ${activeTab === "reviews" ? "text-gray-800" : "text-gray-500"}`}
+            className={`desktop:w-[9.6rem] desktop:h-[3.2rem] desktop:text-[2rem] desktop:leading-[3.2rem] tablet:w-[9.6rem] tablet:h-[3.2rem] tablet:text-[2rem] tablet:leading-[3.2rem] mobile:w-[8.7em] mobile:h-[2.6rem] mobile:text-[1.8rem] mobile:leading-[2.6rem] font-semibold ${activeTab === "reviews" ? "text-gray-800" : "text-gray-500"}`}
             onClick={() => setActiveTab("reviews")}
           >
             내가 쓴 후기
           </button>
           <button
-            className={`
-              desktop:w-[13.1rem] desktop:h-[3.2rem] desktop:text-[2rem] desktop:leading-[3.2rem]
-              tablet:w-[13.1rem] tablet:h-[3.2rem] tablet:text-[2rem] tablet:leading-[3.2rem]
-              mobile:w-auto mobile:h-[2.6rem] mobile:text-[1.8rem] mobile:leading-[2.6rem]
-              desktop:ml-[3.2rem] tablet:ml-[3.2rem] mobile:ml-[1.6rem]
-              font-semibold ${activeTab === "wines" ? "text-gray-800" : "text-gray-500"}`}
+            className={`ml-[3.2rem] w-[13.1rem] h-[3.2rem] text-[2rem] font-semibold leading-[3.2rem] ${activeTab === "wines" ? "text-gray-800" : "text-gray-500"}`}
             onClick={() => setActiveTab("wines")}
           >
             내가 등록한 와인
           </button>
         </div>
-        <p className="desktop:mb-[2.2rem] tablet:mb-[2.2rem] mobile:mb-[1.5rem] font-regular desktop:text-[1.4rem] desktop:leading-[2.4rem] tablet:text-[1.4rem] tablet:leading-[2.4rem] mobile:text-[1.2rem] mobile:leading-[1.8rem] text-right text-primary">
+        <p className="font-regular text-[1.4rem] leading-[2.4rem] text-right text-primary">
           {`총 ${totalCount}개`}
         </p>
       </div>
@@ -126,7 +165,7 @@ export default function ProfileTab() {
             hasMore={hasMoreWines}
             cursor={wineCursor}
           >
-            <div className="mt-[2.2rem] space-y-[2rem] ">
+            <div className="mt-[2.2rem] space-y-[2rem]">
               {wines.map((wine) => (
                 <MyWineCard key={wine.id} wine={wine} />
               ))}
