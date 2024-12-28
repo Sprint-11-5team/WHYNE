@@ -21,7 +21,6 @@ import Search from "@/components/wines/search";
 import RecommendCard from "@/components/wines/recommend-card";
 import EntireCard from "@/components/wines/entire-card";
 import FilterModal from "@/components/wines/modal/filter-modal";
-import Modal from "@/components/common/modal-container";
 import AddWine from "@/components/modal-wine/modal-add-wine";
 import arrowRight from "../../../public/icons/right.svg";
 import "swiper/css";
@@ -260,9 +259,10 @@ export default function Wines() {
             >
               와인 등록하기
             </Button>
-            <Modal isOpen={isAddWineModalOpen} onClose={handleAddWineModalOpen}>
-              <AddWine onClose={handleAddWineModalOpen} />
-            </Modal>
+            <AddWine
+              isOpen={isAddWineModalOpen}
+              onClick={handleAddWineModalOpen}
+            />
           </div>
         </div>
         <div className="desktop:flex desktop:gap-[6rem]">
@@ -287,9 +287,10 @@ export default function Wines() {
             >
               와인 등록하기
             </Button>
-            <Modal isOpen={isAddWineModalOpen} onClose={handleAddWineModalOpen}>
-              <AddWine onClose={handleAddWineModalOpen} />
-            </Modal>
+            <AddWine
+              isOpen={isAddWineModalOpen}
+              onClick={handleAddWineModalOpen}
+            />
           </div>
           {isLoading ? (
             <p className="text-gray-600">와인을 준비중입니다...</p> // 로딩 중 문구 표시
