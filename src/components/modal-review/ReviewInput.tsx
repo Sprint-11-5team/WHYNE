@@ -18,12 +18,13 @@ interface WineIdProps {
 }
 
 export default function ReviewInput({ id, content }: WineIdProps) {
-  const { setContent, setRating } = useReviewModalStore();
-  const [wineName, setWineName] = useState<WineDetails | null>(null);
+  const { setContent, setRating, setWineName, wineName } =
+    useReviewModalStore();
+  // const [wineName, setWineName] = useState<WineDetails | null>(null);
 
   useEffect(() => {
     if (id) {
-      async function GetWineName() {
+      async function fetchWineName() {
         try {
           const res = await instance.get(`/wines/${id}`);
           setWineName(res.data);
@@ -32,11 +33,11 @@ export default function ReviewInput({ id, content }: WineIdProps) {
         } finally {
         }
       }
-      GetWineName();
+      fetchWineName();
     }
-  }, [id]);
+  }, [id, setWineName]);
 
-  const wineNameText = wineName ? wineName.name : "와인 이름 로딩 중...";
+  const wineNameText = wineName ? wineName : "와인 이름 로딩 중...";
 
   return (
     <>

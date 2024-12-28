@@ -1,11 +1,18 @@
 "use client";
-import { createContext, useContext, useState, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  Dispatch,
+  SetStateAction,
+} from "react";
 
 type ReviewState = {
   content: string;
   selectedTags: string[];
   tasteValues: number[];
-  wineId: number;
+  wineId?: number;
   wineName: string;
   rating: number;
   id: number | undefined;
@@ -13,6 +20,7 @@ type ReviewState = {
   setSelectedTags: (tags: string[]) => void;
   setTasteValues: (values: number[]) => void;
   setWineId: (id: number) => void;
+  setWineName: Dispatch<SetStateAction<string>>;
   setRating: (rating: number) => void;
   setId: (id: number) => void;
   setReviewData: (
@@ -21,23 +29,22 @@ type ReviewState = {
   resetReview: () => void;
 };
 
-const TestWineDetail = {
-  id: 504,
-  name: "Sentinel Carbernet Sauvignon 2016",
-};
-
 export const ReviewContext = createContext<ReviewState | null>(null);
 
 const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
   const [content, setContent] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tasteValues, setTasteValues] = useState([50, 50, 50, 50]);
-  const [wineId, setWineId] = useState(TestWineDetail.id);
-  const [wineName] = useState(TestWineDetail.name);
+  const [wineId, setWineId] = useState<number>();
+  const [wineName, setWineName] = useState("Unknown");
   const [rating, setRating] = useState(0);
   const [id, setId] = useState<number | undefined>(undefined);
 
   const setReviewData = useCallback((data: Partial<ReviewState>) => {
+    if (!data.wineId) {
+      throw new Error("wineId is required");
+    }
+
     if (data.content !== undefined) setContent(data.content);
     if (data.selectedTags !== undefined) setSelectedTags(data.selectedTags);
     if (data.tasteValues !== undefined) setTasteValues(data.tasteValues);
@@ -66,6 +73,7 @@ const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
     setSelectedTags,
     setTasteValues,
     setWineId,
+    setWineName,
     setRating,
     setId,
     setReviewData,

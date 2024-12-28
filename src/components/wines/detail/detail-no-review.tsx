@@ -3,7 +3,6 @@ import NoRievew from "@/../public/icons/no_review.svg";
 import Button from "@/components/common/Button";
 import { useState } from "react";
 import AddReviewModal from "@/components/modal-review/AddReviewModal";
-import ReviewProvider from "@/provider/usereviewmodals";
 
 export default function DetailNoReview() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,9 +35,7 @@ export default function DetailNoReview() {
           </p>
         </Button>
       </div>
-      <ReviewProvider>
-        <AddReviewModal isOpen={isModalOpen} onClick={handleModalToggle} />
-      </ReviewProvider>
+      <AddReviewModal isOpen={isModalOpen} onClick={handleModalToggle} />
     </div>
   );
 }

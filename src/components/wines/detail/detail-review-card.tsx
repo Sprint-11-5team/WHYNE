@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AddReviewModal from "@/components/modal-review/AddReviewModal";
 import instance from "@/api/api";
-import ReviewProvider from "@/provider/usereviewmodals";
 import RatingDetails from "./rating-details";
 import DetailNoReview from "./detail-no-review";
 import DeleteModal from "@/components/common/modal-delete";
@@ -99,6 +98,7 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
           tasteValues,
           selectedTags: aromaTags, // 변환된 Aroma[]를 할당
         });
+        setSelectedReviewId(reviewId);
         setIsModalOpen(true); // 모달 열기
       }
     } catch (error) {
@@ -239,15 +239,13 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
                             </div>
                           </DropDownMenu>
                           {isModalOpen && (
-                            <ReviewProvider>
-                              <AddReviewModal
-                                isOpen={isModalOpen}
-                                onClick={() => setIsModalOpen(false)}
-                                id={wineid}
-                                isEditing={isEditing}
-                                initialData={initialData || undefined}
-                              />
-                            </ReviewProvider>
+                            <AddReviewModal
+                              isOpen={isModalOpen}
+                              onClick={() => setIsModalOpen(false)}
+                              id={selectedReviewId}
+                              isEditing={isEditing}
+                              initialData={initialData || undefined}
+                            />
                           )}
                         </div>
                       </div>

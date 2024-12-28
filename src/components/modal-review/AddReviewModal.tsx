@@ -1,7 +1,7 @@
 "use client";
 
 import { useReviewModalStore } from "@/provider/usereviewmodals";
-import { FormEvent, useEffect } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Button from "@/components/common/Button";
 import Modalv from "@/components/common/modal-container-review";
 import ReviewInput from "@/components/modal-review/ReviewInput";
@@ -10,11 +10,12 @@ import TasteSlider from "@/components/modal-review/TasteSlider";
 import instance from "@/api/api";
 import { AxiosResponse } from "axios";
 import { Aroma, mapTagToAroma } from "../wines/detail/detail-wine-tag";
+import { useReviewModalStoreV2 } from "@/provider/review-provider.context";
 
 type ModalProps = {
   isOpen: boolean;
   onClick: () => void;
-  id: string;
+  id: number | null;
   isEditing?: boolean;
   initialData?: {
     rating: number;
@@ -29,69 +30,29 @@ export default function AddReviewModal({
   onClick,
   id,
   isEditing = false,
-  initialData,
+  // initialData,
 }: ModalProps) {
-  const {
-    rating,
-    content,
-    tasteValues,
-    selectedTags,
-    resetReview,
-    setReviewData,
-  } = useReviewModalStore();
+  const { data, setId } = useReviewModalStoreV2();
+  const [tasteValues, setTasteValues] = useState<number[]>([50, 50, 50, 50]);
+  console.log("$$ id", id);
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    console.log("submit");
+  }
 
   useEffect(() => {
-    if (isEditing && initialData) {
-      setReviewData({
-        content: initialData.content,
-        selectedTags: initialData.selectedTags,
-        tasteValues: initialData.tasteValues,
-        wineId: Number(id),
-        rating: initialData.rating,
-      });
-      console.log(initialData);
-    }
-  }, [isEditing, initialData, id, setReviewData]);
+    setId(Number(id));
+    console.log("$$ id", id);
+  }, [data, id, setId]);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  if (!data) {
+    return;
+  }
 
-    const wineId = Number(id);
-
-    const formData = {
-      rating,
-      lightBold: tasteValues[0],
-      smoothTannic: tasteValues[1],
-      drySweet: tasteValues[2],
-      softAcidic: tasteValues[3],
-      aroma: selectedTags
-        .map(mapTagToAroma)
-        .filter((tag): tag is Aroma => tag !== undefined),
-      content,
-      wineId,
-    };
-
-    try {
-      const res: AxiosResponse = isEditing
-        ? await instance.patch(`/reviews/${id}`, formData)
-        : await instance.post("/reviews", formData);
-
-      if (res.status === 200) {
-        console.log(
-          isEditing
-            ? "리뷰가 성공적으로 수정되었습니다."
-            : "리뷰가 성공적으로 제출되었습니다.",
-        );
-      } else {
-        console.error("리뷰 제출 실패", res.data);
-      }
-    } catch (error) {
-      console.error("리뷰 제출 중 오류 발생:", error);
-    } finally {
-      resetReview();
-      onClick();
-    }
-  };
+  if (!id) {
+    return;
+  }
 
   return (
     <Modalv isOpen={isOpen} onClose={onClick}>
@@ -109,7 +70,7 @@ export default function AddReviewModal({
           </button>
         </section>
         <form className="w-full" onSubmit={handleSubmit}>
-          <ReviewInput id={id} content={content} />
+          {/* <ReviewInput id={id} content={data.content} /> */}
           <div className="relative inline-block mb-[2rem]">
             <p
               className="text-gray-800 font-bold text-[1.6rem] tablet:text-[1.8rem] cursor-pointer 
@@ -132,14 +93,14 @@ export default function AddReviewModal({
               기억에 남는 향이 있나요?
             </p>
           </div>
-          <TagSelector selectedTags={selectedTags} />
+          <TagSelector selectedTags={data.aroma} />
           <div className="flex mt-[4rem]">
             <Button
               type="submit"
               size="large"
               color="primary"
               addClassName="w-full text-[1.6rem] tablet:text-[1.5rem] font-bold rounded-[1rem] h-[5.4rem]"
-              disabled={!content}
+              disabled={!data.content}
             >
               {isEditing ? "수정하기" : "리뷰 남기기"}
             </Button>
