@@ -39,7 +39,8 @@ const InitialFilters: Filters = {
 const fetchData = async (
   url: string,
   { limit = 10, cursor, type, minPrice, maxPrice, rating, name }: WineParam,
-): Promise<WineListType | null> => {
+  /*eslint-disable*/
+): Promise<any> => {
   const param = removeEmptyField({
     limit,
     cursor,
@@ -63,7 +64,20 @@ const fetchData = async (
 };
 
 export default function Wines() {
-  const [recommendList, setRecommendList] = useState<WineType[]>([]);
+  const [recommendList, setRecommendList] = useState<WineType[]>([
+    {
+      id: 0,
+      name: "",
+      region: "",
+      image: "",
+      price: 0,
+      type: "",
+      avgRating: 0,
+      reviewCount: 0,
+      recentReview: null,
+    },
+  ]);
+
   const [entireList, setEntireList] = useState<WineListType>({
     list: [],
     nextCursor: 0,
@@ -79,6 +93,7 @@ export default function Wines() {
     const response = await fetchData("/wines/recommended", { limit: 10 });
     if (response) {
       setRecommendList(response);
+      console.log("추천 와인 목록", response);
     }
   }, []);
 
@@ -168,14 +183,14 @@ export default function Wines() {
         <h2 className="font-bold text-gray-800 tablet:text-[2rem]/[2.4rem] mobile:text-[1.8rem]/[2.1rem]">
           이번 달 추천 와인
         </h2>
-        {recommendList.length > 0 ? (
+        {Array.isArray(recommendList) && recommendList.length > 0 ? (
           <div className="relative group w-full">
             <Swiper
               modules={[Navigation]}
               slidesPerView="auto" // 기본 슬라이드 수
               spaceBetween={20}
               centeredSlides={false}
-              loop={true}
+              loop={false}
               navigation={{
                 nextEl: ".swiper-button-next", // 커스텀 버튼 지정
               }} // 네비게이션 버튼 추가
