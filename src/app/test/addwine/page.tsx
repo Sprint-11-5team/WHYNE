@@ -3,7 +3,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import Image from "next/image";
 import instance from "@/api/api";
 import { removeEmptyField } from "@/utils/parameter";
 import {
@@ -21,10 +20,9 @@ import Search from "@/components/wines/search";
 import RecommendCard from "@/components/wines/recommend-card";
 import EntireCard from "@/components/wines/entire-card";
 import FilterModal from "@/components/wines/modal/filter-modal";
-import arrowRight from "../../../public/icons/right.svg";
 import "swiper/css";
 import "swiper/css/navigation";
-import { useAddWineModal } from "./AddWineModalProvider";
+import { useAddWineModal } from "@/app/wines/AddWineModalProvider";
 
 const InitialFilters: Filters = {
   limit: 10,
@@ -204,14 +202,7 @@ export default function Wines() {
                 </SwiperSlide>
               ))}
             </Swiper>
-            <button className="swiper-button-next absolute top-2/3 right-0 transform -translate-y-1/2 bg-gray-200 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Image
-                src={arrowRight}
-                width={24}
-                height={24}
-                alt="추천 와인 더보기"
-              />
-            </button>
+
           </div>
         ) : (
           <p>와인 추천을 준비중이예요!</p>
