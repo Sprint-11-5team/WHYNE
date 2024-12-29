@@ -1,36 +1,31 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 
-interface PriceFilterProps {
+interface PriceApp {
   onChange: (minPrice: number, maxPrice: number) => void; // 가격 범위 변경 시 부모로 전달하는 함수
+  resetValues?: { minPrice: number; maxPrice: number }; // 초기화 값은 옵셔널로 설정
 }
 
-export default function PriceFilter({ onChange }: PriceFilterProps) {
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(500000);
+export default function PriceFilter({ onChange, resetValues }: PriceApp) {
+  const [minPrice, setMinPrice] = useState(resetValues?.minPrice || 0);
+  const [maxPrice, setMaxPrice] = useState(resetValues?.maxPrice || 500000);
 
-  // onChange를 호출하는 핸들러를 useCallback으로 메모화
-  const handleFilterChange = useCallback(() => {
+  // 가격 범위가 변경될 때만 부모에게 전달하는 함수
+  const handlePriceChange = useCallback(() => {
     onChange(minPrice, maxPrice);
   }, [minPrice, maxPrice, onChange]);
 
-  useEffect(() => {
-    handleFilterChange(); // 가격 범위를 부모 컴포넌트로 전달
-  }, [handleFilterChange]);
-
-  // 최소값 변경 핸들러
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Math.min(Number(e.target.value), maxPrice - 1000); // 최소값은 최대값보다 작아야 함
+    const value = Math.min(Number(e.target.value), maxPrice - 1000);
     setMinPrice(value);
-    onChange(value, maxPrice); // 부모로 값 전달
+    handlePriceChange();
   };
 
-  // 최대값 변경 핸들러
   const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Math.max(Number(e.target.value), minPrice + 1000); // 최대값은 최소값보다 커야 함
+    const value = Math.max(Number(e.target.value), minPrice + 1000);
     setMaxPrice(value);
-    onChange(minPrice, value); // 부모로 값 전달
+    handlePriceChange();
   };
 
   return (
@@ -48,8 +43,7 @@ export default function PriceFilter({ onChange }: PriceFilterProps) {
           </span>
         </label>
       </div>
-      <div className="relative h-[0.6rem] bg-gray-300 rounded-full">
-        {/* 활성 범위 표시 */}
+      <div className="relative h-[0.6rem] bg-gray-100 rounded-full">
         <div
           className="absolute h-[0.6rem] bg-primary rounded-full"
           style={{
@@ -57,26 +51,26 @@ export default function PriceFilter({ onChange }: PriceFilterProps) {
             right: `${100 - (maxPrice / 500000) * 100}%`,
           }}
         />
-        {/* 최소값 손잡이 */}
-        <input
-          type="range"
-          min={0}
-          max={500000}
-          step={1000}
-          value={minPrice}
-          onChange={handleMinChange}
-          className="absolute w-full h-[0.6rem] bg-transparent appearance-none pointer-events-auto z-10 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[1.6rem] [&::-webkit-slider-thumb]:h-[1.6rem] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-solid [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-[0.1rem] [&::-webkit-slider-thumb]:border-gray-300 [&::-webkit-slider-runnable-track]:bg-transparent"
-        />
-        {/* 최대값 손잡이 */}
-        <input
-          type="range"
-          min={0}
-          max={500000}
-          step={1000}
-          value={maxPrice}
-          onChange={handleMaxChange}
-          className="absolute w-full h-[0.6rem] bg-transparent appearance-none pointer-events-auto z-10 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[1.6rem] [&::-webkit-slider-thumb]:h-[1.6rem] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-solid [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-[0.1rem] [&::-webkit-slider-thumb]:border-gray-300 [&::-webkit-slider-runnable-track]:bg-transparent"
-        />
+<input
+  type="range"
+  min={0}
+  max={500000}
+  step={1000}
+  value={minPrice}
+  onChange={handleMinChange}
+  className="absolute w-full h-0 top-1/2 -translate-y-1/2 appearance-none bg-transparent pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:ring-1 [&::-webkit-slider-thumb]:ring-gray-300 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-[0.1rem] [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:ring-1 [&::-moz-range-thumb]:ring-white [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto"
+/>
+<input
+  type="range"
+  min={0}
+  max={500000}
+  step={1000}
+  value={maxPrice}
+  onChange={handleMaxChange}
+  className="absolute w-full h-0 top-1/2 -translate-y-1/2 appearance-none bg-transparent pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:ring-1 [&::-webkit-slider-thumb]:ring-gray-300 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-[0.1rem] [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:ring-1 [&::-moz-range-thumb]:ring-white [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto"
+/>
+
+
       </div>
     </div>
   );
