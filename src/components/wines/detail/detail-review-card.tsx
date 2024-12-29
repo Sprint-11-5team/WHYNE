@@ -113,7 +113,8 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
           softAcidic,
           aroma: aromaTags, // 변환된 Aroma[]를 할당
         });
-        setIsModalOpen(true); // 모달 열기
+        setSelectedReviewId(reviewId);
+        setTimeout(() => setIsModalOpen(true), 0);
       }
     } catch (error) {
       console.error("리뷰 데이터를 불러오는 중 오류 발생:", error);
@@ -256,8 +257,8 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
                             <AddReviewModal
                               isOpen={isModalOpen}
                               onClick={() => setIsModalOpen(false)}
-                              id={wineid}
-                              reviewId={review.id}
+                              wineId={wineid}
+                              id={selectedReviewId!}
                               isEditing={isEditing}
                               initialData={initialData || undefined}
                             />

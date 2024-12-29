@@ -14,8 +14,8 @@ import { Aroma, mapTagToAroma } from "../wines/detail/detail-wine-tag";
 type ModalProps = {
   isOpen: boolean;
   onClick: () => void;
-  id: string;
-  reviewId: number;
+  wineId: string;
+  id: number; // review ID
   isEditing?: boolean;
   initialData?: {
     rating: number;
@@ -31,8 +31,8 @@ type ModalProps = {
 export default function AddReviewModal({
   isOpen,
   onClick,
+  wineId,
   id,
-  reviewId,
   isEditing = false,
   initialData,
 }: ModalProps) {
@@ -57,35 +57,46 @@ export default function AddReviewModal({
         smoothTannic: initialData.smoothTannic,
         drySweet: initialData.drySweet,
         softAcidic: initialData.softAcidic,
-        wineId: Number(id),
+        wineId: Number(wineId),
         rating: initialData.rating,
       });
       console.log(initialData);
     }
-  }, [isEditing, initialData, id, setReviewData]);
+  }, [isEditing, initialData, wineId, setReviewData]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const wineId = Number(id);
+    const wineIdToNumber = Number(wineId);
 
-    const formData = {
-      rating,
-      lightBold,
-      smoothTannic,
-      drySweet,
-      softAcidic,
-      aroma: aroma
-        .map(mapTagToAroma)
-        .filter((tag): tag is Aroma => tag !== undefined),
-      content,
-      wineId,
-    };
+    const formData = isEditing
+      ? {
+          rating,
+          lightBold,
+          smoothTannic,
+          drySweet,
+          softAcidic,
+          aroma: aroma
+            .map(mapTagToAroma)
+            .filter((tag): tag is Aroma => tag !== undefined),
+          content,
+        }
+      : {
+          rating,
+          lightBold,
+          smoothTannic,
+          drySweet,
+          softAcidic,
+          aroma: aroma
+            .map(mapTagToAroma)
+            .filter((tag): tag is Aroma => tag !== undefined),
+          content,
+          wineIdToNumber,
+        };
 
     try {
       const res: AxiosResponse = isEditing
-        ? // id 를 reviewid로 바꿔야 함
-          await instance.patch(`/reviews/${reviewId}`, formData)
+        ? await instance.patch(`/reviews/${id}`, formData)
         : await instance.post("/reviews", formData);
 
       if (res.status === 200) {
@@ -121,7 +132,7 @@ export default function AddReviewModal({
           </button>
         </section>
         <form className="w-full" onSubmit={handleSubmit}>
-          <ReviewInput id={id} content={content} />
+          <ReviewInput id={wineId} content={content} />
           <div className="relative inline-block mb-[2rem]">
             <p
               className="text-gray-800 font-bold text-[1.6rem] tablet:text-[1.8rem] cursor-pointer 
