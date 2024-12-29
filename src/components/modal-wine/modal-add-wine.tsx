@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { NewWineData, WineType } from "@/types/tasting";
+import { useState,useEffect } from "react";
+import { WineDetailType, WineType } from "@/types/tasting";
 import Button from "@/components/common/Button";
 import Input from "@/components/modal-wine/input";
 import ImageInput from "@/components/modal-wine/image-input";
@@ -14,14 +14,71 @@ interface Props {
   onClick: () => void;
 }
 
+const useResponsiveMargin = () => {
+  const [marginClass, setMarginClass] = useState('');
+  const [buttonPaddingClass, setButtonPaddingClass] = useState('pt-[2rem]');
+ 
+  useEffect(() => {
+    const handleResize = () => {
+      const height = window.innerHeight;
+      const width = window.innerWidth;
+      console.log('Window size:', { width, height });
+      
+      // Set button padding based on height
+      if (height >= 668) {
+        setButtonPaddingClass('pt-[3rem]');
+      } else {
+        setButtonPaddingClass('pt-[2rem]');
+      }
+
+      // 태블릿 (744px 이상)
+      if (width >= 744) {
+        setMarginClass('h-screen flex items-center'); // 화면 중앙 정렬
+      }
+      // 모바일 (744px 미만)
+      else {
+        if (height >= 915) {
+          setMarginClass('mt-[23rem]'); 
+        } else if (height >= 900) {
+          setMarginClass('mt-[25rem]'); 
+        } else if (height >= 896) {
+          setMarginClass('mt-[22rem]');
+        } else if (height >= 844) {
+          setMarginClass('mt-[17rem]'); 
+        } else if (height >= 740) {
+          setMarginClass('mt-[7rem]');
+        } else if (height >= 720) {
+          setMarginClass('mt-[3rem]');
+        } else if (height <= 667) {
+          setMarginClass('mt-[2rem]');
+        } else {
+          setMarginClass('mt-[9rem]'); 
+        }
+      }
+    };
+ 
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+ 
+  return { marginClass, buttonPaddingClass };
+};
+
+
+
+
+
 export default function AddWine({ isOpen, onClick }: Props) {
-  const [values, setValues] = useState<NewWineData>({
+  const { marginClass, buttonPaddingClass } = useResponsiveMargin();  
+  const [values, setValues] = useState<Partial<WineDetailType>>({
     name: "",
     region: "",
     image: "",
     price: 0,
-    type: WineType.None,
+    type: WineType.None,  // 여기서 type이 확실히 WineType임을 보장
   });
+  
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -52,19 +109,29 @@ export default function AddWine({ isOpen, onClick }: Props) {
       throw error; // ✨ 변경: 에러를 throw하도록 수정
     }
   };
+  interface WineCreateType {
+    name: string;
+    region: string;
+    image: string;
+    price: number;
+    type: WineType;
+  }
 
   // 유효성 검사 함수
   const validateField = (
-    id: string,
-    value: string | number | WineType | null | File,
+    id: keyof WineCreateType,
+    value: string | number | WineType | File | null | undefined
   ): string => {
-    if (value === null) return "값을 입력해주세요.";
+    if (value === undefined || value === null) return "값을 입력해주세요.";
+
+
 
     switch (id) {
       case "name":
         return !value || (typeof value === "string" && value.trim() === "")
           ? "와인 이름을 입력해주세요."
           : "";
+
 
       case "price":
         if (!value || Number(value) === 0) return "가격을 입력해주세요.";
@@ -102,7 +169,8 @@ export default function AddWine({ isOpen, onClick }: Props) {
     }));
 
     if (id === "name" || id === "region" || id === "price" || id === "image") {
-      const errorMessage = validateField(id, values[id]);
+      const errorMessage = validateField(id as keyof WineCreateType, values[id as keyof WineCreateType]);
+        
       if (errorMessage) {
         setErrors((prev) => ({ ...prev, [id]: errorMessage }));
       } else {
@@ -114,6 +182,7 @@ export default function AddWine({ isOpen, onClick }: Props) {
       }
     }
   };
+
 
   const handleChangeImage = (image: File | null) => {
     if (image) {
@@ -129,13 +198,18 @@ export default function AddWine({ isOpen, onClick }: Props) {
       setErrors((prev) => ({ ...prev, image: "이미지를 선택해주세요." }));
     }
   };
+    
+    const updateFieldValue = (
+      id: keyof WineCreateType,
+      value: string | number | WineType
+    ) => {
+      const newValues = {
+        ...values,
+        [id]: value,
+      };
+      setValues(newValues);
 
-  const updateFieldValue = (id: string, value: string | number | WineType) => {
-    const newValues = {
-      ...values,
-      [id]: value,
-    };
-    setValues(newValues);
+
 
     setTouched((prev) => ({
       ...prev,
@@ -154,13 +228,14 @@ export default function AddWine({ isOpen, onClick }: Props) {
     }
   };
 
+
   const handleWineValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    updateFieldValue(id, id === "price" ? Number(value) : value);
+    updateFieldValue(id as keyof WineCreateType, id === "price" ? Number(value) : value);
   };
 
-  const handleTypeChange = (value: WineType) => {
-    updateFieldValue("type", value);
+  const handleTypeChange = (value: string) => {
+    updateFieldValue("type", WineType[value as keyof typeof WineType]);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -182,14 +257,16 @@ export default function AddWine({ isOpen, onClick }: Props) {
 
     const newErrors: Record<string, string> = {};
     allFields.forEach((field) => {
-      const value = values[field as keyof NewWineData];
-      const errorMessage = validateField(field, value);
-      console.log(`${field} 검증:`, { value, errorMessage });
+      const value = values[field as keyof WineCreateType];
+      const errorMessage = validateField(field as keyof WineCreateType, value);
+          console.log(`${field} 검증:`, { value, errorMessage });
       if (errorMessage) {
         newErrors[field] = errorMessage;
       }
     });
 
+
+    
     // 이미지 파일 별도 검증
     if (!imageFile) {
       newErrors.image = "이미지를 선택해주세요.";
@@ -261,38 +338,31 @@ export default function AddWine({ isOpen, onClick }: Props) {
       console.log("검증 실패로 API 호출 중단");
     }
   };
-  const isSubmitDisabled =
+  const isSubmitDisabled = (
     !values.name ||
     !values.region ||
     values.price === 0 ||
     values.type === WineType.None ||
     !imageFile ||
-    Object.keys(errors).length > 0;
+    Object.keys(errors).length > 0
+  );
 
   return (
-    <Modal isOpen={isOpen} onClose={onClick} 
-    className="
-w-full
-tablet:max-w-[46rem]
-mt-0
-h-600:mt-0
-h-667:mt-[2rem] 
-h-740:mt-[7rem]
-h-800:mt-0
-h-820:mt-[12rem]  
-h-844:mt-[16rem]     
-h-896:mt-[20rem]  
-h-1024:mt-0
-max-h-[97vh] 
-overflow-y-auto
-rounded-t-[2rem] tablet:rounded-[2rem]
-flex flex-col
-py-[2rem] tablet:py-[3rem] 
-   ">
-    <div className="flex flex-col">
-      <article className="flex-1 px-[1.6rem] tablet:px-[2.4rem]">
+<Modal 
+  isOpen={isOpen} 
+  onClose={onClick} 
+  className={
+  `w-full tablet:max-w-[46rem] 
+  h-full
+  rounded-t-[2rem] tablet:rounded-[2rem] 
+  flex flex-col
+  ${marginClass}`}>
+
+
+  <div className="flex flex-col w-full h-full ">
+      <article className="flex-1 px-[2rem] pt-[1rem] py-0 tablet:px-[2.4rem]">
       <section className="flex justify-between items-center">
-      <h1 className="text-[2rem] tablet:text-[2.4rem] font-bold mt-[1rem] tablet:mt-[2.4rem] mb-[3rem] tablet:mb-[4rem]">
+      <h1 className="text-[2rem] tablet:text-[2.4rem] font-bold mb-[3rem] tablet:mb-[4rem]">
           와인 등록
         </h1>
         <Button
@@ -305,9 +375,9 @@ py-[2rem] tablet:py-[3rem]
             X
           </Button>
           </section>
-        <form className="flex flex-col h-full" onSubmit={handleSubmit}>
-          <div className=" flex flex-col gap-[1.6rem] tablet:gap-[2.4rem]">
-            <div className="flex flex-col gap-[1.6rem] tablet:gap-[2rem]">
+        <form className="flex flex-col" onSubmit={handleSubmit}>
+          <div className=" flex flex-col gap-[1.7rem] tablet:gap-[2.4rem]">
+            <div className="flex flex-col gap-[1.4rem] tablet:gap-[2rem]">
               <label
                 htmlFor="name"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
@@ -324,7 +394,7 @@ py-[2rem] tablet:py-[3rem]
               />
             </div>
 
-            <div className="flex flex-col gap-[1.6rem]">
+            <div className="flex flex-col gap-[1.4rem]">
               <label
                 htmlFor="price"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
@@ -343,7 +413,7 @@ py-[2rem] tablet:py-[3rem]
               />
             </div>
 
-            <div className="flex flex-col gap-[1.6rem]">
+            <div className="flex flex-col gap-[1.4rem]">
               <label
                 htmlFor="region"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
@@ -360,20 +430,23 @@ py-[2rem] tablet:py-[3rem]
               />
             </div>
 
-            <div className="flex flex-col gap-[1.6rem]">
+            <div className="flex flex-col gap-[1.4rem]">
               <label
                 htmlFor="type"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
               >
                 타입
               </label>
+
               <WineTypeDropdown
-                value={values.type}
-                onChange={handleTypeChange}
-                onBlur={() => handleBlur("type")}
-                error={shouldShowError("type") ? errors.type : ""}
-              />
+  value={values.type as WineType}  // 타입 단언 사용
+  onChange={handleTypeChange}
+  onBlur={() => handleBlur("type")}
+  error={shouldShowError("type") ? errors.type : ""}
+/>
             </div>
+
+
 
             <div className="flex flex-col gap-[1.6rem]">
               <label
@@ -391,16 +464,16 @@ py-[2rem] tablet:py-[3rem]
             </div>
           </div>
 
-          <div className="flex gap-[1rem] sticky bg-white pt-default:pt-[1rem] 
-          pt-800:pt-[1.2rem]
-          pt-820:pt-[3rem]
-          ">
+          <div className={`flex bg-white ${buttonPaddingClass} tablet:pt-[3rem] pb-[2.4rem] tablet:pb-[3rem] gap-[1rem]`}>
+
+
+            
             <Button
               size="small"
               color="white"
               type="button"
               onClick={onClick}
-              addClassName="flex-1 text-primary font-bold min-h-[4rem] text-base tablet:text-lg"
+              addClassName="flex-1 text-primary font-bold min-h-[4rem] tablet:text-lg"
             >
               취소
             </Button>
@@ -409,7 +482,7 @@ py-[2rem] tablet:py-[3rem]
               color="primary"
               type="submit"
               disabled={isSubmitDisabled}
-              addClassName="flex-[2.4] font-bold min-h-[4rem] text-base tablet:text-lg"
+              addClassName="flex-[2.4] font-bold min-h-[4rem] tablet:text-lg"
             >
               와인 등록하기
             </Button>

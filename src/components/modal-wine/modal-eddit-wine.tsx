@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { NewWineData, WineType } from "@/types/tasting";
+import { WineDetailType, WineType } from "@/types/tasting";
 import Button from "@/components/common/Button";
 import Input from "@/components/modal-wine/input";
 import ImageInput from "@/components/modal-wine/image-input";
 import WineTypeDropdown from "@/components/modal-wine/wine-type-drop-down";
 import api from "@/api/api";
-import Modal from "@/components/common/modal-container";
+import ModalV from "@/components/common/modal-container-review";
 
 interface Props {
   isOpen: boolean;
@@ -15,13 +15,14 @@ interface Props {
 }
 
 export default function EditWine({ isOpen, onClick }: Props) {
-  const [values, setValues] = useState<NewWineData>({
+  const [values, setValues] = useState<Partial<WineDetailType>>({
     name: "",
     region: "",
     image: "",
     price: 0,
-    type: WineType.None,
+    type: WineType.None,  // 여기서 type이 확실히 WineType임을 보장
   });
+  
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -52,19 +53,29 @@ export default function EditWine({ isOpen, onClick }: Props) {
       throw error; // ✨ 변경: 에러를 throw하도록 수정
     }
   };
+  interface WineCreateType {
+    name: string;
+    region: string;
+    image: string;
+    price: number;
+    type: WineType;
+  }
 
   // 유효성 검사 함수
   const validateField = (
-    id: string,
-    value: string | number | WineType | null | File,
+    id: keyof WineCreateType,
+    value: string | number | WineType | File | null | undefined
   ): string => {
-    if (value === null) return "값을 입력해주세요.";
+    if (value === undefined || value === null) return "값을 입력해주세요.";
+
+
 
     switch (id) {
       case "name":
         return !value || (typeof value === "string" && value.trim() === "")
           ? "와인 이름을 입력해주세요."
           : "";
+
 
       case "price":
         if (!value || Number(value) === 0) return "가격을 입력해주세요.";
@@ -102,7 +113,8 @@ export default function EditWine({ isOpen, onClick }: Props) {
     }));
 
     if (id === "name" || id === "region" || id === "price" || id === "image") {
-      const errorMessage = validateField(id, values[id]);
+      const errorMessage = validateField(id as keyof WineCreateType, values[id as keyof WineCreateType]);
+        
       if (errorMessage) {
         setErrors((prev) => ({ ...prev, [id]: errorMessage }));
       } else {
@@ -114,6 +126,7 @@ export default function EditWine({ isOpen, onClick }: Props) {
       }
     }
   };
+
 
   const handleChangeImage = (image: File | null) => {
     if (image) {
@@ -129,13 +142,18 @@ export default function EditWine({ isOpen, onClick }: Props) {
       setErrors((prev) => ({ ...prev, image: "이미지를 선택해주세요." }));
     }
   };
+    
+    const updateFieldValue = (
+      id: keyof WineCreateType,
+      value: string | number | WineType
+    ) => {
+      const newValues = {
+        ...values,
+        [id]: value,
+      };
+      setValues(newValues);
 
-  const updateFieldValue = (id: string, value: string | number | WineType) => {
-    const newValues = {
-      ...values,
-      [id]: value,
-    };
-    setValues(newValues);
+
 
     setTouched((prev) => ({
       ...prev,
@@ -154,13 +172,14 @@ export default function EditWine({ isOpen, onClick }: Props) {
     }
   };
 
+
   const handleWineValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    updateFieldValue(id, id === "price" ? Number(value) : value);
+    updateFieldValue(id as keyof WineCreateType, id === "price" ? Number(value) : value);
   };
 
-  const handleTypeChange = (value: WineType) => {
-    updateFieldValue("type", value);
+  const handleTypeChange = (value: string) => {
+    updateFieldValue("type", WineType[value as keyof typeof WineType]);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -182,14 +201,16 @@ export default function EditWine({ isOpen, onClick }: Props) {
 
     const newErrors: Record<string, string> = {};
     allFields.forEach((field) => {
-      const value = values[field as keyof NewWineData];
-      const errorMessage = validateField(field, value);
-      console.log(`${field} 검증:`, { value, errorMessage });
+      const value = values[field as keyof WineCreateType];
+      const errorMessage = validateField(field as keyof WineCreateType, value);
+          console.log(`${field} 검증:`, { value, errorMessage });
       if (errorMessage) {
         newErrors[field] = errorMessage;
       }
     });
 
+
+    
     // 이미지 파일 별도 검증
     if (!imageFile) {
       newErrors.image = "이미지를 선택해주세요.";
@@ -270,50 +291,34 @@ export default function EditWine({ isOpen, onClick }: Props) {
     Object.keys(errors).length > 0;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClick} 
+    <ModalV isOpen={isOpen} onClose={onClick} 
     className="
 w-full
 tablet:max-w-[46rem]
-mt-0
-h-600:mt-0
-h-667:mt-[2rem] 
-h-740:mt-[7rem]
-h-800:mt-0
-h-820:mt-[12rem]  
-h-844:mt-[16rem]     
-h-896:mt-[20rem]  
-h-1024:mt-0
-max-h-[97vh] 
-overflow-y-auto
+mt-[4rem]
 rounded-t-[2rem] tablet:rounded-[2rem]
 flex flex-col
-py-[1.6rem] tablet:py-[5rem]
-pt-[1rem] 
-pt-800:pt-[1.2rem]
-pt-820:pt-[2rem]
+py-[2rem] tablet:py-[3rem] 
    ">
     <div className="flex flex-col">
-      {/*xx */}
-      <article className="flex-1 px-[1.6rem] tablet:px-[2.4rem]
-">
+      <article className="flex-1 px-[1.6rem] tablet:px-[2.4rem]">
       <section className="flex justify-between items-center">
-      <h1 className="text-[2rem] tablet:text-[2.4rem] font-bold mb-[2rem] tablet:mb-[5rem]
-      ">
-          내가 등록한 와인
+      <h1 className="text-[2rem] tablet:text-[2.4rem] font-bold mt-[1rem] tablet:mt-[2.4rem] mb-[3rem] tablet:mb-[4rem]">
+          와인 등록
         </h1>
         <Button
             type="button"
             color="secondary"
             size="large"
             onClick={onClick}
-            className="text-gray-500 text-2xl mb-[3rem] tablet:mb-[5rem]"
+            className="text-gray-500 text-2xl mt-[1rem] tablet:mt-[2.4rem] mb-[3rem] tablet:mb-[4rem]"
           >
             X
           </Button>
           </section>
         <form className="flex flex-col h-full" onSubmit={handleSubmit}>
           <div className=" flex flex-col gap-[1.6rem] tablet:gap-[2.4rem]">
-            <div className="flex flex-col gap-[1.6rem] tablet:gap-[2.4rem]">
+            <div className="flex flex-col gap-[1.6rem] tablet:gap-[2rem]">
               <label
                 htmlFor="name"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
@@ -349,7 +354,7 @@ pt-820:pt-[2rem]
               />
             </div>
 
-            <div className="flex flex-col gap-[1.6rem] tablet:gap-[2.4rem]">
+            <div className="flex flex-col gap-[1.6rem]">
               <label
                 htmlFor="region"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
@@ -366,22 +371,25 @@ pt-820:pt-[2rem]
               />
             </div>
 
-            <div className="flex flex-col gap-[1.6rem] tablet:gap-[2.4rem]">
+            <div className="flex flex-col gap-[1.6rem]">
               <label
                 htmlFor="type"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
               >
                 타입
               </label>
+
               <WineTypeDropdown
-                value={values.type}
-                onChange={handleTypeChange}
-                onBlur={() => handleBlur("type")}
-                error={shouldShowError("type") ? errors.type : ""}
-              />
+  value={values.type as WineType}  // 타입 단언 사용
+  onChange={handleTypeChange}
+  onBlur={() => handleBlur("type")}
+  error={shouldShowError("type") ? errors.type : ""}
+/>
             </div>
 
-            <div className="flex flex-col gap-[1.6rem] tablet:gap-[2.4rem]">
+
+
+            <div className="flex flex-col gap-[1.6rem]">
               <label
                 htmlFor="image"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
@@ -397,16 +405,14 @@ pt-820:pt-[2rem]
             </div>
           </div>
 
-          <div className="flex gap-[1rem] sticky bg-white pt-default:pt-[1rem] 
-          pt-800:pt-[1.2rem]
-          pt-820:pt-[3rem]
+          <div className="flex bg-white pt-[2rem] gap-[1rem]
           ">
             <Button
               size="small"
               color="white"
               type="button"
               onClick={onClick}
-              addClassName="flex-1 text-primary font-bold min-h-[4rem] text-base tablet:text-lg"
+              addClassName="flex-1 text-primary font-bold min-h-[4rem] tablet:text-lg"
             >
               취소
             </Button>
@@ -415,14 +421,14 @@ pt-820:pt-[2rem]
               color="primary"
               type="submit"
               disabled={isSubmitDisabled}
-              addClassName="flex-[2.4] font-bold min-h-[4rem] text-base tablet:text-lg"
+              addClassName="flex-[2.4] font-bold min-h-[4rem] tablet:text-lg"
             >
-              수정하기
+              와인 등록하기
             </Button>
           </div>
         </form>
       </article>
     </div>
-  </Modal>
+  </ModalV>
   );
 }

@@ -6,10 +6,15 @@ import EditWine from "@/components/modal-wine/modal-eddit-wine";
 import DropDownMenu from "@/components/common/dropdown-menu";
 
 export default function TestPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
   };
 
   const handleEdit = () => {
@@ -27,32 +32,32 @@ export default function TestPage() {
     >
       <div>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsAddModalOpen(true)}
           className="rounded-[1.6rem] bg-primary px-[2.4rem] py-[1.2rem] text-[1.6rem] text-white hover:bg-[#7b52f1] transition-colors"
         >
           와인 등록하기
         </button>
 
-        <AddWine isOpen={isModalOpen} onClick={handleCloseModal} />
+        <AddWine isOpen={isAddModalOpen} onClick={handleCloseAddModal} />
       </div>
 
       <div>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsEditModalOpen(true)}
           className="rounded-[1.6rem] bg-primary px-[2.4rem] py-[1.2rem] text-[1.6rem] text-white hover:bg-[#7b52f1] transition-colors"
         >
           와인 수정하기
         </button>
 
-        <EditWine isOpen={isModalOpen} onClick={handleCloseModal} />
+        <EditWine isOpen={isEditModalOpen} onClick={handleCloseEditModal} />
       </div>
 
       <div className="flex items-center" style={{ gap: "1.6rem" }}>
         <h1 className="text-[1.6rem]">드롭다운 메뉴 테스트</h1>
         <DropDownMenu onEdit={handleEdit} onDelete={handleDelete}>
-  <button className="w-8 h-8">⋮</button> {/* 또는 원하는 트리거 버튼 */}
-</DropDownMenu>
+          <button className="w-8 h-8">⋮</button>
+        </DropDownMenu>
+      </div>
     </div>
-  </div>
   );
 }
