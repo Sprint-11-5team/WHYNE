@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { AuthProvider } from "@/context/auth-provider";
 import ClientWrapper from "@/components/common/nav-wrapper";
+import { AddWineModalProvider } from '@/app/wines/AddWineModalProvider';
 
 export const metadata: Metadata = {
   title: "WHYNE",
@@ -17,8 +18,10 @@ export default function RootLayout({
     <html lang="ko">
       <body className="max-w-full">
         <AuthProvider>
-          {/* <LandingNav /> */}
-          <ClientWrapper>{children}</ClientWrapper>
+          <AddWineModalProvider>
+            {/* <LandingNav /> */}
+            <ClientWrapper>{children}</ClientWrapper>
+          </AddWineModalProvider>
         </AuthProvider>
       </body>
     </html>
