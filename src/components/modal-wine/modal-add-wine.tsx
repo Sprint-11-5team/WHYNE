@@ -6,7 +6,6 @@ import Button from "@/components/common/Button";
 import Input from "@/components/modal-wine/input";
 import ImageInput from "@/components/modal-wine/image-input";
 import WineTypeDropdown from "@/components/modal-wine/wine-type-drop-down";
-import api from "@/api/api";
 import Modal from "@/components/common/modal-container";
 import instance from "@/api/api";
 
@@ -46,15 +45,9 @@ export default function AddWine({ isOpen, onClick }: Props) {
     formData.append("image", file);
 
     try {
-      const response = await api.post<{ url: string }>(
+      const response = await instance.post<{ url: string }>(
         "/images/upload",
         formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // ✨ 변경
-            "Content-Type": "multipart/form-data",
-          },
-        },
       );
       return response.data.url;
     } catch (error) {

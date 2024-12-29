@@ -13,7 +13,7 @@ interface WineDetails {
 }
 
 interface WineIdProps {
-  id?: string;
+  id?: string | number;
   content?: string;
 }
 

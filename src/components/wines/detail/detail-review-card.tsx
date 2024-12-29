@@ -81,7 +81,7 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
     smoothTannic: number;
     drySweet: number;
     softAcidic: number;
-    aroma: Aroma[]; // 여기서 Aroma[] 타입을 보장
+    aroma: Aroma[];
   } | null>(null);
 
   async function handleEdit(reviewId: number) {
