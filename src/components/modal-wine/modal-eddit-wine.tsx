@@ -7,7 +7,7 @@ import Input from "@/components/modal-wine/input";
 import ImageInput from "@/components/modal-wine/image-input";
 import WineTypeDropdown from "@/components/modal-wine/wine-type-drop-down";
 import api from "@/api/api";
-import ModalV from "@/components/common/modal-container-review";
+import Modal from "@/components/common/modal-container";
 
 interface Props {
   isOpen: boolean;
@@ -291,7 +291,7 @@ export default function EditWine({ isOpen, onClick }: Props) {
     Object.keys(errors).length > 0;
 
   return (
-    <ModalV isOpen={isOpen} onClose={onClick} 
+    <Modal isOpen={isOpen} onClose={onClick} 
     className="
 w-full
 tablet:max-w-[46rem]
@@ -429,6 +429,6 @@ py-[2rem] tablet:py-[3rem]
         </form>
       </article>
     </div>
-  </ModalV>
+  </Modal>
   );
 }
