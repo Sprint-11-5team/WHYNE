@@ -16,6 +16,7 @@ import Search from "@/components/wines/search";
 import RecommendCard from "@/components/wines/recommend-card";
 import "swiper/css";
 import "swiper/css/navigation";
+import EditWine from "@/components/modal-wine/modal-eddit-wine";
 
 const initialPrice = { minPrice: 0, maxPrice: 500000 };
 const initialRating = 3;
@@ -171,7 +172,7 @@ export default function ImageSearchPage() {
         )}
       </section>
 
-      <div className="w-full max-w-[114rem] flex flex-col gap-4">
+      <div className="w-full max-w-[50rem] flex flex-col gap-4">
         <Search onChange={handleSearchChange} />
         <Button
           type="button"
@@ -195,7 +196,7 @@ export default function ImageSearchPage() {
         />
       </div>
 
-      <div className="w-full max-w-[114rem]">
+      <div className="w-full max-w-[50rem]">
         <Button
           type="button"
           size="large"
@@ -209,6 +210,21 @@ export default function ImageSearchPage() {
           isOpen={isAddWineModalOpen}
           onClick={handleAddWineModalOpen}
         />
+        <div className="w-full mt-[2rem] max-w-[50rem]">
+        <Button
+          type="button"
+          size="large"
+          color="primary"
+          addClassName="w-full font-bold text-lg text-center rounded-[1.6rem] p-[1.6rem] flex justify-center items-center"
+          onClick={handleAddWineModalOpen}
+        >
+          와인 수정하기
+        </Button>
+        <EditWine
+          isOpen={isAddWineModalOpen}
+          onClick={handleAddWineModalOpen}
+        />
+        </div>
       </div>
     </div>
   );

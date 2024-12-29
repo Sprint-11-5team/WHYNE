@@ -304,7 +304,7 @@ py-[2rem] tablet:py-[3rem]
       <article className="flex-1 px-[1.6rem] tablet:px-[2.4rem]">
       <section className="flex justify-between items-center">
       <h1 className="text-[2rem] tablet:text-[2.4rem] font-bold mt-[1rem] tablet:mt-[2.4rem] mb-[3rem] tablet:mb-[4rem]">
-          와인 등록
+          내가 등록한 와인
         </h1>
         <Button
             type="button"
@@ -423,7 +423,7 @@ py-[2rem] tablet:py-[3rem]
               disabled={isSubmitDisabled}
               addClassName="flex-[2.4] font-bold min-h-[4rem] tablet:text-lg"
             >
-              와인 등록하기
+              와인 수정하기
             </Button>
           </div>
         </form>
