@@ -405,6 +405,26 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
         id={selectedReviewId!}
         type="review"
       />
+<<<<<<< HEAD
+=======
+{alertText && (
+        <AlertModal
+          isOpen={!!alertText}
+          text={alertText}
+          onClose={() => setAlertText(null)}
+          />
+      )}
+      {isModalOpen && (
+        <AddReviewModal
+          isOpen={isModalOpen}
+          onClick={() => setIsModalOpen(false)}
+          wineId={wineid}
+          id={selectedReviewId!}
+          isEditing={isEditing}
+          initialData={initialData || undefined}
+        />
+      )}
+>>>>>>> da2918f1bb28e1641f17f6e3d9c8fe9a43c56dbe
     </div>
   );
 }
