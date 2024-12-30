@@ -1,17 +1,26 @@
 "use client";
 
 import { useState,useEffect } from "react";
-import { WineDetailType, WineType } from "@/types/tasting";
+import { WineType} from "@/types/tasting";
 import Button from "@/components/common/Button";
 import Input from "@/components/modal-wine/input";
 import ImageInput from "@/components/modal-wine/image-input";
 import WineTypeDropdown from "@/components/modal-wine/wine-type-drop-down";
-import api from "@/api/api";
 import Modal from "@/components/common/modal-container";
+import instance from "@/api/api";
 
 interface Props {
   isOpen: boolean;
   onClick: () => void;
+  onClose?: () => void;
+}
+
+interface NewWineData {
+  name: string;
+  region: string;
+  image: string;
+  price: number;
+  type: WineType;
 }
 
 const useResponsiveMargin = () => {
@@ -71,7 +80,7 @@ const useResponsiveMargin = () => {
 
 export default function AddWine({ isOpen, onClick }: Props) {
   const { marginClass, buttonPaddingClass } = useResponsiveMargin();  
-  const [values, setValues] = useState<Partial<WineDetailType>>({
+  const [values, setValues] = useState<Partial<NewWineData>>({
     name: "",
     region: "",
     image: "",
@@ -84,54 +93,50 @@ export default function AddWine({ isOpen, onClick }: Props) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
+
   // 이미지 업로드 함수 추가
   const uploadImage = async (file: File) => {
-    const token = localStorage.getItem("accessToken"); // ✨ 변경
-    if (!token) throw new Error("인증 토큰이 없습니다."); // ✨ 추가
+    // const token = localStorage.getItem("accessToken");
+    // if (!token) throw new Error("인증 토큰이 없습니다.");
 
     const formData = new FormData();
     formData.append("image", file);
+    console.log("FormData 확인:");
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
 
     try {
-      const response = await api.post<{ url: string }>(
+      const response = await instance.post<{ url: string }>(
         "/images/upload",
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // ✨ 변경
             "Content-Type": "multipart/form-data",
           },
         },
       );
+      console.log("이미지 업로드 중...", response.data);
       return response.data.url;
     } catch (error) {
       console.error("이미지 업로드 실패", error);
       throw error; // ✨ 변경: 에러를 throw하도록 수정
     }
   };
-  interface WineCreateType {
-    name: string;
-    region: string;
-    image: string;
-    price: number;
-    type: WineType;
-  }
-
-  // 유효성 검사 함수
-  const validateField = (
-    id: keyof WineCreateType,
-    value: string | number | WineType | File | null | undefined
-  ): string => {
-    if (value === undefined || value === null) return "값을 입력해주세요.";
 
 
-
-    switch (id) {
-      case "name":
-        return !value || (typeof value === "string" && value.trim() === "")
-          ? "와인 이름을 입력해주세요."
-          : "";
-
+    // 유효성 검사 함수
+const validateField = (
+      id: string,
+      value: string | number | WineType | null | File | undefined
+    ): string => {
+      if (value === undefined || value === null) return "값을 입력해주세요.";
+    
+      switch (id) {
+        case "name":
+          return !value || (typeof value === "string" && value.trim() === "")
+            ? "와인 이름을 입력해주세요."
+            : "";
 
       case "price":
         if (!value || Number(value) === 0) return "가격을 입력해주세요.";
@@ -169,8 +174,7 @@ export default function AddWine({ isOpen, onClick }: Props) {
     }));
 
     if (id === "name" || id === "region" || id === "price" || id === "image") {
-      const errorMessage = validateField(id as keyof WineCreateType, values[id as keyof WineCreateType]);
-        
+      const errorMessage = validateField(id, values[id]);
       if (errorMessage) {
         setErrors((prev) => ({ ...prev, [id]: errorMessage }));
       } else {
@@ -182,7 +186,6 @@ export default function AddWine({ isOpen, onClick }: Props) {
       }
     }
   };
-
 
   const handleChangeImage = (image: File | null) => {
     if (image) {
@@ -198,18 +201,13 @@ export default function AddWine({ isOpen, onClick }: Props) {
       setErrors((prev) => ({ ...prev, image: "이미지를 선택해주세요." }));
     }
   };
-    
-    const updateFieldValue = (
-      id: keyof WineCreateType,
-      value: string | number | WineType
-    ) => {
-      const newValues = {
-        ...values,
-        [id]: value,
-      };
-      setValues(newValues);
 
-
+  const updateFieldValue = (id: string, value: string | number | WineType) => {
+    const newValues = {
+      ...values,
+      [id]: value,
+    };
+    setValues(newValues);
 
     setTouched((prev) => ({
       ...prev,
@@ -228,14 +226,13 @@ export default function AddWine({ isOpen, onClick }: Props) {
     }
   };
 
-
   const handleWineValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    updateFieldValue(id as keyof WineCreateType, id === "price" ? Number(value) : value);
+    updateFieldValue(id, id === "price" ? Number(value) : value);
   };
 
-  const handleTypeChange = (value: string) => {
-    updateFieldValue("type", WineType[value as keyof typeof WineType]);
+  const handleTypeChange = (value: WineType) => {
+    updateFieldValue("type", value);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -257,16 +254,14 @@ export default function AddWine({ isOpen, onClick }: Props) {
 
     const newErrors: Record<string, string> = {};
     allFields.forEach((field) => {
-      const value = values[field as keyof WineCreateType];
-      const errorMessage = validateField(field as keyof WineCreateType, value);
-          console.log(`${field} 검증:`, { value, errorMessage });
+      const value = values[field as keyof NewWineData];
+      const errorMessage = validateField(field, value);
+      console.log(`${field} 검증:`, { value, errorMessage });
       if (errorMessage) {
         newErrors[field] = errorMessage;
       }
     });
 
-
-    
     // 이미지 파일 별도 검증
     if (!imageFile) {
       newErrors.image = "이미지를 선택해주세요.";
@@ -284,8 +279,6 @@ export default function AddWine({ isOpen, onClick }: Props) {
         }
 
         const token = localStorage.getItem("accessToken");
-        console.log("실제 토큰 값:", token); // ✨ 추가
-        console.log("토큰 확인:", token ? "존재" : "없음");
 
         if (!token) {
           throw new Error("인증 토큰이 없습니다.");
@@ -309,21 +302,13 @@ export default function AddWine({ isOpen, onClick }: Props) {
           image: imageUrl,
         });
 
-        const response = await api.post(
-          "/wines",
-          {
-            name: values.name,
-            region: values.region,
-            price: values.price,
-            type: values.type,
-            image: imageUrl,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        const response = await instance.post("/wines", {
+          name: values.name,
+          region: values.region,
+          price: values.price,
+          type: values.type,
+          image: imageUrl,
+        });
 
         console.log("와인 등록 성공:", response);
         onClick();
@@ -338,15 +323,15 @@ export default function AddWine({ isOpen, onClick }: Props) {
       console.log("검증 실패로 API 호출 중단");
     }
   };
-  const isSubmitDisabled = (
+  const isSubmitDisabled =
     !values.name ||
     !values.region ||
     values.price === 0 ||
     values.type === WineType.None ||
     !imageFile ||
-    Object.keys(errors).length > 0
-  );
+    Object.keys(errors).length > 0;
 
+    
   return (
 <Modal 
   isOpen={isOpen} 

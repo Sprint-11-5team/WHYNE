@@ -1,21 +1,86 @@
 "use client";
 
-import { useState } from "react";
-import { WineDetailType, WineType } from "@/types/tasting";
+import { useState,useEffect } from "react";
+import { WineType} from "@/types/tasting";
 import Button from "@/components/common/Button";
 import Input from "@/components/modal-wine/input";
 import ImageInput from "@/components/modal-wine/image-input";
 import WineTypeDropdown from "@/components/modal-wine/wine-type-drop-down";
-import api from "@/api/api";
 import Modal from "@/components/common/modal-container";
+import instance from "@/api/api";
 
 interface Props {
   isOpen: boolean;
   onClick: () => void;
+  onClose?: () => void;
 }
 
-export default function EditWine({ isOpen, onClick }: Props) {
-  const [values, setValues] = useState<Partial<WineDetailType>>({
+interface NewWineData {
+  name: string;
+  region: string;
+  image: string;
+  price: number;
+  type: WineType;
+}
+
+const useResponsiveMargin = () => {
+  const [marginClass, setMarginClass] = useState('');
+  const [buttonPaddingClass, setButtonPaddingClass] = useState('pt-[2rem]');
+ 
+  useEffect(() => {
+    const handleResize = () => {
+      const height = window.innerHeight;
+      const width = window.innerWidth;
+      console.log('Window size:', { width, height });
+      
+      // Set button padding based on height
+      if (height >= 668) {
+        setButtonPaddingClass('pt-[3rem]');
+      } else {
+        setButtonPaddingClass('pt-[2rem]');
+      }
+
+      // 태블릿 (744px 이상)
+      if (width >= 744) {
+        setMarginClass('h-screen flex items-center'); // 화면 중앙 정렬
+      }
+      // 모바일 (744px 미만)
+      else {
+        if (height >= 915) {
+          setMarginClass('mt-[23rem]'); 
+        } else if (height >= 900) {
+          setMarginClass('mt-[25rem]'); 
+        } else if (height >= 896) {
+          setMarginClass('mt-[22rem]');
+        } else if (height >= 844) {
+          setMarginClass('mt-[17rem]'); 
+        } else if (height >= 740) {
+          setMarginClass('mt-[7rem]');
+        } else if (height >= 720) {
+          setMarginClass('mt-[3rem]');
+        } else if (height <= 667) {
+          setMarginClass('mt-[2rem]');
+        } else {
+          setMarginClass('mt-[9rem]'); 
+        }
+      }
+    };
+ 
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+ 
+  return { marginClass, buttonPaddingClass };
+};
+
+
+
+
+
+export default function AddWine({ isOpen, onClick }: Props) {
+  const { marginClass, buttonPaddingClass } = useResponsiveMargin();  
+  const [values, setValues] = useState<Partial<NewWineData>>({
     name: "",
     region: "",
     image: "",
@@ -28,54 +93,50 @@ export default function EditWine({ isOpen, onClick }: Props) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
+
   // 이미지 업로드 함수 추가
   const uploadImage = async (file: File) => {
-    const token = localStorage.getItem("accessToken"); // ✨ 변경
-    if (!token) throw new Error("인증 토큰이 없습니다."); // ✨ 추가
+    // const token = localStorage.getItem("accessToken");
+    // if (!token) throw new Error("인증 토큰이 없습니다.");
 
     const formData = new FormData();
     formData.append("image", file);
+    console.log("FormData 확인:");
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
 
     try {
-      const response = await api.post<{ url: string }>(
+      const response = await instance.post<{ url: string }>(
         "/images/upload",
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // ✨ 변경
             "Content-Type": "multipart/form-data",
           },
         },
       );
+      console.log("이미지 업로드 중...", response.data);
       return response.data.url;
     } catch (error) {
       console.error("이미지 업로드 실패", error);
       throw error; // ✨ 변경: 에러를 throw하도록 수정
     }
   };
-  interface WineCreateType {
-    name: string;
-    region: string;
-    image: string;
-    price: number;
-    type: WineType;
-  }
-
-  // 유효성 검사 함수
-  const validateField = (
-    id: keyof WineCreateType,
-    value: string | number | WineType | File | null | undefined
-  ): string => {
-    if (value === undefined || value === null) return "값을 입력해주세요.";
 
 
-
-    switch (id) {
-      case "name":
-        return !value || (typeof value === "string" && value.trim() === "")
-          ? "와인 이름을 입력해주세요."
-          : "";
-
+    // 유효성 검사 함수
+const validateField = (
+      id: string,
+      value: string | number | WineType | null | File | undefined
+    ): string => {
+      if (value === undefined || value === null) return "값을 입력해주세요.";
+    
+      switch (id) {
+        case "name":
+          return !value || (typeof value === "string" && value.trim() === "")
+            ? "와인 이름을 입력해주세요."
+            : "";
 
       case "price":
         if (!value || Number(value) === 0) return "가격을 입력해주세요.";
@@ -113,8 +174,7 @@ export default function EditWine({ isOpen, onClick }: Props) {
     }));
 
     if (id === "name" || id === "region" || id === "price" || id === "image") {
-      const errorMessage = validateField(id as keyof WineCreateType, values[id as keyof WineCreateType]);
-        
+      const errorMessage = validateField(id, values[id]);
       if (errorMessage) {
         setErrors((prev) => ({ ...prev, [id]: errorMessage }));
       } else {
@@ -126,7 +186,6 @@ export default function EditWine({ isOpen, onClick }: Props) {
       }
     }
   };
-
 
   const handleChangeImage = (image: File | null) => {
     if (image) {
@@ -142,18 +201,13 @@ export default function EditWine({ isOpen, onClick }: Props) {
       setErrors((prev) => ({ ...prev, image: "이미지를 선택해주세요." }));
     }
   };
-    
-    const updateFieldValue = (
-      id: keyof WineCreateType,
-      value: string | number | WineType
-    ) => {
-      const newValues = {
-        ...values,
-        [id]: value,
-      };
-      setValues(newValues);
 
-
+  const updateFieldValue = (id: string, value: string | number | WineType) => {
+    const newValues = {
+      ...values,
+      [id]: value,
+    };
+    setValues(newValues);
 
     setTouched((prev) => ({
       ...prev,
@@ -172,14 +226,13 @@ export default function EditWine({ isOpen, onClick }: Props) {
     }
   };
 
-
   const handleWineValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    updateFieldValue(id as keyof WineCreateType, id === "price" ? Number(value) : value);
+    updateFieldValue(id, id === "price" ? Number(value) : value);
   };
 
-  const handleTypeChange = (value: string) => {
-    updateFieldValue("type", WineType[value as keyof typeof WineType]);
+  const handleTypeChange = (value: WineType) => {
+    updateFieldValue("type", value);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -201,16 +254,14 @@ export default function EditWine({ isOpen, onClick }: Props) {
 
     const newErrors: Record<string, string> = {};
     allFields.forEach((field) => {
-      const value = values[field as keyof WineCreateType];
-      const errorMessage = validateField(field as keyof WineCreateType, value);
-          console.log(`${field} 검증:`, { value, errorMessage });
+      const value = values[field as keyof NewWineData];
+      const errorMessage = validateField(field, value);
+      console.log(`${field} 검증:`, { value, errorMessage });
       if (errorMessage) {
         newErrors[field] = errorMessage;
       }
     });
 
-
-    
     // 이미지 파일 별도 검증
     if (!imageFile) {
       newErrors.image = "이미지를 선택해주세요.";
@@ -228,8 +279,6 @@ export default function EditWine({ isOpen, onClick }: Props) {
         }
 
         const token = localStorage.getItem("accessToken");
-        console.log("실제 토큰 값:", token); // ✨ 추가
-        console.log("토큰 확인:", token ? "존재" : "없음");
 
         if (!token) {
           throw new Error("인증 토큰이 없습니다.");
@@ -253,21 +302,13 @@ export default function EditWine({ isOpen, onClick }: Props) {
           image: imageUrl,
         });
 
-        const response = await api.post(
-          "/wines",
-          {
-            name: values.name,
-            region: values.region,
-            price: values.price,
-            type: values.type,
-            image: imageUrl,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        const response = await instance.post("/wines", {
+          name: values.name,
+          region: values.region,
+          price: values.price,
+          type: values.type,
+          image: imageUrl,
+        });
 
         console.log("와인 등록 성공:", response);
         onClick();
@@ -290,21 +331,24 @@ export default function EditWine({ isOpen, onClick }: Props) {
     !imageFile ||
     Object.keys(errors).length > 0;
 
+    
   return (
-    <Modal isOpen={isOpen} onClose={onClick} 
-    className="
-w-full
-tablet:max-w-[46rem]
-mt-[4rem]
-rounded-t-[2rem] tablet:rounded-[2rem]
-flex flex-col
-py-[2rem] tablet:py-[3rem] 
-   ">
-    <div className="flex flex-col">
-      <article className="flex-1 px-[1.6rem] tablet:px-[2.4rem]">
+<Modal 
+  isOpen={isOpen} 
+  onClose={onClick} 
+  className={
+  `w-full tablet:max-w-[46rem] 
+  h-full
+  rounded-t-[2rem] tablet:rounded-[2rem] 
+  flex flex-col
+  ${marginClass}`}>
+
+
+  <div className="flex flex-col w-full h-full ">
+      <article className="flex-1 px-[2rem] pt-[1rem] py-0 tablet:px-[2.4rem]">
       <section className="flex justify-between items-center">
-      <h1 className="text-[2rem] tablet:text-[2.4rem] font-bold mt-[1rem] tablet:mt-[2.4rem] mb-[3rem] tablet:mb-[4rem]">
-          내가 등록한 와인
+      <h1 className="text-[2rem] tablet:text-[2.4rem] font-bold mb-[3rem] tablet:mb-[4rem]">
+          와인 등록
         </h1>
         <Button
             type="button"
@@ -316,9 +360,9 @@ py-[2rem] tablet:py-[3rem]
             X
           </Button>
           </section>
-        <form className="flex flex-col h-full" onSubmit={handleSubmit}>
-          <div className=" flex flex-col gap-[1.6rem] tablet:gap-[2.4rem]">
-            <div className="flex flex-col gap-[1.6rem] tablet:gap-[2rem]">
+        <form className="flex flex-col" onSubmit={handleSubmit}>
+          <div className=" flex flex-col gap-[1.7rem] tablet:gap-[2.4rem]">
+            <div className="flex flex-col gap-[1.4rem] tablet:gap-[2rem]">
               <label
                 htmlFor="name"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
@@ -335,7 +379,7 @@ py-[2rem] tablet:py-[3rem]
               />
             </div>
 
-            <div className="flex flex-col gap-[1.6rem]">
+            <div className="flex flex-col gap-[1.4rem]">
               <label
                 htmlFor="price"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
@@ -354,7 +398,7 @@ py-[2rem] tablet:py-[3rem]
               />
             </div>
 
-            <div className="flex flex-col gap-[1.6rem]">
+            <div className="flex flex-col gap-[1.4rem]">
               <label
                 htmlFor="region"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
@@ -371,7 +415,7 @@ py-[2rem] tablet:py-[3rem]
               />
             </div>
 
-            <div className="flex flex-col gap-[1.6rem]">
+            <div className="flex flex-col gap-[1.4rem]">
               <label
                 htmlFor="type"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
@@ -405,8 +449,10 @@ py-[2rem] tablet:py-[3rem]
             </div>
           </div>
 
-          <div className="flex bg-white pt-[2rem] gap-[1rem]
-          ">
+          <div className={`flex bg-white ${buttonPaddingClass} tablet:pt-[3rem] pb-[2.4rem] tablet:pb-[3rem] gap-[1rem]`}>
+
+
+            
             <Button
               size="small"
               color="white"
@@ -423,7 +469,7 @@ py-[2rem] tablet:py-[3rem]
               disabled={isSubmitDisabled}
               addClassName="flex-[2.4] font-bold min-h-[4rem] tablet:text-lg"
             >
-              와인 수정하기
+              와인 등록하기
             </Button>
           </div>
         </form>
