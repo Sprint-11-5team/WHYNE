@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import { AuthProvider } from "@/context/auth-provider";
 import ClientWrapper from "@/components/common/nav-wrapper";
 import { AddWineModalProvider } from '@/app/wines/AddWineModalProvider';
+import ReviewProvider from "@/provider/usereviewmodals";
 
 export const metadata: Metadata = {
   title: "WHYNE",
@@ -19,10 +20,12 @@ export default function RootLayout({
       <body className="max-w-full">
         <AuthProvider>
           <AddWineModalProvider>
+          <ReviewProvider>
             {/* <LandingNav /> */}
             <ClientWrapper>{children}</ClientWrapper>
+          </ReviewProvider>
           </AddWineModalProvider>
-        </AuthProvider>
+     </AuthProvider>
       </body>
     </html>
   );
