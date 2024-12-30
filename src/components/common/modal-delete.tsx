@@ -46,12 +46,12 @@ export default function DeleteModal({
     }
   };
 
-  if (!isOpen && !message) return null;
-
   const handleCloseMessage = () => {
     setMessage(null);
     onCancel(); // 삭제 결과 모달을 닫으면서 삭제 모달도 닫음
   };
+
+  if (!isOpen && !message) return null;
 
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center">
@@ -101,9 +101,9 @@ export default function DeleteModal({
           <p className="text-[1.6rem] text-center mb-[2rem]">{message}</p>
           <Button
             type="button"
-            size="medium"
+            size="small"
             color="primary"
-            addClassName="text-white text-[1.6rem] rounded-[1rem] font-bold"
+            addClassName="text-white text-[1.6rem] rounded-[1rem] font-bold px-[3rem] text-center"
             onClick={handleCloseMessage}
           >
             닫기
@@ -114,8 +114,7 @@ export default function DeleteModal({
   );
 }
 
-{
-  /*
+/*
 페이지에서 사용예시
 <DeleteModal 
   isOpen={isDeleteModalOpen}
@@ -124,4 +123,3 @@ export default function DeleteModal({
   type="wine"  // 또는 "review"
 />
 */
-}
