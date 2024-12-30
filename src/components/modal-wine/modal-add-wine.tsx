@@ -38,17 +38,27 @@ export default function AddWine({ isOpen, onClick }: Props) {
 
   // 이미지 업로드 함수 추가
   const uploadImage = async (file: File) => {
-    const token = localStorage.getItem("accessToken"); // ✨ 변경
-    if (!token) throw new Error("인증 토큰이 없습니다."); // ✨ 추가
+    // const token = localStorage.getItem("accessToken");
+    // if (!token) throw new Error("인증 토큰이 없습니다.");
 
     const formData = new FormData();
     formData.append("image", file);
+    console.log("FormData 확인:");
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
 
     try {
       const response = await instance.post<{ url: string }>(
         "/images/upload",
         formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
       );
+      console.log("이미지 업로드 중...", response.data);
       return response.data.url;
     } catch (error) {
       console.error("이미지 업로드 실패", error);
@@ -210,8 +220,6 @@ export default function AddWine({ isOpen, onClick }: Props) {
         }
 
         const token = localStorage.getItem("accessToken");
-        console.log("실제 토큰 값:", token); // ✨ 추가
-        console.log("토큰 확인:", token ? "존재" : "없음");
 
         if (!token) {
           throw new Error("인증 토큰이 없습니다.");
