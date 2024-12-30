@@ -1,4 +1,4 @@
-import { ChangeEvent, useState,useEffect } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import NextImage from "next/image";
 
 interface ImageInputProps {
