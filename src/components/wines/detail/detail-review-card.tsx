@@ -246,26 +246,39 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
                             layout="fill"
                           />
                         </button>
-                        {review.user.id === user?.id && (
-                          <div className="z-10">
-                            <DropDownMenu
-                              onDelete={() => openDeleteModal(review.id)}
-                              onEdit={() => {
-                                if (review.user.id === user?.id) {
-                                  handleEdit(review.id);
-                                }
-                              }}
-                            >
-                              <div className="relative desktop:w-[3.8rem] desktop:h-[3.8rem] tablet:w-[3.8rem] tablet:h-[3.8rem] mobile:w-[3.2rem] mobile:h-[3.2rem]">
-                                <Image
-                                  src={MenuIcon}
-                                  alt="메뉴 아이콘"
-                                  layout="fill"
-                                />
-                              </div>
-                            </DropDownMenu>
-                          </div>
-                        )}
+
+                        <div className="z-10">
+                          <DropDownMenu
+                            onDelete={() => {
+                              if (review.user.id === user?.id) {
+                                openDeleteModal(review.id);
+                              } else {
+                                setAlertText(
+                                  "본인이 작성한 리뷰만 삭제할 수 있습니다.",
+                                );
+                                return;
+                              }
+                            }}
+                            onEdit={() => {
+                              if (review.user.id === user?.id) {
+                                handleEdit(review.id);
+                              } else {
+                                setAlertText(
+                                  "본인이 작성한 리뷰만 수정할 수 있습니다.",
+                                );
+                                return;
+                              }
+                            }}
+                          >
+                            <div className="relative desktop:w-[3.8rem] desktop:h-[3.8rem] tablet:w-[3.8rem] tablet:h-[3.8rem] mobile:w-[3.2rem] mobile:h-[3.2rem]">
+                              <Image
+                                src={MenuIcon}
+                                alt="메뉴 아이콘"
+                                layout="fill"
+                              />
+                            </div>
+                          </DropDownMenu>
+                        </div>
                       </div>
                     </div>
                   </div>
