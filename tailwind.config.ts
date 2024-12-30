@@ -29,7 +29,7 @@ export default {
       tablet: "744px",
       // => @media (min-width: 744px) { ... }
 
-      mobile: "375px",
+      mobile: "344px",
       // => @media (min-width: 375px) { ... }
 
       // 'pt-default': {'raw': '(min-height: 600px) and (max-height: 799px)'},
