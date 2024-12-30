@@ -189,7 +189,7 @@ export default function Wines() {
               slidesPerView="auto" // 기본 슬라이드 수
               spaceBetween={20}
               centeredSlides={false}
-              loop={false}
+              loop={true}
               navigation={{
                 nextEl: ".swiper-button-next", // 커스텀 버튼 지정
               }} // 네비게이션 버튼 추가
