@@ -42,10 +42,10 @@ const useResponsiveMargin = () => {
       }
       // 모바일 (744px 미만)
       else {
-        if (height >= 915) {
-          setMarginClass('mt-[23rem]'); 
-        } else if (height >= 900) {
+        if (height >= 916) {
           setMarginClass('mt-[25rem]'); 
+        } else if (height >= 900) {
+          setMarginClass('mt-[23rem]'); 
         } else if (height >= 896) {
           setMarginClass('mt-[22rem]');
         } else if (height >= 844) {
@@ -155,7 +155,7 @@ export default function FilterModal({
             color="secondary"
             type="reset"
             onClick={handleReset}
-            addClassName="w-full max-w-[12rem] h-[5.5rem] rounded-[1.2rem] font-bold text-lg"
+            addClassName="w-full min-w-[9.6rem] max-w-[20rem] h-[5.5rem] rounded-[1.2rem] font-bold text-lg"
           >
             초기화
           </Button>
@@ -164,7 +164,7 @@ export default function FilterModal({
             color="primary"
             type="submit"
             onClick={handleApply}
-            addClassName="w-full max-w-[23rem] h-[5.4rem] rounded-[1.2rem] font-bold text-bold text-lg "
+            addClassName="w-full min-w-[23rem] max-w-[30rem] h-[5.4rem] rounded-[1.2rem] font-bold text-bold text-lg "
           >
             필터 적용하기
           </Button>
