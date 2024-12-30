@@ -3,9 +3,12 @@ import NoRievew from "@/../public/icons/no_review.svg";
 import Button from "@/components/common/Button";
 import { useState } from "react";
 import AddReviewModal from "@/components/modal-review/AddReviewModal";
-import ReviewProvider from "@/provider/usereviewmodals";
 
-export default function DetailNoReview() {
+interface DetailReviewCardProps {
+  wineid: string;
+}
+
+export default function DetailNoReview({ wineid }: DetailReviewCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   function handleModalToggle() {
@@ -36,9 +39,11 @@ export default function DetailNoReview() {
           </p>
         </Button>
       </div>
-      <ReviewProvider>
-        <AddReviewModal isOpen={isModalOpen} onClick={handleModalToggle} />
-      </ReviewProvider>
+      <AddReviewModal
+        isOpen={isModalOpen}
+        onClick={() => setIsModalOpen(false)}
+        id={wineid}
+      />
     </div>
   );
 }
