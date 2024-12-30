@@ -14,7 +14,7 @@ import { Aroma, mapTagToAroma } from "../wines/detail/detail-wine-tag";
 type ModalProps = {
   isOpen: boolean;
   onClick: () => void;
-  wineId: string | number;
+  wineId: string;
   id: number; // review ID
   isEditing?: boolean;
   initialData?: {
@@ -61,6 +61,7 @@ export default function AddReviewModal({
         rating: initialData.rating,
       });
       console.log(initialData);
+      console.log("수정 모달 열리고 나서", wineId);
     }
   }, [isEditing, initialData, wineId, setReviewData]);
 
@@ -110,6 +111,7 @@ export default function AddReviewModal({
       }
     } catch (error) {
       console.error("리뷰 제출 중 오류 발생:", error);
+      console.log("제출 모달 열리고 나서", wineId);
     } finally {
       resetReview();
       onClick();
