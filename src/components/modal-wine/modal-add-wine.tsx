@@ -8,6 +8,7 @@ import ImageInput from "@/components/modal-wine/image-input";
 import WineTypeDropdown from "@/components/modal-wine/wine-type-drop-down";
 import Modal from "@/components/common/modal-container";
 import instance from "@/api/api";
+import { useRouter } from "next/navigation";
 
 interface Props {
   isOpen: boolean;
@@ -80,6 +81,7 @@ const useResponsiveMargin = () => {
 
 export default function AddWine({ isOpen, onClick }: Props) {
   const { marginClass, buttonPaddingClass } = useResponsiveMargin();  
+  const router = useRouter();
   const [values, setValues] = useState<Partial<NewWineData>>({
     name: "",
     region: "",
@@ -312,6 +314,8 @@ const validateField = (
 
         console.log("와인 등록 성공:", response);
         onClick();
+        router.push(`/wines/${response.data.id}`); // 이 줄 추가
+   
       } catch (error) {
         console.error("에러 발생:", error);
         setErrors((prev) => ({
@@ -322,7 +326,10 @@ const validateField = (
     } else {
       console.log("검증 실패로 API 호출 중단");
     }
-  };
+   };
+
+
+
   const isSubmitDisabled =
     !values.name ||
     !values.region ||
@@ -347,9 +354,9 @@ const validateField = (
   <div className="flex flex-col w-full h-full ">
       <article className="flex-1 px-[2rem] pt-[1rem] py-0 tablet:px-[2.4rem]">
       <section className="flex justify-between items-center">
-      <h1 className="text-[2rem] tablet:text-[2.4rem] font-bold mb-[3rem] tablet:mb-[4rem]">
+      <h2 className="text-[2rem] tablet:text-[2.4rem] font-bold mb-[3rem] tablet:mb-[4rem]">
           와인 등록
-        </h1>
+        </h2>
         <Button
             type="button"
             color="secondary"
@@ -369,7 +376,7 @@ const validateField = (
               >
                 와인 이름
               </label>
-              <Input
+              <Input 
                 id="name"
                 placeholder="와인 이름 입력"
                 onChange={handleWineValueChange}
@@ -386,7 +393,7 @@ const validateField = (
               >
                 가격
               </label>
-              <Input
+              <Input 
                 id="price"
                 placeholder="가격 입력"
                 type="number"
@@ -405,7 +412,7 @@ const validateField = (
               >
                 원산지
               </label>
-              <Input
+              <Input 
                 id="region"
                 placeholder="원산지 입력"
                 onChange={handleWineValueChange}
@@ -416,7 +423,7 @@ const validateField = (
             </div>
 
             <div className="flex flex-col gap-[1.4rem]">
-              <label
+              <label 
                 htmlFor="type"
                 className="text-[1.4rem] tablet:text-[1.6rem] font-medium"
               >
@@ -428,6 +435,7 @@ const validateField = (
   onChange={handleTypeChange}
   onBlur={() => handleBlur("type")}
   error={shouldShowError("type") ? errors.type : ""}
+  
 />
             </div>
 
