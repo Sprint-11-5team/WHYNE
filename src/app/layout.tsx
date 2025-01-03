@@ -10,7 +10,7 @@ import DarkMode from "@/components/common/dark-mode-button";
 export const metadata: Metadata = {
   title: {
     default: "WHYNE",
-    template: "WHYNE | %s",
+    template: "%s",
   },
   description: "한 곳에서 관리하는 나만의 와인창고",
   keywords:
