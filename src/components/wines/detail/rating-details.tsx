@@ -7,7 +7,7 @@ import purpleStar from "../../../../public/icons/star_fill.svg";
 import instance from "@/api/api";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import AddReviewModal from "@/components/modal-review/AddReviewModal";
+import AddReviewModal from "@/components/modal-review/review-modal";
 import ReviewProvider from "@/provider/usereviewmodals";
 
 interface RatingDetailsProps {

@@ -1,8 +1,10 @@
+//app/layout.tsx
+
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { AuthProvider } from "@/context/auth-provider";
 import ClientWrapper from "@/components/common/nav-wrapper";
-import { AddWineModalProvider } from "@/app/wines/AddWineModalProvider";
+import { AddWineModalProvider } from "@/app/(user-wine)/wines/AddWineModalProvider";
 import ReviewProvider from "@/provider/usereviewmodals";
 import DarkThemeProvider from "@/components/common/theme-provider";
 import DarkMode from "@/components/common/dark-mode-button";

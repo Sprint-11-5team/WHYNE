@@ -12,7 +12,7 @@ import DetailWineTag, { Aroma, AromaMapping } from "./detail-wine-tag";
 import StarFill from "@/../public/icons/star_fill.svg";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import AddReviewModal from "@/components/modal-review/AddReviewModal";
+import AddReviewModal from "@/components/modal-review/review-modal";
 import instance from "@/api/api";
 import RatingDetails from "./rating-details";
 import DetailNoReview from "./detail-no-review";

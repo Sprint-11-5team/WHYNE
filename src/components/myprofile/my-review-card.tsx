@@ -5,7 +5,7 @@ import MenuIcon from "@/../public/icons/menu.svg";
 import DeleteModal from "../common/modal-delete";
 import { useEffect, useState } from "react";
 import instance from "@/api/api";
-import AddReviewModal from "../modal-review/AddReviewModal";
+import AddReviewModal from "../modal-review/review-modal";
 import { Aroma, AromaMapping } from "../wines/detail/detail-wine-tag";
 // import ReviewModal from "../modal-review/modal-review-edit";
 

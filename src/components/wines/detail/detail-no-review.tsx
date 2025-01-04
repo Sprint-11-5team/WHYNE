@@ -2,7 +2,7 @@ import Image from "next/image";
 import NoRievew from "@/../public/icons/no_review.svg";
 import Button from "@/components/common/Button";
 import { useState } from "react";
-import AddReviewModal from "@/components/modal-review/AddReviewModal";
+import AddReviewModal from "@/components/modal-review/review-modal";
 
 interface DetailReviewCardProps {
   wineid: string;
