@@ -197,8 +197,21 @@ export default function ProfileTab() {
           >
             <div className="mt-[2.2rem] space-y-[2rem]">
               {wines.map((wine) => (
-                <MyWineCard key={wine.id} wine={wine} />
-              ))}
+                <MyWineCard key={wine.id} wine={wine} onDelete={() => {
+                  // 와인 목록에서 해당 와인 제거
+                  setWines((prevWines) =>
+                    prevWines.filter((w) => w.id !== wine.id)
+                  );
+                  // 총 와인 수 감소
+                  setWineTotal((prev) => prev - 1);
+          
+                  // 와인이 5개 이하이고 더 로드할 데이터가 있으면 추가 데이터 로드
+                  if (wines.length <= 5 && hasMoreWines) {
+                    fetchWines(wineCursor);
+                  }
+                }}
+              />
+            ))}
             </div>
             {/* 더 이상 데이터가 없을 때 메시지 표시 */}
             {!hasMoreWines && !isLoading && (
