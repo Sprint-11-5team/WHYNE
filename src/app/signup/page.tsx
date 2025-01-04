@@ -1,12 +1,21 @@
+import { Metadata } from "next";
+import { getMetadata } from "@/constants/meta-data";
 import SignUpForm from "@/components/auth/signup-form";
 import Container from "@/components/common/container";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+export const generateMetadata = async (): Promise<Metadata> => {
+  return getMetadata({
+    title: `나만의 와인창고 만들기`,
+    asPath: `/home/signup`,
+  });
+};
+
 export default function SignUp() {
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-gray-100 dark:bg-black min-h-screen">
       <Container
         color="white"
         addClassName="

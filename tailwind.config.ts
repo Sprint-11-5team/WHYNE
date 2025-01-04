@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
+  darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -15,12 +16,18 @@ export default {
       white: "var(--white)",
       black: "var(--black)",
       red: "var(--red)",
-      gray: {
-        100: "#f2f4f8",
-        300: "#cfdbea",
-        500: "#9FACBD",
-        800: "#2d3034",
+      gray: { 100: "#f2f4f8", 300: "#cfdbea", 500: "#9FACBD", 800: "#2d3034" },
+      "dark-gray": {
+        "100": "#2e3238",
+        "300": "#50575e",
+        "500": "#6c757d",
+        "800": "#212529",
       },
+      "dark-primary": "#8c65e6",
+      "dark-secondary": "#343a40",
+      "dark-white": "#f8f9fa",
+      "dark-black": "#1E1E2C",
+      "dark-red": "#f86a6a",
     },
     screens: {
       desktop: "1024px",
@@ -29,20 +36,8 @@ export default {
       tablet: "744px",
       // => @media (min-width: 744px) { ... }
 
-      mobile: "375px",
-      // => @media (min-width: 375px) { ... }
-
-      // 'pt-default': {'raw': '(min-height: 600px) and (max-height: 799px)'},
-      // 'pt-800': {'raw': '(min-height: 800px) and (max-height: 819px)'},
-      // 'pt-820': {'raw': '(min-height: 820px)'},
-      //   'h-600': {'raw': '(min-height: 600px) and (max-height: 666px)'},
-      //   'h-667': {'raw': '(min-height: 667px) and (max-height: 739px)'},
-      //   'h-740': {'raw': '(min-height: 740px) and (max-height: 799px)'},
-      //   'h-800': {'raw': '(min-height: 800px) and (max-height: 819px)'},
-      //   'h-820': {'raw': '(min-height: 820px) and (max-height: 843px)'},
-      //   'h-844': {'raw': '(min-height: 844px) and (max-height: 895px)'},
-      //   'h-896': {'raw': '(min-height: 896px) and (max-height: 1023px)'},
-      //   'h-1024': {'raw': '(min-height: 1024px)'}
+      mobile: "344px",
+      //  => @media (min-width: 375px) { ... }
     },
     //새로 추가
     extend: {
@@ -109,6 +104,15 @@ export default {
         ],
         mds: "0.4rem 0.4rem 1rem rgba(136, 136, 136, 0.2)",
         "2md": "0.4rem 0.4rem 2rem rgba(224,230,238, 0.2)",
+      },
+      keyframes: {
+        fadeSlideUp: {
+          "0%": { opacity: "0", transform: "translateY(5rem)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        fadeSlideUp: "fadeSlideUp 1s ease-out forwards",
       },
     },
   },

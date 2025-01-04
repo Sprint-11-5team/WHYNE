@@ -19,8 +19,8 @@ interface WineIdProps {
 
 export default function ReviewInput({ id, content }: WineIdProps) {
   const { setContent, setRating } = useReviewModalStore();
-
   const [wineName, setWineName] = useState<WineDetails | null>(null);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     if (id) {
@@ -30,12 +30,22 @@ export default function ReviewInput({ id, content }: WineIdProps) {
           setWineName(res.data);
         } catch (error) {
           console.error("와인 이름 가져오기 실패", error);
-        } finally {
         }
       }
       getWineName();
     }
   }, [id]);
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newContent = e.target.value;
+    setContent(newContent);
+
+    if (newContent.length < 10) {
+      setError("10자 이상 작성해주세요");
+    } else {
+      setError("");
+    }
+  };
 
   const wineNameText = wineName ? wineName.name : "와인 이름 로딩 중...";
 
@@ -52,7 +62,7 @@ export default function ReviewInput({ id, content }: WineIdProps) {
           />
         </div>
         <div className="flex flex-col min-w-0 gap-[0.8rem]">
-          <p className="ml-[0.5rem] mt-[1rem] break-words whitespace-normal text-lg tablet:text-2lg font-semiBold">
+          <p className="ml-[0.5rem] mt-[1rem]  dark:text-dark-black break-words whitespace-normal text-lg tablet:text-2lg font-semiBold">
             {wineNameText}
           </p>
 
@@ -62,14 +72,21 @@ export default function ReviewInput({ id, content }: WineIdProps) {
           />
         </div>
       </section>
-      <TextArea
-        id="content"
-        name="content"
-        value={content}
-        placeholder="후기를 작성해주세요"
-        className="mb-[4rem] mt-[2.4rem] tablet:mb-[3.2rem] w-full h-[10rem] tablet:h-[12rem] p-[1.6rem] tablet:p-[2rem] text-[1.4rem] tablet:text-[1.6rem]"
-        onChange={(e) => setContent(e.target.value)}
-      />
+      <div className="relative w-full">
+        <TextArea
+          id="content"
+          name="content"
+          value={content}
+          placeholder="후기를 작성해주세요"
+          className="mb-[4rem] mt-[2.4rem] tablet:mb-[3.2rem] w-full h-[10rem] tablet:h-[12rem] p-[1.6rem] tablet:p-[2rem] text-[1.4rem] tablet:text-[1.6rem]"
+          onChange={handleContentChange}
+        />
+        {error && (
+          <p className="absolute bottom-[1rem] left-[1.6rem] text-primary text-sm">
+            {error}
+          </p>
+        )}
+      </div>
     </>
   );
 }

@@ -8,14 +8,14 @@ import ReviewInput from "@/components/modal-review/ReviewInput";
 import TagSelector from "@/components/modal-review/TagSelector";
 import TasteSlider from "@/components/modal-review/TasteSlider";
 import instance from "@/api/api";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { Aroma, mapTagToAroma } from "../wines/detail/detail-wine-tag";
 
 type ModalProps = {
   isOpen: boolean;
   onClick: () => void;
-  wineId: string | number;
-  id: number; // review ID
+  wineId?: string | number;
+  id?: number; // review ID
   isEditing?: boolean;
   initialData?: {
     rating: number;
@@ -61,13 +61,14 @@ export default function AddReviewModal({
         rating: initialData.rating,
       });
       console.log(initialData);
+      console.log("수정 모달 열리고 나서", wineId);
     }
   }, [isEditing, initialData, wineId, setReviewData]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const wineIdToNumber = Number(wineId);
+    // const wineIdToNumber = Number(wineId);
 
     const formData = isEditing
       ? {
@@ -91,7 +92,7 @@ export default function AddReviewModal({
             .map(mapTagToAroma)
             .filter((tag): tag is Aroma => tag !== undefined),
           content,
-          wineIdToNumber,
+          wineId: Number(wineId),
         };
 
     try {
@@ -99,7 +100,7 @@ export default function AddReviewModal({
         ? await instance.patch(`/reviews/${id}`, formData)
         : await instance.post("/reviews", formData);
 
-      if (res.status === 200) {
+      if (res.status >= 200 && res.status < 300) {
         console.log(
           isEditing
             ? "리뷰가 성공적으로 수정되었습니다."
@@ -110,6 +111,9 @@ export default function AddReviewModal({
       }
     } catch (error) {
       console.error("리뷰 제출 중 오류 발생:", error);
+      console.log(" 모달 열리고 나서", wineId);
+      const axiosError = error as AxiosError;
+      console.error(axiosError.response?.data || axiosError.message);
     } finally {
       resetReview();
       onClick();
@@ -120,9 +124,9 @@ export default function AddReviewModal({
     <Modalv isOpen={isOpen} onClose={onClick}>
       <div className="w-full h-auto rounded-[1.8rem] bg-white pt-[3.2rem] px-[2.4rem] pb-[2.4rem] tablet:pt-[2.4rem] tablet:px-[2.4rem] tablet:pb-[2.4rem]">
         <section className="flex justify-between items-center">
-          <h1 className="text-gray-800 m-0 font-bold text-[2rem] tablet:text-[2.4rem]">
+          <h2 className="text-gray-800 m-0 font-bold text-[2rem] tablet:text-[2.4rem]">
             {isEditing ? "수정하기" : "리뷰 등록"}
-          </h1>
+          </h2>
           <button
             type="button"
             onClick={onClick}
@@ -134,26 +138,26 @@ export default function AddReviewModal({
         <form className="w-full" onSubmit={handleSubmit}>
           <ReviewInput id={wineId} content={content} />
           <div className="relative inline-block mb-[2rem]">
-            <p
-              className="text-gray-800 font-bold text-[1.6rem] tablet:text-[1.8rem] cursor-pointer 
+            <h3
+              className="text-gray-800 font-bold text-[1.6rem] tablet:text-[2rem] cursor-pointer 
   border-b-[0.4rem] border-dotted border-transparent 
   hover:border-primary hover:mb-[1rem] hover:pb-[0.5rem]
   transition-all duration-300"
             >
               와인의 맛은 어땠나요?
-            </p>
+            </h3>
           </div>
           <TasteSlider />
           <div className="relative inline-block mt-[4rem] mb-[2rem]">
-            <p
-              className="text-gray-800 font-bold text-[1.6rem] tablet:text-[1.8rem] cursor-pointer 
+            <h3
+              className="text-gray-800 font-bold text-[1.6rem] tablet:text-[2rem] cursor-pointer 
   border-b-[0.4rem] border-dotted border-transparent 
   hover:border-primary hover:mb-[1rem] hover:pb-[0.5rem]
   transition-all duration-300"
             >
               {" "}
               기억에 남는 향이 있나요?
-            </p>
+            </h3>
           </div>
           <TagSelector aroma={aroma} />
           <div className="flex mt-[4rem]">

@@ -6,12 +6,7 @@ import { Navigation } from "swiper/modules";
 import Image from "next/image";
 import instance from "@/api/api";
 import { removeEmptyField } from "@/utils/parameter";
-import {
-  WineParam,
-  Filters,
-  WineListType,
-  WineType,
-} from "@/components/wines/wine";
+import { WineParam, Filters, WineListType, WineType } from "@/types/wine";
 import PriceFilter from "@/components/wines/price-filter";
 import RatingFliter from "@/components/wines/rating-filter";
 import TypesFilter from "@/components/wines/types-filter";
@@ -27,17 +22,17 @@ import "swiper/css/navigation";
 import { useAddWineModal } from "./AddWineModalProvider";
 
 const InitialFilters: Filters = {
-  limit: 10,
+  limit: 1000,
   type: "",
   minPrice: 0,
   maxPrice: 500000,
-  rating: 3,
+  rating: 5,
 };
 
 // 와인 목록을 가져오는 함수 (공통화)
 const fetchData = async (
   url: string,
-  { limit = 10, cursor, type, minPrice, maxPrice, rating, name }: WineParam,
+  { limit = 1000, cursor, type, minPrice, maxPrice, rating, name }: WineParam,
   /*eslint-disable*/
 ): Promise<any> => {
   const param = removeEmptyField({
@@ -89,7 +84,7 @@ export default function Wines() {
 
   // 추천 와인 목록 가져오기
   const fetchRecommendData = useCallback(async () => {
-    const response = await fetchData("/wines/recommended", { limit: 10 });
+    const response = await fetchData("/wines/recommended", { limit: 1000 });
     if (response) {
       setRecommendList(response);
       console.log("추천 와인 목록", response);
@@ -170,8 +165,8 @@ export default function Wines() {
 
   return (
     <div className="flex flex-column w-auto max-w-[114rem] my-0 mx-auto">
-      <section className="w-full max-w-[114rem] tablet:mt-[2rem] mobile:mt-[1.5rem] tablet:mb-[4rem] mobile:mb-[2.4rem] h-auto rounded-[1.6rem] tablet:p-[3rem] mobile:p-[2rem] bg-gray-100">
-        <h2 className="font-bold text-gray-800 tablet:text-[2rem]/[2.4rem] mobile:text-[1.8rem]/[2.1rem]">
+      <section className="w-full max-w-[114rem] tablet:mt-[2rem] mobile:mt-[1.5rem] tablet:mb-[4rem] mobile:mb-[2.4rem] h-auto rounded-[1.6rem] tablet:p-[3rem] mobile:p-[2rem] dark:bg-[#2A2A3D] bg-gray-100">
+        <h2 className="font-bold dark:text-[#E0E6EE] text-gray-800 tablet:text-[2rem]/[2.4rem] mobile:text-[1.8rem]/[2.1rem]">
           이번 달 추천 와인
         </h2>
         {Array.isArray(recommendList) && recommendList.length > 0 ? (
@@ -181,12 +176,12 @@ export default function Wines() {
               slidesPerView="auto"
               spaceBetween={20}
               centeredSlides={false}
-              loop={false}
+              loop={true}
               navigation={{
                 nextEl: ".swiper-button-next",
               }}
               breakpoints={{
-                375: {
+                344: {
                   slidesPerView: 3,
                 },
                 744: {
