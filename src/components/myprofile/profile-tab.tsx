@@ -24,36 +24,38 @@ export default function ProfileTab() {
   // 리뷰 데이터 가져오기 (useCallback으로 메모이제이션)
   const fetchReviews = useCallback(
     async (cursor: number | null) => {
-      if (isLoading || !hasMoreReviews) return; // 로딩 중이거나 더 이상 불러올 데이터가 없으면 return
-      console.log("Fetching reviews with cursor:", cursor);
+      if (isLoading || !hasMoreReviews) return;
+      
       try {
         setIsLoading(true);
         const response = await instance.get("/users/me/reviews", {
           params: { limit: initialLimit, cursor },
         });
-
+  
         const { list, totalCount, nextCursor } = response.data;
-        console.log("Reviews data:", list);
-        console.log("Total reviews count:", totalCount);
-        console.log("Next cursor for reviews:", nextCursor);
-
-        // 중복되지 않는 데이터만 추가
+  
+        // 데이터 중복 제거 로직 개선
         setReviews((prevReviews) => {
           const uniqueReviews = [
             ...prevReviews,
             ...list.filter(
               (newReview: Review) =>
-                !prevReviews.some((review) => review.id === newReview.id),
+                !prevReviews.some((review) => review.id === newReview.id)
             ),
           ];
           return uniqueReviews;
         });
-
+  
         setReveiwTotal(totalCount);
-        setReviewCursor(nextCursor); // 커서 저장
-
+        setReviewCursor(nextCursor);
+  
+        // 데이터가 충분하지 않으면 추가 로드
+        if (nextCursor && list.length < initialLimit) {
+          await fetchReviews(nextCursor);
+        }
+  
         if (!nextCursor) {
-          setHasMoreReviews(false); // 더 이상 로드할 데이터 없으면 false
+          setHasMoreReviews(false);
         }
       } catch (error) {
         console.error("리뷰 데이터 불러오기 실패", error);
@@ -61,7 +63,7 @@ export default function ProfileTab() {
         setIsLoading(false);
       }
     },
-    [isLoading, hasMoreReviews],
+    [isLoading, hasMoreReviews, initialLimit]
   );
 
   // 와인 데이터 가져오기 (useCallback으로 메모이제이션)
@@ -159,9 +161,25 @@ export default function ProfileTab() {
             cursor={reviewCursor}
           >
             <div className="mt-[2.2rem] space-y-[2rem]">
-              {reviews.map((review) => (
-                <MyReviewCard key={review.id} review={review} />
-              ))}
+            {reviews.map((review) => (
+  <MyReviewCard 
+    key={review.id} 
+    review={review} 
+    onDelete={() => {
+      // 리뷰 목록에서 해당 리뷰 제거
+      setReviews(prevReviews => 
+        prevReviews.filter(r => r.id !== review.id)
+      );
+      // 총 리뷰 수 감소
+      setReveiwTotal(prev => prev - 1);
+      
+      // 리뷰가 5개 미만이고 더 로드할 데이터가 있으면 추가 데이터 로드
+      if (reviews.length <= 5 && hasMoreReviews) {
+        fetchReviews(reviewCursor);
+      }
+    }} 
+  />
+))}
             </div>
             {/* 더 이상 데이터가 없을 때 메시지 표시 */}
             {!hasMoreReviews && !isLoading && (

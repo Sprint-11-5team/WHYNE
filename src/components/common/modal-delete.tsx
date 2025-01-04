@@ -7,7 +7,7 @@ type DeleteModalProps = {
   onCancel: () => void;
   id: number;
   type: "wine" | "review";
-  onDeleted?: () => void;  // Optional callback for after deletion
+  onDeleted?: () => void;  // 삭제 후 콜백
 };
 
 export default function DeleteModal({
@@ -18,6 +18,7 @@ export default function DeleteModal({
   onDeleted,
 }: DeleteModalProps) {
   const [message, setMessage] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -32,6 +33,10 @@ export default function DeleteModal({
   }, [isOpen]);
 
   const handleDelete = async () => {
+    // 삭제 중복 방지
+    if (isDeleting) return;
+
+    setIsDeleting(true);
     try {
       if (type === "wine") {
         await deleteWine({ id });
@@ -41,24 +46,24 @@ export default function DeleteModal({
         setMessage("리뷰가 삭제되었습니다.");
       }
   
-      // 1초 후에 모달을 닫음
+      // 1초 후에 모달을 닫고 콜백 호출
       setTimeout(() => {
         handleCloseMessage();
-        // If onDeleted callback is provided, call it
         if (onDeleted) {
-          onDeleted();  // 이 콜백이 fetchReviews()를 호출할 것입니다
+          onDeleted();  // 리뷰 목록 새로고침 등의 작업 수행
         }
-        // reload 제거 - 상태 업데이트로 충분함
       }, 1000);
   
     } catch (error) {
       console.error(`${type} 삭제 오류:`, error);
       setMessage(`${type === "wine" ? "와인" : "리뷰"} 삭제에 실패했습니다.`);
+      setIsDeleting(false);
     }
   };
 
   const handleCloseMessage = () => {
     setMessage(null);
+    setIsDeleting(false);
     onCancel();
   };
 
@@ -81,6 +86,7 @@ export default function DeleteModal({
               addClassName="!text-gray-500 text-[1.6rem] rounded-[1rem] font-bold flex items-center justify-center min-h-[5rem] tablet:min-h-[5.4rem]"
               onClick={onCancel}
               style={{ flexGrow: "1" }}
+              disabled={isDeleting}
             >
               취소
             </Button>
@@ -91,8 +97,9 @@ export default function DeleteModal({
               addClassName="text-white text-[1.6rem] rounded-[1rem] font-bold flex items-center justify-center min-h-[5rem] tablet:min-h-[5.4rem]"
               style={{ flexGrow: "1" }}
               onClick={handleDelete}
+              disabled={isDeleting}
             >
-              삭제하기
+              {isDeleting ? '삭제 중...' : '삭제하기'}
             </Button>
           </div>
         </div>
