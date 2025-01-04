@@ -1,3 +1,4 @@
+//wines/page.tsx 와인목록페이지
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
@@ -16,7 +17,7 @@ import Search from "@/components/wines/search";
 import RecommendCard from "@/components/wines/recommend-card";
 import EntireCard from "@/components/wines/entire-card";
 import FilterModal from "@/components/wines/modal/filter-modal";
-import arrowRight from "../../../public/icons/right.svg";
+import arrowRight from "../../../../public/icons/right.svg";
 import "swiper/css";
 import "swiper/css/navigation";
 import { useAddWineModal } from "./AddWineModalProvider";
