@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import Button from "@/components/common/Button";
 import { deleteWine, deleteReview } from "@/api/wine.api";
@@ -9,6 +7,7 @@ type DeleteModalProps = {
   onCancel: () => void;
   id: number;
   type: "wine" | "review";
+  onDeleted?: () => void;  // Optional callback for after deletion
 };
 
 export default function DeleteModal({
@@ -16,6 +15,7 @@ export default function DeleteModal({
   onCancel,
   id,
   type,
+  onDeleted,
 }: DeleteModalProps) {
   const [message, setMessage] = useState<string | null>(null);
 
@@ -40,6 +40,17 @@ export default function DeleteModal({
         await deleteReview({ id });
         setMessage("리뷰가 삭제되었습니다.");
       }
+  
+      // 1초 후에 모달을 닫음
+      setTimeout(() => {
+        handleCloseMessage();
+        // If onDeleted callback is provided, call it
+        if (onDeleted) {
+          onDeleted();  // 이 콜백이 fetchReviews()를 호출할 것입니다
+        }
+        // reload 제거 - 상태 업데이트로 충분함
+      }, 1000);
+  
     } catch (error) {
       console.error(`${type} 삭제 오류:`, error);
       setMessage(`${type === "wine" ? "와인" : "리뷰"} 삭제에 실패했습니다.`);
@@ -48,22 +59,17 @@ export default function DeleteModal({
 
   const handleCloseMessage = () => {
     setMessage(null);
-    onCancel(); // 삭제 결과 모달을 닫으면서 삭제 모달도 닫음
+    onCancel();
   };
 
   if (!isOpen && !message) return null;
 
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center">
-      {/* 배경 레이어 */}
       <div className="fixed inset-0 bg-black opacity-30" onClick={onCancel} />
 
-      {/* 삭제 확인 모달 */}
       {isOpen && !message && (
-        <div
-          className="rounded-[1.6rem] border-[0.1rem] border-solid border-gray-300 dark:border-none fixed z-20 dark:bg-dark-black bg-white pt-[3.2rem] pr-[1.6rem] pb-[2.4rem] pl-[1.6rem]
-                      w-[35.3rem] h-[17.2rem] tablet:h-[18.2rem]"
-        >
+        <div className="rounded-[1.6rem] border-[0.1rem] border-solid border-gray-300 dark:border-none fixed z-20 dark:bg-dark-black bg-white pt-[3.2rem] pr-[1.6rem] pb-[2.4rem] pl-[1.6rem] w-[35.3rem] h-[17.2rem] tablet:h-[18.2rem]">
           <h1 className="text-[1.8rem] tablet:text-[2rem] m-0 mb-[4rem] text-center font-bold">
             정말 삭제하시겠습니까?
           </h1>
@@ -92,12 +98,8 @@ export default function DeleteModal({
         </div>
       )}
 
-      {/* 삭제 결과 메시지 모달 */}
       {message && (
-        <div
-          className="rounded-[1.6rem] border-[0.1rem] border-solid border-gray-300 fixed z-20 dark:bg-dark-black bg-white p-[2rem]
-                      w-[30rem] h-[15rem] flex flex-col justify-center items-center"
-        >
+        <div className="rounded-[1.6rem] border-[0.1rem] border-solid border-gray-300 fixed z-20 dark:bg-dark-black bg-white p-[2rem] w-[30rem] h-[15rem] flex flex-col justify-center items-center">
           <p className="text-[1.6rem] text-center mb-[2rem]">{message}</p>
           <Button
             type="button"
@@ -113,13 +115,3 @@ export default function DeleteModal({
     </div>
   );
 }
-
-/*
-페이지에서 사용예시
-<DeleteModal 
-  isOpen={isDeleteModalOpen}
-  onCancel={() => setIsDeleteModalOpen(false)}
-  id={id}
-  type="wine"  // 또는 "review"
-/>
-*/

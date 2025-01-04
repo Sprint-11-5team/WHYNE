@@ -4,59 +4,27 @@ import Button from "@/components/common/Button";
 import Image from "next/image";
 import defaultStar from "../../../../public/icons/star.svg";
 import purpleStar from "../../../../public/icons/star_fill.svg";
-import instance from "@/api/api";
-import { AxiosError } from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddReviewModal from "@/components/modal-review/AddReviewModal";
 import ReviewProvider from "@/provider/usereviewmodals";
 
 interface RatingDetailsProps {
-  avgRating: number;
-  reviewCount: number;
-  avgRatings: {
-    [key: number]: number;
+  id: string;
+  ratingData?: {
+    avgRating: number;
+    reviewCount: number;
+    avgRatings: {
+      [key: number]: number;
+    };
   };
 }
 
-interface WineID {
-  id: string;
-}
-
-interface ErrorResponse {
-  message: string;
-}
-
-export default function RatingDetails({ id }: WineID) {
-  const [ratingDetails, setRatingDetails] = useState<RatingDetailsProps>({
-    avgRating: 0,
-    reviewCount: 0,
-    avgRatings: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
-  });
-
+export default function RatingDetails({ id, ratingData }: RatingDetailsProps) {
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  useEffect(() => {
-    async function getRatings(id: string) {
-      try {
-        const res = await instance.get(`/wines/${id}`);
-        setRatingDetails(res.data);
-      } catch (error) {
-        const axiosError = error as AxiosError;
-        console.error(axiosError.response?.data || axiosError.message);
+  // useEffect와 getRatings 제거 (더 이상 필요 없음)
 
-        const errorData = axiosError.response?.data as ErrorResponse;
-        console.error(errorData);
-        alert(
-          errorData?.message ||
-            axiosError.message ||
-            "알 수 없는 오류가 발생했습니다.",
-        );
-      }
-    }
-    getRatings(id);
-  }, [id]);
-
-  return ratingDetails.reviewCount ? (
+  return ratingData?.reviewCount ? (
     <div className="desktop:mx-0 tablet:mx-[2rem] mobile:mx-[1.6rem]">
       <div className="">
         <div
@@ -81,7 +49,7 @@ export default function RatingDetails({ id }: WineID) {
             "
             >
               <h2 className="desktop:text-[5.4rem] tablet:text-[5.4rem] mobile:text-[3.6rem] font-extrabold">
-                {ratingDetails.avgRating?.toFixed(1)}
+                {ratingData.avgRating?.toFixed(1)}
               </h2>
 
               <div className="flex flex-col gap-[0.5rem]">
@@ -91,11 +59,10 @@ export default function RatingDetails({ id }: WineID) {
                       key={index}
                       className="relative desktop:w-[2.4rem] desktop:h-[2.4rem] tablet:w-[2.4rem] tablet:h-[2.4rem] mobile:w-[1.8rem] mobile:h-[1.8rem]"
                     >
-                      {/* 48x48 크기로 컨테이너 설정 */}
                       <Image
                         layout="fill"
                         src={
-                          index < Math.round(ratingDetails.avgRating)
+                          index < Math.round(ratingData.avgRating)
                             ? purpleStar
                             : defaultStar
                         }
@@ -107,7 +74,7 @@ export default function RatingDetails({ id }: WineID) {
                 </div>
 
                 <p className="text-gray-500 text-[1.4rem]">
-                  {ratingDetails.reviewCount}개의 후기
+                  {ratingData.reviewCount}개의 후기
                 </p>
               </div>
             </div>
@@ -124,11 +91,11 @@ export default function RatingDetails({ id }: WineID) {
           </div>
           <div className="flex flex-col gap-[1.5rem]">
             {[
-              { label: "5점", value: ratingDetails.avgRatings?.[5] || 0 },
-              { label: "4점", value: ratingDetails.avgRatings?.[4] || 0 },
-              { label: "3점", value: ratingDetails.avgRatings?.[3] || 0 },
-              { label: "2점", value: ratingDetails.avgRatings?.[2] || 0 },
-              { label: "1점", value: ratingDetails.avgRatings?.[1] || 0 },
+              { label: "5점", value: ratingData.avgRatings?.[5] || 0 },
+              { label: "4점", value: ratingData.avgRatings?.[4] || 0 },
+              { label: "3점", value: ratingData.avgRatings?.[3] || 0 },
+              { label: "2점", value: ratingData.avgRatings?.[2] || 0 },
+              { label: "1점", value: ratingData.avgRatings?.[1] || 0 },
             ].map((ratings, index) => (
               <div
                 key={index}
@@ -143,7 +110,7 @@ export default function RatingDetails({ id }: WineID) {
                       <div
                         className="absolute max-w-full h-[0.6rem] bg-primary rounded-[5rem] z-10"
                         style={{
-                          width: `${(ratings.value / ratingDetails.reviewCount) * 100}%`,
+                          width: `${(ratings.value / ratingData.reviewCount) * 100}%`,
                         }}
                       />
                     </div>
