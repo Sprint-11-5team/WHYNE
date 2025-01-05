@@ -82,6 +82,26 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null);
+
+  const refreshData = async () => {
+    await fetchReviews(); // 리뷰 목록 새로고침
+    const ratingDetailsComponent = document.querySelector("#rating-details");
+    if (ratingDetailsComponent) {
+      const event = new CustomEvent("refreshRatings");
+      ratingDetailsComponent.dispatchEvent(event);
+    }
+  };
+  
+
+// 모달 닫힐 때 호출
+const handleModalClose = async () => {
+  setIsModalOpen(false);
+  setIsEditing(false);
+  setInitialData(null);
+  await refreshData(); // 리뷰 목록과 별점 모두 업데이트
+};
+
+
   const [alertText, setAlertText] = useState<string | null>(null);
 
   const { user } = useAuth();
@@ -441,7 +461,7 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
       {isModalOpen && (
         <AddReviewModal
           isOpen={isModalOpen}
-          onClick={() => setIsModalOpen(false)}
+          onClick={handleModalClose} // 수정됨
           wineId={wineid}
           id={selectedReviewId!}
           isEditing={isEditing}
