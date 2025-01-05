@@ -19,9 +19,10 @@ export interface Wine {
 interface MyWineCardProps {
   wine: Wine;
   onUpdate?: (updatedWine: Wine) => void;
+  onDelete?: () => void; // 삭제 후 동작을 위한 콜백 추가
 }
 
-export default function MyWineCard({ wine, onUpdate }: MyWineCardProps) {
+export default function MyWineCard({ wine, onUpdate, onDelete }: MyWineCardProps) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -114,6 +115,7 @@ export default function MyWineCard({ wine, onUpdate }: MyWineCardProps) {
         onCancel={closeDeleteModal}
         id={wine.id} 
         type="wine"
+        onDeleted={onDelete} // 삭제 완료 후 동작 설정
       />
     </div>
   );

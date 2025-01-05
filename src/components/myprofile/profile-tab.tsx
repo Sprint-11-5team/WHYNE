@@ -21,11 +21,10 @@ export default function ProfileTab() {
 
   const initialLimit = 5; // 데이터 로딩 개수
 
-  // 리뷰 데이터 가져오기 (useCallback으로 메모이제이션)
+  // 리뷰 데이터 가져오기
   const fetchReviews = useCallback(
     async (cursor: number | null) => {
-      if (isLoading || !hasMoreReviews) return; // 로딩 중이거나 더 이상 불러올 데이터가 없으면 return
-      console.log("Fetching reviews with cursor:", cursor);
+      if (isLoading || !hasMoreReviews) return;
       try {
         setIsLoading(true);
         const response = await instance.get("/users/me/reviews", {
@@ -33,42 +32,30 @@ export default function ProfileTab() {
         });
 
         const { list, totalCount, nextCursor } = response.data;
-        console.log("Reviews data:", list);
-        console.log("Total reviews count:", totalCount);
-        console.log("Next cursor for reviews:", nextCursor);
 
-        // 중복되지 않는 데이터만 추가
-        setReviews((prevReviews) => {
-          const uniqueReviews = [
-            ...prevReviews,
-            ...list.filter(
-              (newReview: Review) =>
-                !prevReviews.some((review) => review.id === newReview.id),
-            ),
-          ];
-          return uniqueReviews;
-        });
-
+        setReviews((prevReviews) => [
+          ...prevReviews,
+          ...list.filter(
+            (newReview: Review) =>
+              !prevReviews.some((review) => review.id === newReview.id),
+          ),
+        ]);
         setReveiwTotal(totalCount);
-        setReviewCursor(nextCursor); // 커서 저장
-
-        if (!nextCursor) {
-          setHasMoreReviews(false); // 더 이상 로드할 데이터 없으면 false
-        }
+        setReviewCursor(nextCursor);
+        setHasMoreReviews(!!nextCursor);
       } catch (error) {
         console.error("리뷰 데이터 불러오기 실패", error);
       } finally {
         setIsLoading(false);
       }
     },
-    [isLoading, hasMoreReviews],
+    [isLoading, hasMoreReviews, initialLimit],
   );
 
-  // 와인 데이터 가져오기 (useCallback으로 메모이제이션)
+  // 와인 데이터 가져오기
   const fetchWines = useCallback(
     async (cursor: number | null) => {
-      if (isLoading || !hasMoreWines) return; // 로딩 중이거나 더 이상 불러올 데이터가 없으면 return
-      console.log("Fetching wines with cursor:", cursor);
+      if (isLoading || !hasMoreWines) return;
       try {
         setIsLoading(true);
         const response = await instance.get("/users/me/wines", {
@@ -76,44 +63,25 @@ export default function ProfileTab() {
         });
 
         const { list, totalCount, nextCursor } = response.data;
-        console.log("Wines data:", list);
-        console.log("Total wines count:", totalCount);
-        console.log("Next cursor for wines:", nextCursor);
 
-        // 중복되지 않는 데이터만 추가
-        setWines((prevWines) => {
-          const uniqueWines = [
-            ...prevWines,
-            ...list.filter(
-              (newWine: Wine) =>
-                !prevWines.some((wine) => wine.id === newWine.id),
-            ),
-          ];
-          return uniqueWines;
-        });
-
+        setWines((prevWines) => [
+          ...prevWines,
+          ...list.filter(
+            (newWine: Wine) =>
+              !prevWines.some((wine) => wine.id === newWine.id),
+          ),
+        ]);
         setWineTotal(totalCount);
-        setWineCursor(nextCursor); // 커서 저장
-        if (!nextCursor) {
-          setHasMoreWines(false); // 더 이상 로드할 데이터 없으면 false
-        }
+        setWineCursor(nextCursor);
+        setHasMoreWines(!!nextCursor);
       } catch (error) {
         console.error("와인 데이터 불러오기 실패", error);
       } finally {
         setIsLoading(false);
       }
     },
-    [isLoading, hasMoreWines],
+    [isLoading, hasMoreWines, initialLimit],
   );
-
-  // 탭 변경 시 데이터 가져오기
-  // useEffect(() => {
-  //   if (activeTab === "reviews") {
-  //     fetchReviews(reviewCursor);
-  //   } else {
-  //     fetchWines(wineCursor);
-  //   }
-  // }, [activeTab, reviewCursor, wineCursor, fetchReviews, fetchWines]);
 
   return (
     <div className="desktop:w-[80rem] desktop:h-[3.2rem] tablet:w-full mobile:w-full">
@@ -123,9 +91,10 @@ export default function ProfileTab() {
             className={`
               desktop:w-[9.6rem] desktop:h-[3.2rem] desktop:text-[2rem] desktop:leading-[3.2rem]
               tablet:w-[9.6rem] tablet:h-[3.2rem] tablet:text-[2rem] tablet:leading-[3.2rem]
-              mobile:w-auto mobile:h-[2.6rem] mobile:text-[1.8rem] mobile:leading-[2.6rem] 
-              
-              font-semibold ${activeTab === "reviews" ? "text-gray-800" : "text-gray-500"}`}
+              mobile:w-auto mobile:h-[2.6rem] mobile:text-[1.8rem] mobile:leading-[2.6rem]
+              font-semibold ${
+                activeTab === "reviews" ? "text-gray-800" : "text-gray-500"
+              }`}
             onClick={() => setActiveTab("reviews")}
           >
             내가 쓴 후기
@@ -136,8 +105,9 @@ export default function ProfileTab() {
               tablet:w-[13.1rem] tablet:h-[3.2rem] tablet:text-[2rem] tablet:leading-[3.2rem]
               mobile:w-auto mobile:h-[2.6rem] mobile:text-[1.8rem] mobile:leading-[2.6rem]
               desktop:ml-[3.2rem] tablet:ml-[3.2rem] mobile:ml-[1.6rem]
-              
-              font-semibold ${activeTab === "wines" ? "text-gray-800" : "text-gray-500"}`}
+              font-semibold ${
+                activeTab === "wines" ? "text-gray-800" : "text-gray-500"
+              }`}
             onClick={() => setActiveTab("wines")}
           >
             내가 등록한 와인
@@ -160,10 +130,18 @@ export default function ProfileTab() {
           >
             <div className="mt-[2.2rem] space-y-[2rem]">
               {reviews.map((review) => (
-                <MyReviewCard key={review.id} review={review} />
+                <MyReviewCard
+                  key={review.id}
+                  review={review}
+                  onDelete={() => {
+                    setReviews((prevReviews) =>
+                      prevReviews.filter((r) => r.id !== review.id),
+                    );
+                    setReveiwTotal((prev) => prev - 1);
+                  }}
+                />
               ))}
             </div>
-            {/* 더 이상 데이터가 없을 때 메시지 표시 */}
             {!hasMoreReviews && !isLoading && (
               <div className="mt-[3rem] text-center text-[1.8rem] text-[#CCCCCC]">
                 더 이상 데이터가 없습니다.
@@ -179,10 +157,18 @@ export default function ProfileTab() {
           >
             <div className="mt-[2.2rem] space-y-[2rem]">
               {wines.map((wine) => (
-                <MyWineCard key={wine.id} wine={wine} />
+                <MyWineCard
+                  key={wine.id}
+                  wine={wine}
+                  onDelete={() => {
+                    setWines((prevWines) =>
+                      prevWines.filter((w) => w.id !== wine.id),
+                    );
+                    setWineTotal((prev) => prev - 1);
+                  }}
+                />
               ))}
             </div>
-            {/* 더 이상 데이터가 없을 때 메시지 표시 */}
             {!hasMoreWines && !isLoading && (
               <div className="mt-[3rem] text-center text-[1.8rem] text-[#CCCCCC]">
                 더 이상 데이터가 없습니다.

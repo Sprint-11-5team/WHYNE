@@ -10,7 +10,7 @@ import MenuIcon from "@/../public/icons/menu.svg";
 import DropDownMenu from "@/components/common/dropdown-menu";
 import DetailWineTag, { Aroma, AromaMapping } from "./detail-wine-tag";
 import StarFill from "@/../public/icons/star_fill.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import AddReviewModal from "@/components/modal-review/AddReviewModal";
 import instance from "@/api/api";
@@ -41,9 +41,18 @@ interface User {
   image: string;
 }
 
+interface RatingData {
+  avgRating: number;
+  reviewCount: number;
+  avgRatings: {
+    [key: number]: number;
+  };
+}
+
 interface DetailReviewCardProps {
   wineid: string;
 }
+
 
 function timeAgo(createdAt: string): string {
   const now = new Date();
@@ -68,12 +77,32 @@ function timeAgo(createdAt: string): string {
 
 export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [ratingData, setRatingData] = useState<RatingData | null>(null);  // 타입 지정
   const [isExpand, setIsExpand] = useState<Record<number, boolean>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  // const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null);
-  const [alertText, setAlertText] = useState<string | null>(null); // 추가
+
+  const refreshData = async () => {
+    await fetchReviews(); // 리뷰 목록 새로고침
+    const ratingDetailsComponent = document.querySelector("#rating-details");
+    if (ratingDetailsComponent) {
+      const event = new CustomEvent("refreshRatings");
+      ratingDetailsComponent.dispatchEvent(event);
+    }
+  };
+  
+
+// 모달 닫힐 때 호출
+const handleModalClose = async () => {
+  setIsModalOpen(false);
+  setIsEditing(false);
+  setInitialData(null);
+  await refreshData(); // 리뷰 목록과 별점 모두 업데이트
+};
+
+
+  const [alertText, setAlertText] = useState<string | null>(null);
 
   const { user } = useAuth();
 
@@ -150,23 +179,31 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
     }
   }
 
-  useEffect(() => {
-    async function fetchReviews() {
-      try {
-        setIsLoading(true);
-        const response = await instance.get<{ reviews: Review[] }>(
-          `/wines/${wineid}`,
-        );
-        setReviews(response.data.reviews || []);
-      } catch (error) {
-        console.error("리뷰 가져오기 실패", error);
-      } finally {
-        setIsLoading(false);
-      }
+  const fetchReviews = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await instance.get(`/wines/${wineid}`);
+      setReviews(response.data.reviews || []);
+      // rating 관련 데이터만 추출해서 저장
+      const { avgRating, reviewCount, avgRatings } = response.data;
+      setRatingData({ avgRating, reviewCount, avgRatings });
+    } catch (error) {
+      console.error("리뷰 가져오기 실패", error);
+    } finally {
+      setIsLoading(false);
     }
-
-    fetchReviews();
   }, [wineid]);
+  
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);  // fetchReviews만 의존성으로 등록
+
+
+  function closeDeleteModal() {
+    setSelectedReviewId(null);
+    setIsDeleteModalOpen(false);
+    fetchReviews(); // 삭제 후 리뷰 목록 갱신
+  }
 
   if (isLoading) {
     return <div></div>;
@@ -184,10 +221,6 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
     setIsDeleteModalOpen(true);
   }
 
-  function closeDeleteModal() {
-    setSelectedReviewId(null);
-    setIsDeleteModalOpen(false);
-  }
 
   // function openEditModal(review: Review) {
   //   setSelectedReviewId(review.id);
@@ -197,7 +230,9 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
   return (
     <div className="flex desktop:w-[114rem] tablet:w-full mobile:w-full desktop:flex-row-reverse desktop:gap-[4rem] tablet:flex-col tablet:gap-[3.6rem] mobile:flex-col mobile:gap-[2rem]">
       <div className="">
-        <RatingDetails id={wineid} />
+        <RatingDetails id={wineid} ratingData={ratingData || undefined}  // null 대신 undefined 전달
+ // ratingData를 props로 전달
+ />
       </div>
       {reviews.length > 0 ? (
         <div className="flex flex-row gap-[6rem] w-full">
@@ -426,7 +461,7 @@ export default function DetailReviewCard({ wineid }: DetailReviewCardProps) {
       {isModalOpen && (
         <AddReviewModal
           isOpen={isModalOpen}
-          onClick={() => setIsModalOpen(false)}
+          onClick={handleModalClose} // 수정됨
           wineId={wineid}
           id={selectedReviewId!}
           isEditing={isEditing}

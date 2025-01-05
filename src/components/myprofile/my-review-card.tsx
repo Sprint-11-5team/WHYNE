@@ -44,7 +44,7 @@ export interface Review {
   aroma: Aroma[];
 }
 
-export default function MyReviewCard({ review }: { review: Review }) {
+export default function MyReviewCard({ review, onDelete }: { review: Review; onDelete?: () => void; }) {
   const [wineName, setWineName] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -189,7 +189,8 @@ export default function MyReviewCard({ review }: { review: Review }) {
         onCancel={closeDeleteModal}
         id={reviewIdForModal!}
         type="review"
-      />
+        onDeleted={onDelete}  // onDeleted 대신 onSuccessDelete 사용
+        />
     </div>
   );
 }
